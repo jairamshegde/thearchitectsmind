@@ -11,6 +11,7 @@ import { rehypeMermaid } from '../../src/markdown/rehype-mermaid';
 import { rehypeFigure } from '../../src/markdown/rehype-figure';
 import { rehypeTableWrap } from '../../src/markdown/rehype-table-wrap';
 import { rehypeBaseLinks } from '../../src/markdown/rehype-base-links';
+import { rehypeSideImage } from '../../src/markdown/rehype-side-image';
 
 function html(md: string, ...plugins: Array<() => (tree: Root) => void>): string {
   let p = unified().use(remarkParse).use(remarkGfm).use(remarkRehype);
@@ -115,5 +116,24 @@ describe('rehypeBaseLinks', () => {
 
   it('is a no-op when the site lives at the domain root', () => {
     expect(run('[post](/writing/foo/)', '/')).toContain('href="/writing/foo/"');
+  });
+});
+
+describe('rehypeSideImage', () => {
+  const md = (src: string) => html(src, rehypeSideImage);
+
+  it('puts an image titled "left" beside the text that follows it, up to the next heading', () => {
+    const out = md('## What I do\n\n![Pico](./p.png "left")\n\nFirst.\n\nSecond.\n\n## Next\n\nAfter.');
+    expect(out).toBe(
+      '<h2>What I do</h2>\n<div class="md-split md-split-left"><div class="md-split-media"><img src="./p.png" alt="Pico"></div><div class="md-split-text"><p>First.</p>\n<p>Second.</p></div></div>\n<h2>Next</h2>\n<p>After.</p>',
+    );
+  });
+
+  it('supports "right"', () => {
+    expect(md('![Pico](./p.png "right")\n\nText.')).toContain('<div class="md-split md-split-right">');
+  });
+
+  it('leaves images with any other title (captions) alone', () => {
+    expect(md('![Pico](./p.png "A caption")\n\nText.')).not.toContain('md-split');
   });
 });

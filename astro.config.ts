@@ -9,6 +9,7 @@ import { remarkReadingTime } from './src/markdown/remark-reading-time';
 import { rehypeCodeFrame } from './src/markdown/rehype-code-frame';
 import { rehypeMermaid } from './src/markdown/rehype-mermaid';
 import { rehypeFigure } from './src/markdown/rehype-figure';
+import { rehypeSideImage } from './src/markdown/rehype-side-image';
 import { rehypeTableWrap } from './src/markdown/rehype-table-wrap';
 import { rehypeBaseLinks } from './src/markdown/rehype-base-links';
 
@@ -29,6 +30,7 @@ export default defineConfig({
         [rehypeBaseLinks, { base: SITE.base }],
         rehypeMermaid,
         rehypeCodeFrame,
+        rehypeSideImage, // before rehypeFigure: "left"/"right" titles are layout, not captions
         rehypeFigure,
         rehypeTableWrap,
         rehypeHeadingIds, // must run before autolink so headings have ids

@@ -133,3 +133,15 @@
 
 /* Back link at the top of an article */
 .article-crumb { display: inline-block; margin-bottom: 18px; }
+
+/* ---------- Side-by-side image + text: ![alt](./img.png "left" | "right") ---------- */
+.md-split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: clamp(20px, 3vw, 40px); align-items: center; margin: 1.4em 0 2em; }
+.md-split-right { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+.md-split-right .md-split-media { order: 2; }
+.md-split-media img { width: 100%; border-radius: 0; }
+.md-split-text > :last-child { margin-bottom: 0; }
+@media (max-width: 640px) {
+  .md-split, .md-split-right { grid-template-columns: minmax(0, 1fr); }
+  .md-split-right .md-split-media { order: 0; }
+  .md-split-media { max-width: 320px; margin: 0 auto; }
+}
