@@ -1,0 +1,21 @@
+---
+import { SITE } from '../site.config';
+import { withBase } from '../lib/url';
+import ThemeToggle from './ThemeToggle.astro';
+
+const links = [
+  { label: 'Writing', href: withBase('/#writing') },
+  { label: 'Notes', href: withBase('/notes/') },
+  { label: 'Projects', href: withBase('/#projects') },
+  { label: 'About', href: withBase('/#about') },
+];
+---
+<header class="wrap">
+  <nav class="nav" aria-label="Main">
+    <a class="logo" href={withBase('/')}>{SITE.title}</a>
+    <ul>
+      {links.map((l) => <li><a class="nl" href={l.href}>{l.label}</a></li>)}
+      <li><ThemeToggle /></li>
+    </ul>
+  </nav>
+</header>

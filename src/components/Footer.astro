@@ -1,0 +1,29 @@
+---
+import { getEntry } from 'astro:content';
+import { SITE } from '../site.config';
+
+const settings = await getEntry('settings', 'site');
+if (!settings) throw new Error('Missing src/content/settings/site.json');
+const { footerStatement, footerSub, socials } = settings.data;
+---
+<footer class="foot wrap">
+  <p class="big">{footerStatement}</p>
+  <p class="sub">{footerSub}</p>
+  <ul class="links">
+    {socials.map((s) => (
+      <li>
+        <a href={s.url} rel={s.url.startsWith('http') ? 'me noopener' : undefined}>{s.label}<span class="arr" aria-hidden="true">↗</span></a>
+        {(s.meta || s.note) && (
+          <div class="pop" role="tooltip">
+            {s.meta && <p class="pop-meta">{s.meta}</p>}
+            {s.note && <p class="pop-note">{s.note}</p>}
+          </div>
+        )}
+      </li>
+    ))}
+  </ul>
+  <div class="sig">
+    <span><b>{SITE.title}</b>Written and built by {SITE.author}</span>
+    <span>© {new Date().getFullYear()}</span>
+  </div>
+</footer>

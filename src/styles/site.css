@@ -1,0 +1,28 @@
+/* Skip link */
+.skip { position: absolute; left: 12px; top: -60px; z-index: 20; padding: 8px 14px; border-radius: var(--r-pill); background: var(--ink); color: var(--page); text-decoration: none; }
+.skip:focus { top: 12px; }
+
+/* Nav additions */
+.nav ul { align-items: center; }
+@media (max-width: 560px) {
+  .nav { flex-wrap: wrap; gap: 10px; }
+  .nav ul { gap: 16px; }
+}
+
+/* Theme toggle */
+.theme-toggle { display: inline-grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: var(--r-pill); background: transparent; color: var(--graphite); cursor: pointer; transition: background-color var(--dur-fast) ease, color var(--dur-fast) ease; }
+.theme-toggle:hover { background: var(--card); color: var(--ink); }
+.theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.theme-toggle .i-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .i-sun { display: block; }
+:root[data-theme="dark"] .theme-toggle .i-moon { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .i-sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle .i-moon { display: none; }
+}
+
+/* Anchored sections clear the top edge when jumped to */
+section[id] { scroll-margin-top: 16px; }
+
+/* Empty-state line */
+.empty { margin: 0; font-family: var(--font-hand); font-size: var(--fs-note); color: var(--graphite); }
