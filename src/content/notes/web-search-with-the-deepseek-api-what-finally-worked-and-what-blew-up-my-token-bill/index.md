@@ -133,6 +133,8 @@ print("\n=== FINAL ANSWER ===")
 
 | Reasoning | Token Count | Result Accuracy |
 
+|--- | --- | --- |
+
 | default | \~100k | High |
 
 | low | \~45k | moderate |
