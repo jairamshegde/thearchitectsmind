@@ -1,4 +1,54 @@
 ---
+import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectList from '../components/ProjectList.astro';
+import PostCard from '../components/PostCard.astro';
+import { published } from '../lib/collections';
+import { pickHome } from '../lib/content';
+import { renderMarkdown } from '../lib/markdown-text';
+import { withBase } from '../lib/url';
+
+const projects = pickHome(await published('projects'), 3);
+const posts = pickHome(await published('writing'), 3);
+const about = await getEntry('pages', 'about');
+if (!about) throw new Error('Missing src/content/pages/about.md');
 ---
-<BaseLayout><section class="wrap"><h1>The Architect's Mind</h1></section></BaseLayout>
+<BaseLayout>
+  <Hero />
+
+  <section class="sec wrap" id="projects">
+    <div class="sec-head">
+      <h2>Featured projects</h2>
+      <a class="more" href={withBase('/projects/')}>All projects <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+    {projects.length > 0 ? <ProjectList projects={projects} /> : <p class="empty">First project write-up coming soon.</p>}
+  </section>
+
+  <section class="sec wrap" id="writing">
+    <div class="sec-head">
+      <h2>Writing</h2>
+      <a class="more" href={withBase('/writing/')}>All writing <span class="arr" aria-hidden="true">→</span></a>
+    </div>
+    {posts.length > 0 ? (
+      <div class="writing-grid">{posts.map((post) => <PostCard post={post} />)}</div>
+    ) : (
+      <p class="empty">First post coming soon.</p>
+    )}
+  </section>
+
+  <section class="sec wrap" id="about">
+    <div class="sec-head"><h2>About</h2></div>
+    <div class="about-grid">
+      <div>
+        <Fragment set:html={renderMarkdown(about.data.intro)} />
+        <a class="btn btn-primary" href={withBase('/about/')}>Learn more about me <span class="arr" aria-hidden="true">→</span></a>
+      </div>
+      {about.data.now.length > 0 && (
+        <dl class="now">
+          {about.data.now.map((n) => <div><dt>{n.label}</dt><dd>{n.value}</dd></div>)}
+        </dl>
+      )}
+    </div>
+  </section>
+</BaseLayout>

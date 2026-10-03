@@ -26,3 +26,22 @@ section[id] { scroll-margin-top: 16px; }
 
 /* Empty-state line */
 .empty { margin: 0; font-family: var(--font-hand); font-size: var(--fs-note); color: var(--graphite); }
+
+/* Writing card thumbnails */
+.post .thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.thumb-fallback { display: grid; place-items: center; width: 100%; height: 100%; background: var(--page) radial-gradient(circle, var(--line-2) 1.1px, transparent 1.4px) 0 0 / 18px 18px; }
+.thumb-fallback .hand { font-size: 22px; color: var(--graphite); transform: rotate(-3deg); }
+
+/* Projects: stage panels and case-study badge */
+.proj-list > li { display: block; }
+.stage { overflow: hidden; }
+.stage-panel { position: absolute; inset: 0; display: grid; place-items: center; padding: 28px; }
+.stage-panel[hidden] { display: none; }
+.stage-panel img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: var(--r-md); }
+.stage-fallback { text-align: center; }
+.stage-title { margin: 0; font-weight: 700; font-size: var(--fs-h2); letter-spacing: -.03em; line-height: 1.1; }
+.stage-fallback .hand { margin: 10px 0 0; color: var(--graphite); }
+.badge { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: var(--r-pill); border: 1px solid var(--line-2); font-size: 12px; color: var(--graphite); }
+
+/* About section CTA */
+.about-grid .btn { margin-top: 8px; }

@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { isCaseStudy } from '../lib/content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+const { projects } = Astro.props;
+---
+<div class="proj-grid" data-proj>
+  <ol class="proj-list">
+    {projects.map((p, i) => (
+      <li>
+        <a class:list={['proj-row', { 'is-active': i === 0 }]} href={withBase(`/projects/${p.id}/`)} data-proj-row={i}>
+          <span class="num">{String(i + 1).padStart(2, '0')}</span>
+          <span>
+            <span class="name">{p.data.title}</span>
+            <span class="blurb">{p.data.summary}</span>
+            <span class="meta">
+              {p.data.stack.join(' · ')}
+              {isCaseStudy(p.data) && <span class="badge">Case study</span>}
+            </span>
+            {p.data.role && <span class="note"><span>{p.data.role}</span></span>}
+          </span>
+          <span class="year">{p.data.date.getUTCFullYear()}</span>
+        </a>
+      </li>
+    ))}
+  </ol>
+  <div class="stage" aria-hidden="true">
+    {projects.map((p, i) => (
+      <div class="stage-panel" data-stage-panel={i} hidden={i !== 0}>
+        {p.data.cover ? (
+          <Image src={p.data.cover} alt="" widths={[480, 960]} sizes="(max-width: 900px) 100vw, 560px" />
+        ) : (
+          <div class="stage-fallback">
+            <p class="stage-title">{p.data.title}</p>
+            <p class="hand">{p.data.stack.join(' · ')}</p>
+          </div>
+        )}
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  import { initProjectStage } from '../scripts/project-stage';
+  initProjectStage();
+</script>

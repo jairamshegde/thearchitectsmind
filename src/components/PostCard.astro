@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { formatDate } from '../lib/format';
+import { withBase } from '../lib/url';
+
+interface Props {
+  post: CollectionEntry<'writing'>;
+}
+const { post } = Astro.props;
+const { title, description, date, tags, cover } = post.data;
+---
+<a class="post" href={withBase(`/writing/${post.id}/`)}>
+  <span class="thumb">
+    {cover ? (
+      <Image src={cover} alt="" widths={[400, 800]} sizes="(max-width: 900px) 100vw, 380px" />
+    ) : (
+      <span class="thumb-fallback"><span class="hand">{tags[0]}</span></span>
+    )}
+  </span>
+  <span class="body">
+    <time class="date" datetime={date.toISOString()}>{formatDate(date)}</time>
+    <h3>{title}<svg class="ul" viewBox="0 0 200 8" preserveAspectRatio="none" aria-hidden="true"><path d="M2 5 C 50 1, 100 8, 198 3" /></svg></h3>
+    <p>{description}</p>
+    <span class="tags">{tags.join(' · ')}</span>
+  </span>
+</a>

@@ -1,7 +1,7 @@
 import { z } from 'astro/zod';
 
 /** Astro's `image()` helper from the collection schema context (tests pass `() => z.string()`). */
-export type ImageFn = () => z.ZodType;
+export type ImageFn<I extends z.ZodType = z.ZodType> = () => I;
 
 /** The CMS writes '' or null for a cleared field. Treat both as "not set". */
 const optional = <T extends z.ZodType>(schema: T) =>
@@ -11,7 +11,7 @@ const date = z.coerce.date();
 const tags = z.array(z.string().min(1)).min(1);
 const flags = { featured: z.boolean().default(false), draft: z.boolean().default(false) };
 
-export const writingSchema = (image: ImageFn) =>
+export const writingSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
     title: z.string().min(1),
     description: z.string().min(1),
@@ -30,7 +30,7 @@ export const noteSchema = z.object({
   draft: z.boolean().default(false),
 });
 
-export const projectSchema = (image: ImageFn) =>
+export const projectSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
     title: z.string().min(1),
     summary: z.string().min(1),
