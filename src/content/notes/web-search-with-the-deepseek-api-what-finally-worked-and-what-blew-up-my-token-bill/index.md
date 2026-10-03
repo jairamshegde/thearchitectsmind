@@ -129,11 +129,9 @@ print("\n=== FINAL ANSWER ===")
 # print(content)
 ```
 
-### ### Token Consumption Metric
+### Token Consumption Metric
 
 | Reasoning | Token Count | Result Accuracy |
-
-| --- | --- | --- |
 
 | default | \~100k | High |
 
