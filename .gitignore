@@ -28,3 +28,4 @@ pnpm-debug.log*
 
 # local design and planning docs
 docs/
+.claude/
