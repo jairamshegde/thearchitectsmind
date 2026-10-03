@@ -133,6 +133,15 @@ describe('rehypeSideImage', () => {
     expect(md('![Pico](./p.png "right")\n\nText.')).toContain('<div class="md-split md-split-right">');
   });
 
+  it('"left: note" adds a handwritten note with an arrow that reveals on scroll', () => {
+    const out = md('![Pico](./p.png "left: Build it. Break it.")\n\nText.');
+    expect(out).toContain('<div class="md-split md-split-left">');
+    expect(out).toContain('<div class="md-split-media" data-reveal-note="">');
+    expect(out).toContain('<span class="md-note-text">Build it. Break it.</span>');
+    expect(out).toMatch(/<svg class="md-note-arrow" viewBox="0 0 120 80" aria-hidden="true"><path pathLength="1" d="[^"]+"><\/path><path class="md-note-arrow-head" pathLength="1" d="[^"]+"><\/path><\/svg>/);
+    expect(out).toContain('<img src="./p.png" alt="Pico">');
+  });
+
   it('leaves images with any other title (captions) alone', () => {
     expect(md('![Pico](./p.png "A caption")\n\nText.')).not.toContain('md-split');
   });

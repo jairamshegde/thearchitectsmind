@@ -145,3 +145,26 @@
   .md-split-right .md-split-media { order: 0; }
   .md-split-media { max-width: 320px; margin: 0 auto; }
 }
+
+/* Handwritten note + curvy arrow on a side image ("left: note" / "right: note").
+   The arrow tip is pinned at ~55% across, 9% down the image (where a centred character's head is).
+   Image on the left → note above-right, mirrored arrow; image on the right → note above-left. */
+.md-split-media[data-reveal-note] { position: relative; margin-top: 96px; }
+.md-note { position: absolute; z-index: 1; bottom: 91%; right: 45%; display: flex; align-items: flex-start; gap: 4px; }
+.md-split-left .md-note { right: auto; left: 55%; flex-direction: row-reverse; }
+.md-note-text { width: max-content; max-width: 22ch; margin-top: -10px; font-family: var(--font-hand); font-size: clamp(15px, 1.3vw, 18px); line-height: 1.3; color: var(--graphite); text-align: right; transform: rotate(-3deg); }
+.md-split-left .md-note-text { text-align: left; transform: rotate(2deg); }
+.md-note-arrow { flex: none; width: clamp(64px, 7vw, 92px); height: auto; overflow: visible; }
+.md-split-left .md-note-arrow { transform: scaleX(-1); }
+.md-note-arrow path { fill: none; stroke: var(--accent); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.reveal-ready .md-note-text { opacity: 0; clip-path: inset(0 100% 0 0); }
+.reveal-ready.is-revealed .md-note-text { opacity: 1; clip-path: inset(0 0 0 0); transition: clip-path 1s cubic-bezier(.4, .1, .3, 1) .1s, opacity .2s ease .1s; }
+.reveal-ready .md-note-arrow path { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.reveal-ready.is-revealed .md-note-arrow path { animation: hero-draw .8s cubic-bezier(.4, .1, .3, 1) .6s forwards; }
+.reveal-ready.is-revealed .md-note-arrow .md-note-arrow-head { animation-duration: .3s; animation-delay: 1.35s; }
+@media (max-width: 640px) {
+  .md-split-media[data-reveal-note] { margin-top: 0; }
+  .md-note, .md-split-left .md-note { position: static; justify-content: center; margin-bottom: 10px; }
+  .md-note-text, .md-split-left .md-note-text { max-width: none; margin: 0; text-align: center; transform: none; }
+  .md-note-arrow { display: none; }
+}
