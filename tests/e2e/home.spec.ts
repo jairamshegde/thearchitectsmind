@@ -41,3 +41,11 @@ test('hero note sits above the image without an arrow on phones', async ({ page 
   await expect(page.locator('.hero-note-text')).toBeVisible();
   await expect(page.locator('.hero-arrow')).toBeHidden();
 });
+
+test('hero headline stays at a readable size on wide screens', async ({ page }) => {
+  await page.setViewportSize({ width: 1920, height: 1000 });
+  await page.goto('./');
+  const size = await page.locator('.hero .hl').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(size).toBeLessThanOrEqual(60);
+  expect(size).toBeGreaterThanOrEqual(50);
+});
