@@ -166,8 +166,21 @@
 .reveal-ready .md-note-arrow path { stroke-dasharray: 1; stroke-dashoffset: 1; }
 .reveal-ready.is-revealed .md-note-arrow path { animation: hero-draw .8s cubic-bezier(.4, .1, .3, 1) .6s forwards; }
 .reveal-ready.is-revealed .md-note-arrow .md-note-arrow-head { animation-duration: .3s; animation-delay: 1.35s; }
+/* Thought bubble ("left: thought: …"): floats above the character's head; two little circles trail down to it */
+.md-thought { position: absolute; z-index: 1; left: 52%; bottom: calc(100% + 14px); }
+.md-split-right .md-thought { left: auto; right: 52%; }
+.md-thought-text { display: block; width: max-content; max-width: 13ch; padding: 10px 16px; border-radius: 26px; background: var(--card); box-shadow: 0 0 0 1px var(--line-2), 0 10px 20px -12px rgba(20, 25, 35, .35); font-family: var(--font-hand); font-size: clamp(14px, 1.15vw, 16px); line-height: 1.25; color: var(--graphite); text-align: center; }
+.md-thought::before, .md-thought::after { content: ""; position: absolute; border-radius: 50%; background: var(--card); box-shadow: 0 0 0 1px var(--line-2); }
+.md-thought::before { width: 12px; height: 12px; left: 16px; top: calc(100% + 3px); }
+.md-thought::after { width: 7px; height: 7px; left: 8px; top: calc(100% + 19px); }
+.md-split-right .md-thought::before { left: auto; right: 16px; }
+.md-split-right .md-thought::after { left: auto; right: 8px; }
+.reveal-ready .md-thought { opacity: 0; transform: translateY(8px) scale(.85); transform-origin: 15% 100%; }
+.reveal-ready.is-revealed .md-thought { opacity: 1; transform: none; transition: opacity .35s ease .15s, transform .5s var(--ease-spring) .15s; }
 @media (max-width: 640px) {
   .md-split-media[data-reveal-note] { margin-top: 0; }
+  .md-thought { position: static; display: flex; justify-content: center; margin-bottom: 14px; }
+  .md-thought::before, .md-thought::after { display: none; }
   .md-note, .md-split-right .md-note { position: static; justify-content: center; margin-bottom: 10px; }
   .md-note-text, .md-split-right .md-note-text { max-width: none; margin: 0; text-align: center; transform: none; }
   .md-note-arrow { display: none; }

@@ -142,6 +142,13 @@ describe('rehypeSideImage', () => {
     expect(out).toContain('<img src="./p.png" alt="Pico">');
   });
 
+  it('"left: thought: …" adds a thought bubble (no arrow) that reveals on scroll', () => {
+    const out = md('![Pico](./p.png "left: thought: Still so much to learn…")\n\nText.');
+    expect(out).toContain('<div class="md-split-media" data-reveal-note="">');
+    expect(out).toContain('<span class="md-thought"><span class="md-thought-text">Still so much to learn…</span></span>');
+    expect(out).not.toContain('md-note-arrow');
+  });
+
   it('leaves images with any other title (captions) alone', () => {
     expect(md('![Pico](./p.png "A caption")\n\nText.')).not.toContain('md-split');
   });
