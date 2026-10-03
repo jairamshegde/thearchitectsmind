@@ -13,7 +13,9 @@ export function initRevealNotes(): void {
         observer.unobserve(entry.target);
       }
     },
-    { threshold: 0.5 },
+    // Reveal only once the element is well into view (its section scrolled to), so notes in
+    // sections that merely peek in at the bottom wait their turn instead of all firing at once.
+    { threshold: 0.5, rootMargin: '0px 0px -35% 0px' },
   );
   for (const el of targets) {
     el.classList.add('reveal-ready'); // only now hide the note, so no-JS visitors always see it

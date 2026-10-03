@@ -134,7 +134,7 @@ test('about page: the “What I do” note and arrow appear when scrolled into v
   await page.goto('./about/');
   const note = page.locator('.md-split .md-note-text');
   expect(await note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(0);
-  await page.locator('.md-split').scrollIntoViewIfNeeded();
+  await page.locator('.md-split').evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await expect.poll(() => note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
@@ -160,3 +160,14 @@ for (const width of [1920, 1440, 1180, 1024, 800]) {
     expect(note.x).toBeGreaterThanOrEqual(article.x - 2); // stays inside the article (clear of the TOC rail)
   });
 }
+
+test('about page: notes reveal one section at a time, not all at once on a tall screen', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./about/');
+  const opacity = (sel: string) => page.locator(sel).evaluate((el) => Number(getComputedStyle(el).opacity));
+  await expect.poll(() => opacity('.about-welcome .about-pico-note')).toBe(1);
+  await page.waitForTimeout(1500);
+  expect(await opacity('.md-split .md-note-text')).toBe(0); // “What I do” is only peeking in: not yet
+  await page.locator('.md-split').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await expect.poll(() => opacity('.md-split .md-note-text')).toBe(1);
+});
