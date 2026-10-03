@@ -1,6 +1,7 @@
 /* ---------- Article shell + header ---------- */
 .article-shell { display: grid; grid-template-columns: minmax(0, 1fr); padding-top: clamp(16px, 4vh, 40px); padding-bottom: var(--section-y); }
-.article { width: 100%; max-width: 70ch; margin: 0 auto; }
+.article-shell { --article-w: 860px; }
+.article { width: 100%; max-width: var(--article-w); margin: 0 auto; }
 .article-head { margin-bottom: 40px; }
 .article-kicker, .article-meta { margin: 0; font-size: var(--fs-meta); color: var(--pencil); }
 .article-title { margin: 10px 0 0; font-weight: 700; font-variation-settings: "opsz" 96; font-size: var(--fs-hero); line-height: 1.12; letter-spacing: -.03em; text-wrap: balance; }
@@ -12,7 +13,8 @@
 /* ---------- TOC rail (≥1100px) ---------- */
 .toc { display: none; }
 @media (min-width: 1100px) {
-  .article-shell { grid-template-columns: 200px minmax(0, 70ch) 200px; justify-content: center; column-gap: 48px; }
+  /* Wider than .wrap so the 860px column stays near-centred with the TOC rail beside it */
+  .article-shell { max-width: 1320px; grid-template-columns: minmax(150px, 1fr) minmax(0, var(--article-w)) minmax(0, 1fr); column-gap: 40px; }
   .article { grid-column: 2; grid-row: 1; margin: 0; }
   .toc { display: block; grid-column: 1; grid-row: 1; position: sticky; top: 32px; align-self: start; justify-self: start; z-index: 5; }
   .toc-inline { display: none; }

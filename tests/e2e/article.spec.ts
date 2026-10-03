@@ -48,3 +48,18 @@ test.describe('mobile', () => {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 });
+
+test.describe('reading width', () => {
+  for (const width of [1440, 1100]) {
+    test(`article column is wide, rail stays beside it, no overflow at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(POST);
+      const article = (await page.locator('article.article').boundingBox())!;
+      const rail = (await page.locator('nav.toc').boundingBox())!;
+      expect(article.width).toBeGreaterThanOrEqual(width === 1440 ? 820 : 700);
+      expect(rail.x + rail.width).toBeLessThanOrEqual(article.x);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
+});
