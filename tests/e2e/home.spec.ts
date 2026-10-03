@@ -144,8 +144,8 @@ for (const width of [1920, 1440, 1180, 1024, 800]) {
     await page.goto('./about/');
     await page.locator('.md-split-left').scrollIntoViewIfNeeded();
     const img = (await page.locator('.md-split-left .md-split-media img').boundingBox())!;
-    const arrow = (await page.locator('.md-note-arrow').boundingBox())!;
-    const note = (await page.locator('.md-note-text').boundingBox())!;
+    const arrow = (await page.locator('.md-split-left .md-note-arrow').boundingBox())!;
+    const note = (await page.locator('.md-split-left .md-note-text').boundingBox())!;
     const text = (await page.locator('.md-split-left .md-split-text').boundingBox())!;
     const article = (await page.locator('article.article').boundingBox())!;
     // Image on the left: note above-left, arrow tip (bottom-right corner) on Pico's head.
@@ -171,3 +171,28 @@ test('about page: notes reveal one section at a time, not all at once on a tall 
   await page.locator('.md-split-left').evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await expect.poll(() => opacity('.md-split-left .md-note-text')).toBe(1);
 });
+
+for (const width of [1920, 1440, 1180, 1024, 800]) {
+  test(`about page: “Why I enjoy it” note sits above-right at ${width}px — arrow on the board, clear of the text`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./about/');
+    const split = page.locator('.md-split-right');
+    await split.locator('.md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    const img = (await split.locator('.md-split-media img').boundingBox())!;
+    const arrow = (await split.locator('.md-note-arrow').boundingBox())!;
+    const note = (await split.locator('.md-note-text').boundingBox())!;
+    const text = (await split.locator('.md-split-text').boundingBox())!;
+    // Image on the right: note above-right, mirrored arrow whose tip is its bottom-left corner.
+    const tipX = (arrow.x - img.x) / img.width;
+    const tipY = (arrow.y + arrow.height - img.y) / img.height;
+    expect(tipX).toBeGreaterThan(0.5);
+    expect(tipX).toBeLessThan(0.6);
+    expect(tipY).toBeGreaterThan(0);
+    expect(tipY).toBeLessThan(0.14);
+    expect(note.x).toBeGreaterThanOrEqual(arrow.x + arrow.width - 2); // note is right of the arrow
+    expect(note.x).toBeGreaterThan(text.x + text.width); // never runs into the text column
+    // The right margin has no TOC rail, so the note may use a little of it — but must stay well on screen.
+    expect(note.x + note.width).toBeLessThanOrEqual(width - 12);
+    await expect.poll(() => split.locator('.md-note-text').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  });
+}
