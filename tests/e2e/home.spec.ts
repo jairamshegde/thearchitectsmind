@@ -132,9 +132,9 @@ test('about page: the “What I do” note and arrow appear when scrolled into v
   // Short viewport so the section starts below the fold.
   await page.setViewportSize({ width: 1440, height: 480 });
   await page.goto('./about/');
-  const note = page.locator('.md-split-left .md-note-text');
+  const note = page.locator('.md-split:has(img[src*="pico-builder"]) .md-note-text');
   expect(await note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(0);
-  await page.locator('.md-split-left .md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await page.locator('.md-split:has(img[src*="pico-builder"]) .md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await expect.poll(() => note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
@@ -142,11 +142,11 @@ for (const width of [1920, 1440, 1180, 1024, 800]) {
   test(`about page: “What I do” note sits on the outer side at ${width}px — on Pico, clear of the text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./about/');
-    await page.locator('.md-split-left').scrollIntoViewIfNeeded();
-    const img = (await page.locator('.md-split-left .md-split-media img').boundingBox())!;
-    const arrow = (await page.locator('.md-split-left .md-note-arrow').boundingBox())!;
-    const note = (await page.locator('.md-split-left .md-note-text').boundingBox())!;
-    const text = (await page.locator('.md-split-left .md-split-text').boundingBox())!;
+    await page.locator('.md-split:has(img[src*="pico-builder"])').scrollIntoViewIfNeeded();
+    const img = (await page.locator('.md-split:has(img[src*="pico-builder"]) .md-split-media img').boundingBox())!;
+    const arrow = (await page.locator('.md-split:has(img[src*="pico-builder"]) .md-note-arrow').boundingBox())!;
+    const note = (await page.locator('.md-split:has(img[src*="pico-builder"]) .md-note-text').boundingBox())!;
+    const text = (await page.locator('.md-split:has(img[src*="pico-builder"]) .md-split-text').boundingBox())!;
     const article = (await page.locator('article.article').boundingBox())!;
     // Image on the left: note above-left, arrow tip (bottom-right corner) on Pico's head.
     const tipX = (arrow.x + arrow.width - img.x) / img.width;
@@ -167,16 +167,16 @@ test('about page: notes reveal one section at a time, not all at once on a tall 
   const opacity = (sel: string) => page.locator(sel).evaluate((el) => Number(getComputedStyle(el).opacity));
   await expect.poll(() => opacity('.about-welcome .about-pico-note')).toBe(1);
   await page.waitForTimeout(1500);
-  expect(await opacity('.md-split-left .md-note-text')).toBe(0); // “What I do” is only peeking in: not yet
-  await page.locator('.md-split-left').evaluate((el) => el.scrollIntoView({ block: 'center' }));
-  await expect.poll(() => opacity('.md-split-left .md-note-text')).toBe(1);
+  expect(await opacity('.md-split:has(img[src*="pico-builder"]) .md-note-text')).toBe(0); // “What I do” is only peeking in: not yet
+  await page.locator('.md-split:has(img[src*="pico-builder"])').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await expect.poll(() => opacity('.md-split:has(img[src*="pico-builder"]) .md-note-text')).toBe(1);
 });
 
 for (const width of [1920, 1440, 1180, 1024, 800]) {
   test(`about page: “Why I enjoy it” note sits above-right at ${width}px — arrow on the board, clear of the text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./about/');
-    const split = page.locator('.md-split-right');
+    const split = page.locator('.md-split:has(img[src*="pico-whiteboard"])');
     await split.locator('.md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
     const img = (await split.locator('.md-split-media img').boundingBox())!;
     const arrow = (await split.locator('.md-note-arrow').boundingBox())!;
@@ -194,5 +194,25 @@ for (const width of [1920, 1440, 1180, 1024, 800]) {
     // The right margin has no TOC rail, so the note may use a little of it — but must stay well on screen.
     expect(note.x + note.width).toBeLessThanOrEqual(width - 12);
     await expect.poll(() => split.locator('.md-note-text').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  });
+}
+
+for (const width of [1920, 1440, 1024, 800]) {
+  test(`about page: “How I learn” thought bubble floats above Pico at ${width}px, clear of the text`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./about/');
+    const split = page.locator('.md-split', { has: page.locator('.md-thought') });
+    await split.locator('.md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    const img = (await split.locator('.md-split-media img').boundingBox())!;
+    const bubble = (await split.locator('.md-thought-text').boundingBox())!;
+    const text = (await split.locator('.md-split-text').boundingBox())!;
+    const article = (await page.locator('article.article').boundingBox())!;
+    expect(bubble.y + bubble.height).toBeLessThanOrEqual(img.y + 4); // sits above the image
+    expect(bubble.x + bubble.width).toBeLessThan(text.x); // never touches the text column
+    expect(bubble.x).toBeGreaterThanOrEqual(article.x - 2);
+    const centre = (bubble.x + bubble.width / 2 - img.x) / img.width;
+    expect(centre).toBeGreaterThan(0.5); // over the right part of Pico's head, clear of the lightbulb
+    expect(centre).toBeLessThan(0.85);
+    await expect.poll(() => split.locator('.md-thought').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
   });
 }
