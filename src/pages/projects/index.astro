@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectList from '../../components/ProjectList.astro';
+import { published } from '../../lib/collections';
+
+const projects = await published('projects');
+---
+<BaseLayout title="Projects" description="Projects and case studies.">
+  <header class="page-head wrap">
+    <h1>Projects</h1>
+    <p>Things I've designed and built, some broken down as full case studies.</p>
+  </header>
+  <div class="wrap page-body">
+    {projects.length > 0 ? <ProjectList projects={projects} /> : <p class="empty">First project write-up coming soon.</p>}
+  </div>
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDayMonth } from '../lib/format';
+import { withBase } from '../lib/url';
+
+interface Props {
+  note: CollectionEntry<'notes'>;
+}
+const { note } = Astro.props;
+const { title, date, tags } = note.data;
+---
+<li>
+  <a class="note-row" href={withBase(`/notes/${note.id}/`)}>
+    <time class="note-date" datetime={date.toISOString()}>{formatDayMonth(date)}</time>
+    <span class="note-title">{title}</span>
+    <span class="note-tags">{tags.join(' · ')}</span>
+  </a>
+</li>
