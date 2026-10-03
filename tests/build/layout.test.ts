@@ -21,7 +21,7 @@ describe('base layout', () => {
   });
 
   it('renders the footer from site settings', () => {
-    expect(home.querySelector('.foot .big')?.text).toBe("Let's build something sound.");
+    expect(home.querySelector('.foot .big')?.text).toBe('Every system has a story. The fun is finding it.');
     const socials = home.querySelectorAll('.foot .links > li > a').map((a) => a.text.replace('↗', '').trim());
     expect(socials).toEqual(['GitHub', 'LinkedIn', 'Email']);
     expect(home.querySelector('.foot .pop .pop-note')?.text).toBe('Where the code lives.');
