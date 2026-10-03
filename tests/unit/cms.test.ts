@@ -53,4 +53,23 @@ describe('CMS config', () => {
       expect(fieldsFor(name).find((f) => f.name === 'draft')).toMatchObject({ widget: 'boolean', default: true });
     }
   });
+
+  it('stores uploaded media beside each entry, as relative paths Astro can resolve', () => {
+    for (const c of cmsConfig.collections) {
+      const targets = 'folder' in c ? [c] : c.files;
+      for (const t of targets) expect([t.name, t.media_folder, t.public_folder]).toEqual([t.name, '', '']);
+    }
+  });
+
+  it('rejects URLs without a scheme in the CMS before they can fail the build', () => {
+    const projectLinks = fieldsFor('projects').find((f) => f.name === 'links')!.fields as CmsField[];
+    const socialUrl = (fieldsFor('settings').find((f) => f.name === 'socials')!.fields as CmsField[]).find((f) => f.name === 'url')!;
+    for (const field of [...projectLinks, socialUrl]) {
+      const [pattern] = field.pattern as [string, string];
+      const re = new RegExp(pattern);
+      expect(re.test('https://github.com/me'), field.name).toBe(true);
+      expect(re.test('github.com/me'), field.name).toBe(false);
+    }
+    expect(new RegExp((socialUrl.pattern as [string, string])[0]).test('mailto:me@example.com')).toBe(true);
+  });
 });

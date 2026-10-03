@@ -14,6 +14,11 @@ const tags = list('tags', 'Tags', 'Comma-separated, e.g. architecture, python');
 const featured = opt({ name: 'featured', label: 'Featured on the home page', widget: 'boolean', default: false });
 const draft = opt({ name: 'draft', label: 'Draft (untick to publish)', widget: 'boolean', default: true });
 const body = (label = 'Body'): CmsField => ({ name: 'body', label, widget: 'markdown' });
+const httpUrl = ['^https?://\\S+$', 'Must be a full URL starting with https://'];
+const url = (name: string, label: string): CmsField => str(name, label, { pattern: httpUrl });
+
+/** Uploaded media sits beside the entry file, referenced by a relative path Astro can optimise. */
+const besideEntry = { media_folder: '', public_folder: '' };
 
 /** One folder per entry (<slug>/index.md); uploaded images are stored beside it. */
 const folder = (name: string, label: string, label_singular: string, fields: CmsField[]) => ({
@@ -26,11 +31,16 @@ const folder = (name: string, label: string, label_singular: string, fields: Cms
   format: 'frontmatter',
   create: true,
   slug: '{{slug}}',
+  ...besideEntry,
   fields,
 });
 
 type FolderCollection = ReturnType<typeof folder>;
-type FileCollection = { name: string; label: string; files: { name: string; label: string; file: string; fields: CmsField[] }[] };
+type FileCollection = {
+  name: string;
+  label: string;
+  files: { name: string; label: string; file: string; media_folder: string; public_folder: string; fields: CmsField[] }[];
+};
 
 export const cmsConfig: {
   backend: { name: string; repo: string; branch: string; auth_methods: string[] };
@@ -43,7 +53,7 @@ export const cmsConfig: {
   backend: { name: 'github', repo: `${SITE.owner}/${SITE.repo}`, branch: SITE.branch, auth_methods: ['token'] },
   site_url: `${SITE.url}${SITE.base}/`,
   media_folder: 'public/uploads',
-  public_folder: '/uploads',
+  public_folder: `${SITE.base}/uploads`,
   output: { omit_empty_optional_fields: true },
   collections: [
     folder('writing', 'Writing', 'Post', [
@@ -70,7 +80,7 @@ export const cmsConfig: {
       text('summary', 'Summary'),
       list('stack', 'Stack', 'Comma-separated, e.g. Python, FastAPI'),
       date('date', 'Date'),
-      opt({ name: 'links', label: 'Links', widget: 'object', fields: [opt(str('repo', 'Repository URL')), opt(str('demo', 'Live demo URL'))] }),
+      opt({ name: 'links', label: 'Links', widget: 'object', fields: [opt(url('repo', 'Repository URL')), opt(url('demo', 'Live demo URL'))] }),
       opt(str('role', 'Role', { hint: 'Case study only' })),
       opt(str('timeline', 'Timeline', { hint: 'Case study only, e.g. Jan – May 2026' })),
       opt(text('problem', 'Problem', { hint: 'Filling Problem or Outcome turns this into a full case study. Markdown allowed.' })),
@@ -90,6 +100,7 @@ export const cmsConfig: {
           name: 'about',
           label: 'About',
           file: 'src/content/pages/about.md',
+          ...besideEntry,
           fields: [
             title,
             text('intro', 'Short intro (home page)'),
@@ -101,6 +112,7 @@ export const cmsConfig: {
           name: 'settings',
           label: 'Site settings',
           file: 'src/content/settings/site.json',
+          ...besideEntry,
           fields: [
             str('heroHeadline', 'Hero headline'),
             opt(str('heroHighlight', 'Highlighted phrase', { hint: 'Must appear exactly in the headline' })),
@@ -109,7 +121,12 @@ export const cmsConfig: {
             str('footerSub', 'Footer sub line'),
             {
               name: 'socials', label: 'Social links', widget: 'list',
-              fields: [str('label', 'Label'), str('url', 'URL'), opt(str('meta', 'Popover meta')), opt(text('note', 'Popover note'))],
+              fields: [
+                str('label', 'Label'),
+                str('url', 'URL', { pattern: ['^(https?://|mailto:)\\S+$', 'Must start with https:// or mailto:'] }),
+                opt(str('meta', 'Popover meta')),
+                opt(text('note', 'Popover note')),
+              ],
             },
           ],
         },
