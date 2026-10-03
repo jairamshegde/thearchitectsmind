@@ -121,3 +121,9 @@ for (const width of [1920, 1440, 1024, 375]) {
     expect(overflow).toBeLessThanOrEqual(0);
   });
 }
+
+test('about page: Pico’s welcome note writes itself in on load', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./about/');
+  await expect.poll(() => page.locator('.about-welcome .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+});

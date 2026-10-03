@@ -1,15 +1,31 @@
 ---
+import { Image } from 'astro:assets';
 import { getEntry, render } from 'astro:content';
 import ArticleLayout from '../layouts/ArticleLayout.astro';
 
 const about = await getEntry('pages', 'about');
 if (!about) throw new Error('Missing src/content/pages/about.md');
 const { Content, headings } = await render(about);
+const { title, welcome, lead, welcomeImage, welcomeNote } = about.data;
 ---
-<ArticleLayout title="About" description={about.data.intro} headings={headings}>
-  <Fragment slot="header">
-    <p class="article-kicker">About</p>
-    <h1 class="article-title">{about.data.title}</h1>
-  </Fragment>
+<ArticleLayout title="About" description={lead ?? about.data.intro} headings={headings}>
+  <div slot="header" class="about-welcome">
+    <div>
+      <p class="article-kicker">{welcome ?? 'About'}</p>
+      <h1 class="article-title">{title}</h1>
+      {lead && <p class="article-lead">{lead}</p>}
+    </div>
+    {welcomeImage && (
+      <figure class="about-pico" data-reveal-note>
+        {welcomeNote && <figcaption class="about-pico-note">{welcomeNote}</figcaption>}
+        <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[320, 640]} sizes="300px" loading="eager" />
+      </figure>
+    )}
+  </div>
   <Content />
 </ArticleLayout>
+
+<script>
+  import { initRevealNotes } from '../scripts/reveal-note';
+  initRevealNotes();
+</script>

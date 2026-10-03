@@ -1,5 +1,7 @@
 ---
-title: "Hi, I'm Jairam."
+title: "Hi, I'm Jairam 👋"
+welcome: "Welcome to my place 🛋️"
+lead: "I’m an AI engineer who likes to build things that are slightly more complicated than they probably need to be."
 intro: |
   I’m usually somewhere between “let’s build it” and “wait, why does this work?”
 
@@ -13,6 +15,8 @@ now:
   - { label: "Writing", value: "Phase 6 of Mingraph learning" }
 picoImage: pico-skeptical.png
 picoNote: "I’m reading what he wrote. You tell me what it means."
+welcomeImage: pico-welcome.png
+welcomeNote: "Hey curious reader, I’m Pico"
 ---
 
 ## What I do
