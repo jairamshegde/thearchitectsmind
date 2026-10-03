@@ -126,6 +126,7 @@ export const cmsConfig: {
             image('heroImage', 'Hero image'),
             str('footerStatement', 'Footer statement'),
             str('footerSub', 'Footer sub line'),
+            image('footerImage', 'Footer image (right of the statement)'),
             {
               name: 'socials', label: 'Social links', widget: 'list',
               fields: [

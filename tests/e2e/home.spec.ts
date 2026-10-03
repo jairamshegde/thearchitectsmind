@@ -232,3 +232,22 @@ for (const width of [1920, 1440, 1024, 800]) {
     await expect.poll(() => split.locator('.md-note-text').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
   });
 }
+
+test('footer: Pico sits to the right of the statement on desktop', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./');
+  const big = (await page.locator('.foot .big').boundingBox())!;
+  const pico = (await page.locator('.foot-pico img').boundingBox())!;
+  expect(pico.x).toBeGreaterThan(big.x + big.width);
+  expect(Math.abs(pico.y + pico.height / 2 - (big.y + big.height / 2))).toBeLessThan(big.height / 2); // vertically aligned
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
+});
+
+test('footer: Pico sits above the statement on phones', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('./');
+  const big = (await page.locator('.foot .big').boundingBox())!;
+  const pico = (await page.locator('.foot-pico img').boundingBox())!;
+  expect(pico.y + pico.height).toBeLessThanOrEqual(big.y + 2);
+});
