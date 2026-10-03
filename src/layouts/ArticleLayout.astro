@@ -26,6 +26,8 @@ const { title, description, headings } = Astro.props;
 <script>
   import { initTocRail } from '../scripts/toc-rail';
   import { initCopyButtons } from '../scripts/copy-code';
+  import { initMermaid } from '../scripts/mermaid';
   initTocRail();
   initCopyButtons();
+  initMermaid();
 </script>
