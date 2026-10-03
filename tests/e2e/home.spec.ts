@@ -136,13 +136,27 @@ test('about page: the “What I do” note and arrow appear when scrolled into v
   expect(await note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(0);
   await page.locator('.md-split').scrollIntoViewIfNeeded();
   await expect.poll(() => note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
-  const img = (await page.locator('.md-split-media img').boundingBox())!;
-  const arrow = (await page.locator('.md-note-arrow').boundingBox())!;
-  // Image on the left: the note sits above-right and the (mirrored) arrow's tip is its bottom-left corner.
-  const tipX = (arrow.x - img.x) / img.width;
-  const tipY = (arrow.y + arrow.height - img.y) / img.height;
-  expect(tipX).toBeGreaterThan(0.5);
-  expect(tipX).toBeLessThan(0.6);
-  expect(tipY).toBeGreaterThan(0);
-  expect(tipY).toBeLessThan(0.14);
 });
+
+for (const width of [1920, 1440, 1180, 1024, 800]) {
+  test(`about page: “What I do” note sits on the outer side at ${width}px — on Pico, clear of the text`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./about/');
+    await page.locator('.md-split').scrollIntoViewIfNeeded();
+    const img = (await page.locator('.md-split-media img').boundingBox())!;
+    const arrow = (await page.locator('.md-note-arrow').boundingBox())!;
+    const note = (await page.locator('.md-note-text').boundingBox())!;
+    const text = (await page.locator('.md-split-text').boundingBox())!;
+    const article = (await page.locator('article.article').boundingBox())!;
+    // Image on the left: note above-left, arrow tip (bottom-right corner) on Pico's head.
+    const tipX = (arrow.x + arrow.width - img.x) / img.width;
+    const tipY = (arrow.y + arrow.height - img.y) / img.height;
+    expect(tipX).toBeGreaterThan(0.5);
+    expect(tipX).toBeLessThan(0.6);
+    expect(tipY).toBeGreaterThan(0);
+    expect(tipY).toBeLessThan(0.14);
+    expect(note.x + note.width).toBeLessThanOrEqual(arrow.x + 2); // note is left of the arrow
+    expect(note.x + note.width).toBeLessThan(text.x); // never runs into the text column
+    expect(note.x).toBeGreaterThanOrEqual(article.x - 2); // stays inside the article (clear of the TOC rail)
+  });
+}
