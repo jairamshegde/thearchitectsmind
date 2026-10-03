@@ -21,7 +21,7 @@ welcomeNote: "Hey curious reader, I’m Pico"
 
 ## What I do
 
-![Pico building with blocks and a toolbox](./pico-builder.png "left")
+![Pico building with blocks and a toolbox](./pico-builder.png "left: Build it. Break it. Figure out why. Repeat.")
 
 These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.
 

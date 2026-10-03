@@ -19,6 +19,8 @@ describe('/about/', () => {
     const split = h2.nextElementSibling!;
     expect(split.classNames).toBe('md-split md-split-left');
     expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-builder\./);
+    expect(split.querySelector('.md-note .md-note-text')?.text).toBe('Build it. Break it. Figure out why. Repeat.');
+    expect(split.querySelector('.md-note svg.md-note-arrow')).not.toBeNull();
     expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
       'These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.',
     );

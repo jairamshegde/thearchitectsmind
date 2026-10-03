@@ -127,3 +127,22 @@ test('about page: Pico’s welcome note writes itself in on load', async ({ page
   await page.goto('./about/');
   await expect.poll(() => page.locator('.about-welcome .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
+
+test('about page: the “What I do” note and arrow appear when scrolled into view, arrow on Pico', async ({ page }) => {
+  // Short viewport so the section starts below the fold.
+  await page.setViewportSize({ width: 1440, height: 480 });
+  await page.goto('./about/');
+  const note = page.locator('.md-split .md-note-text');
+  expect(await note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(0);
+  await page.locator('.md-split').scrollIntoViewIfNeeded();
+  await expect.poll(() => note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  const img = (await page.locator('.md-split-media img').boundingBox())!;
+  const arrow = (await page.locator('.md-note-arrow').boundingBox())!;
+  // Image on the left: the note sits above-right and the (mirrored) arrow's tip is its bottom-left corner.
+  const tipX = (arrow.x - img.x) / img.width;
+  const tipY = (arrow.y + arrow.height - img.y) / img.height;
+  expect(tipX).toBeGreaterThan(0.5);
+  expect(tipX).toBeLessThan(0.6);
+  expect(tipY).toBeGreaterThan(0);
+  expect(tipY).toBeLessThan(0.14);
+});
