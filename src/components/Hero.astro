@@ -6,9 +6,11 @@ import { withBase } from '../lib/url';
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
 const { heroHeadline, heroSub, heroNote, heroImage } = settings.data;
+// One line per sentence: "I make computers do interesting things." / "Then I get suspicious."
+const headlineLines = heroHeadline.split(/(?<=[.!?])\s+/);
 ---
 <section class="hero wrap">
-  <h1 class="hl">{heroHeadline}</h1>
+  <h1 class="hl">{headlineLines.map((line, i) => <>{i > 0 && ' '}<span class="hl-line">{line}</span></>)}</h1>
   <p class="hero-sub">{heroSub}</p>
   <div class="ctas">
     <a class="btn btn-primary" href={withBase('/projects/')}>View projects <span class="arr" aria-hidden="true">→</span></a>
@@ -23,8 +25,8 @@ const { heroHeadline, heroSub, heroNote, heroImage } = settings.data;
       <figcaption class="hero-note">
         <span class="hero-note-text">{heroNote}</span>
         <svg class="hero-arrow" viewBox="0 0 120 80" aria-hidden="true">
-          <path pathLength="1" d="M6 8 C 46 2, 92 14, 113 72" />
-          <path class="hero-arrow-head" pathLength="1" d="M100 62 L114 76 L118 57" />
+          <path pathLength="1" d="M4 14 C 58 -6, 120 8, 120 76" />
+          <path class="hero-arrow-head" pathLength="1" d="M111 65 L120 80 L128 66" />
         </svg>
       </figcaption>
       <Image
