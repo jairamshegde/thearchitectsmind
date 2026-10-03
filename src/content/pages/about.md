@@ -1,11 +1,16 @@
 ---
 title: "Hi, I'm Jairam."
-intro: "I design and build software systems, and I write down how I think about them. This is placeholder text — replace it from the CMS."
+intro: |
+  I’m usually somewhere between “let’s build it” and “wait, why does this work?”
+
+  I write about AI, software architecture, and the systems hiding underneath.
+
+  Mostly the things I learn by building, breaking, and following the rabbit hole.
 now:
-  - { label: "Building", value: "This site" }
-  - { label: "Reading", value: "Designing Data-Intensive Applications" }
-  - { label: "Learning", value: "Rust for Python developers" }
-  - { label: "Writing", value: "A field guide to failure" }
+  - { label: "Building", value: "Minimal version of LangGraph (Mingraph)" }
+  - { label: "Reading", value: "An Illustrated Guide to AI Agents" }
+  - { label: "Learning", value: "Agent evals" }
+  - { label: "Writing", value: "Phase 6 of Mingraph learning" }
 ---
 
 ## What I do
