@@ -118,3 +118,12 @@ section[id] { scroll-margin-top: 16px; }
 .foot .big { font-size: clamp(30px, 5.8vw, 84px); }
 .foot .big-line { display: block; }
 @media (min-width: 360px) { .foot .big-line { white-space: nowrap; } }
+
+/* ---------- Sticky nav ---------- */
+:root { --nav-h: 84px; }
+@media (max-width: 560px) { :root { --nav-h: 106px; } }
+/* Anchor jumps (nav links, TOC) stop below the sticky nav */
+html { scroll-padding-top: calc(var(--nav-h) + 12px); }
+.site-header { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--page) 86%, transparent); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+@media (max-width: 560px) { .site-header .nav { padding: 12px 0; } }
+.stage { top: calc(var(--nav-h) + 24px); }
