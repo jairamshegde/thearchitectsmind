@@ -5,9 +5,11 @@ import { SITE } from '../site.config';
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
 const { footerStatement, footerSub, socials } = settings.data;
+// One line per sentence, like the hero headline.
+const statementLines = footerStatement.split(/(?<=[.!?])\s+/);
 ---
 <footer class="foot wrap">
-  <p class="big">{footerStatement}</p>
+  <p class="big">{statementLines.map((line, i) => <>{i > 0 && ' '}<span class="big-line">{line}</span></>)}</p>
   <p class="sub">{footerSub}</p>
   <ul class="links">
     {socials.map((s) => (

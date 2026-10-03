@@ -113,3 +113,8 @@ section[id] { scroll-margin-top: 16px; }
   .about-pico { justify-content: flex-start; margin-top: 8px; }
   .about-pico-note { text-align: left; }
 }
+
+/* Footer statement: one sentence per line, sized so the longer sentence fits on one line */
+.foot .big { font-size: clamp(30px, 5.8vw, 84px); }
+.foot .big-line { display: block; }
+@media (min-width: 360px) { .foot .big-line { white-space: nowrap; } }

@@ -106,3 +106,18 @@ test.describe('about Pico note', () => {
     await expect.poll(() => opacity(page)).toBe(1);
   });
 });
+
+for (const width of [1920, 1440, 1024, 375]) {
+  test(`footer statement is exactly two lines, one per sentence, at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./');
+    await expect(page.locator('.foot .big .big-line')).toHaveText(['Every system has a story.', 'The fun is finding it.']);
+    const { height, lineHeight, overflow } = await page.locator('.foot .big').evaluate((el) => ({
+      height: el.getBoundingClientRect().height,
+      lineHeight: parseFloat(getComputedStyle(el).lineHeight),
+      overflow: el.scrollWidth - el.clientWidth,
+    }));
+    expect(Math.round(height / lineHeight)).toBe(2);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+}
