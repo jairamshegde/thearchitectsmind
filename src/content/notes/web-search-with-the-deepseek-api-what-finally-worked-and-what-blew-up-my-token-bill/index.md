@@ -2,7 +2,11 @@
 title: 'Web Search with the DeepSeek API: What Finally Worked and What Blew Up My Token Bill'
 date: 2026-10-03
 tags:
-  - deepseek, websearch, python, llm, tool call,
+  - deepseek
+  - websearch,
+  - python
+  - llm
+  - tool call
 draft: false
 ---
 
