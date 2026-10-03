@@ -132,9 +132,9 @@ test('about page: the “What I do” note and arrow appear when scrolled into v
   // Short viewport so the section starts below the fold.
   await page.setViewportSize({ width: 1440, height: 480 });
   await page.goto('./about/');
-  const note = page.locator('.md-split .md-note-text');
+  const note = page.locator('.md-split-left .md-note-text');
   expect(await note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(0);
-  await page.locator('.md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await page.locator('.md-split-left .md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await expect.poll(() => note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
@@ -142,11 +142,11 @@ for (const width of [1920, 1440, 1180, 1024, 800]) {
   test(`about page: “What I do” note sits on the outer side at ${width}px — on Pico, clear of the text`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./about/');
-    await page.locator('.md-split').scrollIntoViewIfNeeded();
-    const img = (await page.locator('.md-split-media img').boundingBox())!;
+    await page.locator('.md-split-left').scrollIntoViewIfNeeded();
+    const img = (await page.locator('.md-split-left .md-split-media img').boundingBox())!;
     const arrow = (await page.locator('.md-note-arrow').boundingBox())!;
     const note = (await page.locator('.md-note-text').boundingBox())!;
-    const text = (await page.locator('.md-split-text').boundingBox())!;
+    const text = (await page.locator('.md-split-left .md-split-text').boundingBox())!;
     const article = (await page.locator('article.article').boundingBox())!;
     // Image on the left: note above-left, arrow tip (bottom-right corner) on Pico's head.
     const tipX = (arrow.x + arrow.width - img.x) / img.width;
@@ -167,7 +167,7 @@ test('about page: notes reveal one section at a time, not all at once on a tall 
   const opacity = (sel: string) => page.locator(sel).evaluate((el) => Number(getComputedStyle(el).opacity));
   await expect.poll(() => opacity('.about-welcome .about-pico-note')).toBe(1);
   await page.waitForTimeout(1500);
-  expect(await opacity('.md-split .md-note-text')).toBe(0); // “What I do” is only peeking in: not yet
-  await page.locator('.md-split').evaluate((el) => el.scrollIntoView({ block: 'center' }));
-  await expect.poll(() => opacity('.md-split .md-note-text')).toBe(1);
+  expect(await opacity('.md-split-left .md-note-text')).toBe(0); // “What I do” is only peeking in: not yet
+  await page.locator('.md-split-left').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await expect.poll(() => opacity('.md-split-left .md-note-text')).toBe(1);
 });
