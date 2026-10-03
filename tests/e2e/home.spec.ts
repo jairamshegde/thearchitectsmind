@@ -134,7 +134,7 @@ test('about page: the “What I do” note and arrow appear when scrolled into v
   await page.goto('./about/');
   const note = page.locator('.md-split .md-note-text');
   expect(await note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(0);
-  await page.locator('.md-split').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+  await page.locator('.md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
   await expect.poll(() => note.evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
