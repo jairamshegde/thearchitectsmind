@@ -87,11 +87,18 @@ def fetch_orders(client):
 
 ## Diagram fallback
 
-If a diagram has a syntax error, the page still works and shows the source instead:
+A computational graph for **f = ((x + y) × z − w)²**: each node is one simple operation, and each edge carries the value computed so far. If a diagram ever has a syntax error, the page still works and shows its source instead.
 
 ```mermaid
 graph LR
-  A -->
+  x(["x = 2"]) --> add["+"]
+  y(["y = 3"]) --> add
+  add -->|"q = 5"| mul["×"]
+  z(["z = 4"]) --> mul
+  mul -->|"p = 20"| sub["−"]
+  w(["w = 6"]) --> sub
+  sub -->|"s = 14"| sq["x²"]
+  sq --> f(["f = 196"])
 ```
 
 ---
