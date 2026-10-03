@@ -23,6 +23,7 @@ const { title, description, date, updated, tags, cover } = post.data;
 ---
 <ArticleLayout title={title} description={description} headings={headings}>
   <Fragment slot="header">
+    <a class="more article-crumb" href={withBase('/writing/')}>← All writing</a>
     <p class="article-kicker">{tags.join(' · ')} · {remarkPluginFrontmatter.minutesRead} min read</p>
     <h1 class="article-title">{title}</h1>
     <p class="article-lead">{description}</p>

@@ -4,6 +4,12 @@ import { BASE, built, page } from './helpers';
 describe('writing article: kitchen sink', () => {
   const p = page('/writing/designing-for-failure/');
 
+  it('links back to the writing index from the top of the article', () => {
+    const back = p.querySelector('.article-head a.article-crumb');
+    expect(back?.getAttribute('href')).toBe(`${BASE}/writing/`);
+    expect(back?.text.trim()).toBe('← All writing');
+  });
+
   it('renders the header: kicker, title, lead, dates, cover', () => {
     expect(p.querySelector('.article-kicker')?.text).toMatch(/^architecture · reliability · python · \d+ min read$/);
     expect(p.querySelector('h1.article-title')?.text).toBe('Designing for failure: a field guide');

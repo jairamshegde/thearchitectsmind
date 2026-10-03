@@ -130,3 +130,6 @@
 .lessons-label { margin: 0 0 6px; font-weight: 700; }
 .lessons p { margin: 0 0 .5em; }
 .lessons > :last-child { margin-bottom: 0; }
+
+/* Back link at the top of an article */
+.article-crumb { display: inline-block; margin-bottom: 18px; }
