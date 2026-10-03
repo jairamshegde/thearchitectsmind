@@ -41,4 +41,4 @@ I learn mostly by building, breaking things, figuring out why, and building them
 
 ![Pico relaxing in a beanbag with his headphones on](./pico-companion.png "right: text: Keeping things fun and honest")
 
-This site is where I keep the things worth remembering: ideas I’m exploring, systems I’m designing, things I’ve learned the hard way, and the occasional rabbit hole I probably didn’t need to go down—but did anyway.
+Pico is here to make sure I don’t take any of this too seriously. A curious little penguin, part debugger, part cheerleader, and always ready with a question (usually a good one).

@@ -55,7 +55,7 @@ describe('/about/', () => {
     expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-companion\./);
     expect(split.querySelector('.md-note-plain .md-note-text')?.text).toBe('Keeping things fun and honest');
     expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
-      'This site is where I keep the things worth remembering: ideas I’m exploring, systems I’m designing, things I’ve learned the hard way, and the occasional rabbit hole I probably didn’t need to go down—but did anyway.',
+      'Pico is here to make sure I don’t take any of this too seriously. A curious little penguin, part debugger, part cheerleader, and always ready with a question (usually a good one).',
     );
   });
 
