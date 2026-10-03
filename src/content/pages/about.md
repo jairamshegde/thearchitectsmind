@@ -27,7 +27,7 @@ These days, that usually means AI systems, agents, retrieval, software architect
 
 ## Why I enjoy it
 
-![Pico at a whiteboard covered in boxes and arrows, next to a stack of books](./pico-whiteboard.png "right")
+![Pico at a whiteboard covered in boxes and arrows, next to a stack of books](./pico-whiteboard.png "right: It started simple…")
 
 I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.
 

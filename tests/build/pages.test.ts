@@ -31,6 +31,7 @@ describe('/about/', () => {
     const split = h2.nextElementSibling!;
     expect(split.classNames).toBe('md-split md-split-right');
     expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-whiteboard\./);
+    expect(split.querySelector('.md-note .md-note-text')?.text).toBe('It started simple…');
     expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
       'I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.',
     );
