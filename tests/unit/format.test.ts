@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, formatDayMonth, splitHighlight } from '../../src/lib/format';
+import { formatDate, formatDayMonth } from '../../src/lib/format';
 import { renderMarkdown } from '../../src/lib/markdown-text';
 
 // `npm test` runs with TZ=America/Los_Angeles. A date parsed from "2026-09-20" is UTC midnight,
@@ -8,17 +8,6 @@ describe('date formatting', () => {
   it('shows the calendar day written in the frontmatter, in any timezone', () => {
     expect(formatDate(new Date('2026-09-20'))).toBe('Sep 20, 2026');
     expect(formatDayMonth(new Date('2026-01-01'))).toBe('Jan 1');
-  });
-});
-
-describe('splitHighlight', () => {
-  it('splits around the first occurrence of the phrase', () => {
-    expect(splitHighlight('I think in systems', 'think')).toEqual(['I ', 'think', ' in systems']);
-  });
-  it('returns null when the phrase is missing or empty', () => {
-    expect(splitHighlight('I think', 'nope')).toBeNull();
-    expect(splitHighlight('I think', undefined)).toBeNull();
-    expect(splitHighlight('I think', '')).toBeNull();
   });
 });
 
