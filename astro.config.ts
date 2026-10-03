@@ -10,6 +10,7 @@ import { rehypeCodeFrame } from './src/markdown/rehype-code-frame';
 import { rehypeMermaid } from './src/markdown/rehype-mermaid';
 import { rehypeFigure } from './src/markdown/rehype-figure';
 import { rehypeTableWrap } from './src/markdown/rehype-table-wrap';
+import { rehypeBaseLinks } from './src/markdown/rehype-base-links';
 
 export default defineConfig({
   site: SITE.url,
@@ -25,6 +26,7 @@ export default defineConfig({
     processor: unified({
       remarkPlugins: [remarkAlert, remarkReadingTime],
       rehypePlugins: [
+        [rehypeBaseLinks, { base: SITE.base }],
         rehypeMermaid,
         rehypeCodeFrame,
         rehypeFigure,

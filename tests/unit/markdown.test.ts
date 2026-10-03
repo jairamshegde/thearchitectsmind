@@ -10,6 +10,7 @@ import { rehypeCodeFrame } from '../../src/markdown/rehype-code-frame';
 import { rehypeMermaid } from '../../src/markdown/rehype-mermaid';
 import { rehypeFigure } from '../../src/markdown/rehype-figure';
 import { rehypeTableWrap } from '../../src/markdown/rehype-table-wrap';
+import { rehypeBaseLinks } from '../../src/markdown/rehype-base-links';
 
 function html(md: string, ...plugins: Array<() => (tree: Root) => void>): string {
   let p = unified().use(remarkParse).use(remarkGfm).use(remarkRehype);
@@ -90,5 +91,29 @@ describe('rehypeCodeFrame', () => {
   it('ignores <pre> elements that are not Shiki output', () => {
     const tree: Root = { type: 'root', children: [{ type: 'element', tagName: 'pre', properties: {}, children: [] }] };
     expect(run(tree)).toBe('<pre></pre>');
+  });
+});
+
+describe('rehypeBaseLinks', () => {
+  const run = (md: string, base: string) =>
+    String(unified().use(remarkParse).use(remarkRehype).use(rehypeBaseLinks, { base }).use(rehypeStringify).processSync(md));
+
+  it('prefixes root-relative links and images written in markdown', () => {
+    const out = run('[post](/writing/foo/) ![pic](/uploads/a.png)', '/thearchitectsmind');
+    expect(out).toContain('href="/thearchitectsmind/writing/foo/"');
+    expect(out).toContain('src="/thearchitectsmind/uploads/a.png"');
+  });
+
+  it('leaves external, protocol-relative, fragment, relative and already-based URLs alone', () => {
+    const out = run('[a](https://x.com) [b](//cdn.x.com/y) [c](#top) ![d](./d.png) [e](/thearchitectsmind/notes/)', '/thearchitectsmind');
+    expect(out).toContain('href="https://x.com"');
+    expect(out).toContain('href="//cdn.x.com/y"');
+    expect(out).toContain('href="#top"');
+    expect(out).toContain('src="./d.png"');
+    expect(out).toContain('href="/thearchitectsmind/notes/"');
+  });
+
+  it('is a no-op when the site lives at the domain root', () => {
+    expect(run('[post](/writing/foo/)', '/')).toContain('href="/writing/foo/"');
   });
 });
