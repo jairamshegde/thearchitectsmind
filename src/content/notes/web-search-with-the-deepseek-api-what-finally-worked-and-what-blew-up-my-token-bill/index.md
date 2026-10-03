@@ -132,12 +132,9 @@ print("\n=== FINAL ANSWER ===")
 ### Token Consumption Metric
 
 | Reasoning | Token Count | Result Accuracy |
-
-|--- | --- | --- |
-
-| default | \~100k | High |
-
-| low | \~45k | moderate |
+| --- | --- | --- |
+| default | ~100k | High |
+| low | ~45k | moderate |
 
 ### Without Streaming
 
