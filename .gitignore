@@ -29,3 +29,6 @@ pnpm-debug.log*
 # local design and planning docs
 docs/
 .claude/
+# test output
+test-results/
+playwright-report/

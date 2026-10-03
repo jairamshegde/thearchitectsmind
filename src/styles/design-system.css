@@ -1,0 +1,339 @@
+/* =====================================================================
+   AIJAY_ design system: tokens, type, and components (no Pico)
+
+   Fonts (put this in <head>):
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+   Roles
+   - Bricolage Grotesque: everything (headings, body, UI). Variable, with an
+     optical-size axis, so big headlines get tighter shapes automatically.
+   - Shantell Sans: handwritten notes only (annotations, margin notes,
+     sticky notes). Never for body copy or buttons.
+   - System monospace: code only.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------------
+   1. Tokens
+   --------------------------------------------------------------------- */
+:root {
+  /* Color: light (default) */
+  --page:      #F4F5F7;  /* page background, cool light grey */
+  --card:      #FFFFFF;  /* raised surfaces: cards, stage, popovers */
+  --ink:       #1B1F27;  /* primary text, primary button fill */
+  --graphite:  #4A5160;  /* secondary text, nav links */
+  --pencil:    #8A92A0;  /* tertiary text: dates, meta, numbers */
+  --line:      #E1E4E9;  /* hairlines on cards */
+  --line-2:    #CDD2D9;  /* list dividers */
+  --accent:    #F2A33A;  /* the one accent: underlines, highlights, focus moments */
+  --accent-soft: rgba(242, 163, 58, .35); /* marker highlight behind words */
+  --marker:    #2C3E5A;  /* whiteboard / sketch ink */
+
+  /* Color: code editor (always dark, both themes) */
+  --ide-bg:     #0E1420;
+  --ide-panel:  #0F1523;
+  --ide-chrome: #0C111B;
+  --ide-line:   #1F2937;
+  --ide-text:   #D7DEE8;
+  --ide-muted:  #7C8BA1;
+  --ide-blue:   #3B82F6;  /* active tab, selected file, chart bars */
+  --syn-kw:     #C084FC;  /* keywords */
+  --syn-fn:     #60A5FA;  /* function calls */
+  --syn-str:    #FB923C;  /* strings, numbers */
+  --syn-cmt:    #6B7A92;  /* comments */
+  --ok:         #4ADE80;
+  --err:        #F87171;
+  --warn:       #FBBF24;
+
+  /* Type */
+  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Shantell Sans", "Comic Neue", "Segoe Print", "Bradley Hand", cursive;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* Type scale (fluid). Tracking tightens as size grows. */
+  --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.045em, leading .92 */
+  --fs-hero:    clamp(30px, 3.2vw, 46px);  /* hero sentence, 700, -.03em, 1.16 */
+  --fs-h2:      clamp(28px, 3vw, 38px);    /* section titles, 700, -.03em, 1.1 */
+  --fs-lead:    clamp(20px, 1.9vw, 24px);  /* about paragraphs, 400, -.01em, 1.45 */
+  --fs-h3:      clamp(18px, 1.55vw, 21px); /* card titles, 650, -.02em, 1.25 */
+  --fs-item:    clamp(20px, 1.9vw, 24px);  /* project names, 650, -.02em, 1.2 */
+  --fs-body:    16px;                      /* 400, 1.6 */
+  --fs-small:   15px;                      /* card excerpts, list text */
+  --fs-meta:    13.5px;                    /* dates, tags, meta */
+  --fs-note:    15px;                      /* handwritten notes */
+
+  /* Layout and spacing */
+  --max-w:      1200px;
+  --gutter:     clamp(20px, 4vw, 48px);
+  --section-y:  clamp(64px, 10vh, 120px);
+  --gap-lg:     clamp(28px, 4vw, 56px);
+  --gap-md:     clamp(20px, 2.6vw, 34px);
+
+  /* Radii: bigger for bigger surfaces */
+  --r-pill:  999px;  /* buttons */
+  --r-xl:    20px;   /* stage panel */
+  --r-lg:    18px;   /* cards, editor window */
+  --r-md:    12px;   /* thumbnails, inner chips */
+  --r-sm:    6px;
+
+  /* Shadows: a hairline ring plus one soft, offset drop */
+  --ring:        0 0 0 1px var(--line);
+  --shadow-rest: 0 0 0 1px var(--line);
+  --shadow-lift: 0 0 0 1px var(--line), 0 26px 40px -24px rgba(30, 40, 60, .35);
+  --shadow-pop:  0 0 0 1px var(--line), 0 24px 40px -20px rgba(20, 25, 35, .4);
+  --shadow-ide:  0 0 0 1px #2A3446, 0 50px 80px -34px rgba(10, 20, 40, .6);
+
+  /* Motion */
+  --ease-out:    cubic-bezier(.3, .7, .3, 1);   /* most hovers */
+  --ease-spring: cubic-bezier(.3, 1.4, .5, 1);  /* small pops */
+  --dur-fast:    .25s;
+  --dur-base:    .35s;
+  --dur-slow:    .55s;
+
+  color-scheme: light dark;
+}
+
+/* Color: dark */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --page: #121418; --card: #1A1D22; --ink: #ECEDEF; --graphite: #B8BEC8;
+    --pencil: #8A92A0; --line: #2A2E35; --line-2: #383D45;
+  }
+}
+:root[data-theme="dark"] {
+  --page: #121418; --card: #1A1D22; --ink: #ECEDEF; --graphite: #B8BEC8;
+  --pencil: #8A92A0; --line: #2A2E35; --line-2: #383D45;
+}
+
+/* ---------------------------------------------------------------------
+   2. Base
+   --------------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; }
+img, svg { max-width: 100%; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
+.wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
+.hand { font-family: var(--font-hand); }
+
+/* ---------------------------------------------------------------------
+   3. Navigation
+   --------------------------------------------------------------------- */
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; }
+.logo { font-weight: 800; font-size: 22px; letter-spacing: -.02em; text-decoration: none; }
+.nav ul { display: flex; gap: clamp(18px, 3vw, 36px); list-style: none; margin: 0; padding: 0; }
+.nav a.nl { font-size: 15px; font-weight: 500; text-decoration: none; color: var(--graphite); }
+.nav a.nl:hover { color: var(--ink); }
+
+/* ---------------------------------------------------------------------
+   4. Hero
+   --------------------------------------------------------------------- */
+.hero { padding: clamp(20px, 4vh, 48px) 0 clamp(56px, 9vh, 100px); }
+.hero-top {
+  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: clamp(24px, 4vw, 64px); align-items: end;
+}
+.hl {
+  margin: 0; max-width: 24ch;
+  font-weight: 700; font-variation-settings: "opsz" 96;
+  font-size: var(--fs-hero); line-height: 1.16; letter-spacing: -.03em; text-wrap: pretty;
+}
+/* Marker highlight behind a phrase */
+.hl .mark { background: linear-gradient(transparent 62%, var(--accent-soft) 62%); padding: 0 .06em; }
+/* Hand-drawn circle that draws on hover (wrap the phrase in .circled and add the SVG) */
+.circled { position: relative; }
+.circled svg { position: absolute; left: -6%; top: -18%; width: 112%; height: 136%; overflow: visible; pointer-events: none; }
+.circled path { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 760; stroke-dashoffset: 760; transition: stroke-dashoffset .7s cubic-bezier(.4, .1, .3, 1); }
+.circled:hover path, .circled:focus-visible path { stroke-dashoffset: 0; }
+.side-note { font-family: var(--font-hand); font-size: 16px; line-height: 1.4; color: var(--graphite); margin: 0 0 20px; max-width: 26ch; }
+
+/* ---------------------------------------------------------------------
+   5. Buttons and links
+   --------------------------------------------------------------------- */
+.ctas { display: flex; flex-wrap: wrap; gap: 14px 34px; align-items: center; }
+.btn {
+  position: relative; display: inline-flex; align-items: center; gap: 10px;
+  font-size: 16px; font-weight: 600; text-decoration: none; color: var(--ink);
+}
+.btn .arr { display: inline-block; transition: transform var(--dur-base) var(--ease-out); }
+/* Primary: solid ink pill */
+.btn-primary { padding: 13px 22px; background: var(--ink); color: var(--page); border-radius: var(--r-pill); }
+.btn-primary:hover .arr { transform: translateX(5px); }
+/* Secondary: text link with a scribbled underline that draws on hover.
+   Markup: <a class="btn btn-text">Read My Writing <span class="arr">↗</span>
+           <svg class="scribble" viewBox="0 0 150 10" preserveAspectRatio="none"><path d="M2 6 C 30 2, 60 9, 90 5 S 135 3, 148 6"/></svg></a> */
+.btn-text { padding: 6px 0; }
+.btn-text:hover .arr { transform: translate(3px, -3px); }
+.btn-text .scribble { position: absolute; left: -2px; right: -6px; bottom: -5px; height: 10px; overflow: visible; }
+.btn-text .scribble path { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 170; stroke-dashoffset: 170; transition: stroke-dashoffset .45s ease; }
+.btn-text:hover .scribble path, .btn-text:focus-visible .scribble path { stroke-dashoffset: 0; }
+/* Quiet "view all" link */
+.more { font-size: 15px; font-weight: 500; text-decoration: none; color: var(--graphite); white-space: nowrap; }
+.more .arr { display: inline-block; transition: transform .3s ease; }
+.more:hover { color: var(--ink); }
+.more:hover .arr { transform: translateX(4px); }
+/* Small pill (used inside popovers) */
+.pill { display: inline-block; font-size: 13.5px; font-weight: 600; padding: 8px 14px; border-radius: var(--r-pill); border: 1.5px solid var(--ink); background: var(--card); color: var(--ink); text-decoration: none; cursor: pointer; }
+.pill.solid { background: var(--ink); color: var(--card); }
+
+/* ---------------------------------------------------------------------
+   6. Section header
+   --------------------------------------------------------------------- */
+.sec { padding: var(--section-y) 0; }
+.sec-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: clamp(28px, 5vh, 48px); }
+.sec-head h2 { display: flex; align-items: baseline; gap: 14px; margin: 0; font-weight: 700; font-size: var(--fs-h2); letter-spacing: -.03em; line-height: 1.1; }
+.sec-head h2 small { font-size: 15px; font-weight: 500; letter-spacing: 0; color: var(--pencil); font-variant-numeric: tabular-nums; }
+
+/* ---------------------------------------------------------------------
+   7. Projects: quiet list + sticky preview panel
+   --------------------------------------------------------------------- */
+.proj-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--gap-lg); align-items: start; }
+.proj-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line-2); }
+.proj-row {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; column-gap: 14px;
+  padding: 26px 16px 26px 8px; border-top: 1px solid var(--line-2);
+  text-decoration: none; color: var(--ink); transition: background-color .3s ease;
+}
+.proj-row .num, .proj-row .year { font-size: 14px; color: var(--pencil); padding-top: 4px; font-variant-numeric: tabular-nums; }
+.proj-row .name { display: block; font-weight: 650; font-size: var(--fs-item); letter-spacing: -.02em; line-height: 1.2; transition: transform var(--dur-base) var(--ease-out); }
+.proj-row .blurb { display: block; font-size: var(--fs-small); color: var(--graphite); margin-top: 6px; line-height: 1.5; }
+.proj-row .meta { display: block; font-size: var(--fs-meta); color: var(--pencil); margin-top: 8px; }
+.proj-row:hover, .proj-row.is-active { background: var(--card); }
+.proj-row:hover .name, .proj-row.is-active .name { transform: translateX(4px); }
+/* Handwritten note that slides open under the active row */
+.proj-row .note { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
+.proj-row .note > span { overflow: hidden; font-family: var(--font-hand); font-size: var(--fs-note); color: var(--graphite); opacity: 0; transition: opacity .3s ease .15s; }
+.proj-row.is-active .note { grid-template-rows: 1fr; }
+.proj-row.is-active .note > span { opacity: 1; }
+
+.stage {
+  position: sticky; top: 24px; height: clamp(430px, 56vh, 480px);
+  border-radius: var(--r-xl);
+  background: var(--card) radial-gradient(circle, var(--line) 1.1px, transparent 1.4px) 0 0 / 20px 20px; /* dot grid */
+  box-shadow: 0 0 0 1px var(--line), 0 24px 50px -32px rgba(30, 40, 60, .35);
+}
+/* Diagram inside the stage */
+.d-node rect { fill: var(--card); stroke: var(--ink); stroke-width: 1.4; }
+.d-node.core rect { fill: var(--page); stroke-width: 1.8; }
+.d-node text { font-family: var(--font-sans); font-size: 13px; font-weight: 500; fill: var(--ink); }
+.d-edge { fill: none; stroke: var(--ink); stroke-width: 1.4; stroke-linecap: round; }
+.d-anno text { font-family: var(--font-hand); font-size: 13.5px; fill: var(--graphite); }
+
+/* ---------------------------------------------------------------------
+   8. Writing cards
+   --------------------------------------------------------------------- */
+.writing-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap-md); }
+.post {
+  display: block; text-decoration: none; color: var(--ink);
+  background: var(--card); border-radius: var(--r-lg); padding: 10px 10px 22px;
+  box-shadow: var(--shadow-rest);
+  transition: transform .45s var(--ease-out), box-shadow .45s ease;
+}
+.post:hover, .post:focus-visible { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
+.post .thumb { display: block; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; }
+.post .body { display: block; padding: 0 8px; }
+.post .date { display: block; font-size: var(--fs-meta); color: var(--pencil); margin-top: 16px; }
+.post h3 { position: relative; margin: 4px 0 0; padding-bottom: 6px; font-weight: 650; font-size: var(--fs-h3); letter-spacing: -.02em; line-height: 1.25; }
+.post h3 .ul { position: absolute; left: 0; bottom: -3px; height: 8px; width: min(100%, 200px); overflow: visible; }
+.post h3 .ul path { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 420; stroke-dashoffset: 420; transition: stroke-dashoffset .55s ease; }
+.post:hover h3 .ul path, .post:focus-visible h3 .ul path { stroke-dashoffset: 0; }
+.post p { font-size: var(--fs-small); color: var(--graphite); margin: 10px 0 0; line-height: 1.55; }
+.post .tags { display: block; font-size: var(--fs-meta); color: var(--pencil); margin-top: 12px; }
+
+/* ---------------------------------------------------------------------
+   9. About
+   --------------------------------------------------------------------- */
+.about-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); }
+.about-grid p { font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; margin: 0 0 18px; max-width: 32em; }
+.now { margin: 0; font-size: var(--fs-small); }
+.now div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 13px 0; border-top: 1px solid var(--line-2); transition: background-color .25s ease, padding .25s ease; }
+.now div:last-child { border-bottom: 1px solid var(--line-2); }
+.now div:hover { background: var(--card); padding-left: 12px; }
+.now dt { color: var(--pencil); }
+.now dd { margin: 0; }
+
+/* ---------------------------------------------------------------------
+   10. Footer
+   --------------------------------------------------------------------- */
+.foot { padding: clamp(80px, 13vh, 140px) 0 0; text-align: center; }
+.big { margin: 0; font-weight: 800; font-variation-settings: "opsz" 96; font-size: var(--fs-display); line-height: .92; letter-spacing: -.045em; }
+.foot .sub { font-size: 17px; color: var(--graphite); margin: 26px 0 0; }
+.links { display: flex; justify-content: center; gap: clamp(22px, 5vw, 52px); margin: 32px 0 0; list-style: none; padding: 0; }
+.links > li { position: relative; }
+.links > li > a { position: relative; text-decoration: none; font-size: 16px; font-weight: 600; padding: 4px 0; }
+.links > li > a .arr { display: inline-block; margin-left: 6px; transition: transform .3s ease; }
+.links > li > a:hover .arr { transform: translate(3px, -3px); }
+.links > li > a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; border-radius: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
+.links > li > a:hover::after, .links > li > a:focus-visible::after { transform: scaleX(1); }
+.sig { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 22px 0 28px; font-size: 14px; color: var(--graphite); text-align: left; }
+.sig b { display: block; font-weight: 800; font-size: 17px; color: var(--ink); letter-spacing: -.02em; }
+
+/* Hover preview card above a link (put .pop inside the <li>) */
+.pop {
+  position: absolute; bottom: calc(100% + 16px); left: 50%; z-index: 6; width: 280px; padding: 14px;
+  background: var(--card); border-radius: 16px; box-shadow: var(--shadow-pop); text-align: left;
+  opacity: 0; pointer-events: none; transform: translate(-50%, 8px);
+  transition: opacity .2s ease, transform var(--dur-fast) ease;
+}
+.pop::after { content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 18px; } /* hover bridge */
+.links > li:hover .pop, .links > li:focus-within .pop { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
+.pop .pop-meta { margin: 0; font-size: 13px; color: var(--pencil); }
+.pop .pop-note { margin: 10px 0 0; font-family: var(--font-hand); font-size: 15px; line-height: 1.35; }
+
+/* ---------------------------------------------------------------------
+   11. Handwritten details (use sparingly)
+   --------------------------------------------------------------------- */
+.sticky-note {
+  width: 92px; min-height: 62px; padding: 8px 9px; border-radius: 3px;
+  background: var(--c, #FFE58F); color: #3A3222;
+  font-family: var(--font-hand); font-size: 13px; line-height: 1.2;
+  transform: rotate(var(--r, -4deg)); box-shadow: 0 6px 12px -6px rgba(0, 0, 0, .3);
+}
+/* Sticky colors: #FFE58F yellow, #FFC9C9 pink, #CFE3FF blue */
+
+/* ---------------------------------------------------------------------
+   12. Code editor window (optional showcase)
+   --------------------------------------------------------------------- */
+.ide { border-radius: var(--r-lg); background: var(--ide-bg); color: var(--ide-text); box-shadow: var(--shadow-ide); overflow: hidden; }
+.ide-bar { display: flex; align-items: center; height: 48px; padding: 0 16px; background: var(--ide-chrome); border-bottom: 1px solid var(--ide-line); }
+.ide-dots { display: flex; gap: 8px; }
+.ide-dots i { width: 12px; height: 12px; border-radius: 50%; background: #FF5F57; }
+.ide-dots i:nth-child(2) { background: #FEBC2E; }
+.ide-dots i:nth-child(3) { background: #28C840; }
+.ide-code { font-family: var(--font-mono); font-size: 12.5px; line-height: 18.5px; padding: 10px 0; }
+.ide-code .ln { display: flex; white-space: pre; }
+.ide-code .no { width: 46px; padding-right: 18px; text-align: right; color: #4B5B73; }
+.ide-code .ln.add { background: rgba(34, 197, 94, .13); }
+.ide-code .ln.err { background: rgba(239, 68, 68, .16); }
+.ide-code .ln.warn { background: rgba(245, 158, 11, .13); }
+.ide-status { height: 30px; background: var(--ide-chrome); border-top: 1px solid var(--ide-line); font-size: 12.5px; color: #AAB6C6; }
+
+/* ---------------------------------------------------------------------
+   13. Responsive and motion preferences
+   --------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hero-top, .proj-grid, .about-grid { grid-template-columns: 1fr; }
+  .writing-grid { grid-template-columns: 1fr; gap: 24px; }
+  .stage { position: relative; top: 0; }
+}
+@media (max-width: 560px) {
+  .sec-head { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .proj-row { grid-template-columns: 30px minmax(0, 1fr) auto; }
+  .links { flex-wrap: wrap; gap: 18px 28px; }
+  .sig { flex-direction: column; align-items: flex-start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+}
