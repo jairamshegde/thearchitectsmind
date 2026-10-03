@@ -31,6 +31,12 @@ These days, that usually means AI systems, agents, retrieval, software architect
 
 I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.
 
+## How I learn
+
+![Pico in headphones reading “How Things Work”, a lightbulb above his head](./pico-learning.png "left: thought: Still so much to learn…")
+
+I learn mostly by building, breaking things, figuring out why, and building them again. I dive deep into docs, read, experiment, and sometimes go down rabbit holes — even the ones I probably didn’t need to go down.
+
 ## How I think
 
 Placeholder: principles, trade-offs you care about.

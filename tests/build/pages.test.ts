@@ -37,9 +37,20 @@ describe('/about/', () => {
     );
   });
 
+  it('“How I learn” shows Pico learning on the left with a thought bubble, text on the right', () => {
+    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'How I learn')!;
+    const split = h2.nextElementSibling!;
+    expect(split.classNames).toBe('md-split md-split-left');
+    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-learning\./);
+    expect(split.querySelector('.md-thought-text')?.text).toBe('Still so much to learn…');
+    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
+      'I learn mostly by building, breaking things, figuring out why, and building them again. I dive deep into docs, read, experiment, and sometimes go down rabbit holes — even the ones I probably didn’t need to go down.',
+    );
+  });
+
   it('renders the about sections in order, with one TOC entry per section', () => {
     const sections = p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim());
-    expect(sections.slice(0, 2)).toEqual(['What I do', 'Why I enjoy it']);
+    expect(sections.slice(0, 3)).toEqual(['What I do', 'Why I enjoy it', 'How I learn']);
     expect(p.querySelectorAll('nav.toc a').length).toBe(sections.length);
   });
 });
