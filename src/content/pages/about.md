@@ -37,10 +37,8 @@ I enjoy the part where a simple idea turns into a messy system. The unexpected f
 
 I learn mostly by building, breaking things, figuring out why, and building them again. I dive deep into docs, read, experiment, and sometimes go down rabbit holes — even the ones I probably didn’t need to go down.
 
-## How I think
+## And Pico?
 
-Placeholder: principles, trade-offs you care about.
+![Pico relaxing in a beanbag with his headphones on](./pico-companion.png "right: text: Keeping things fun and honest")
 
-## Elsewhere
-
-Placeholder: where people can find you.
+This site is where I keep the things worth remembering: ideas I’m exploring, systems I’m designing, things I’ve learned the hard way, and the occasional rabbit hole I probably didn’t need to go down—but did anyway.

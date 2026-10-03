@@ -48,9 +48,20 @@ describe('/about/', () => {
     );
   });
 
-  it('renders the about sections in order, with one TOC entry per section', () => {
+  it('“And Pico?” shows the text on the left and relaxed Pico on the right, with a handwritten note', () => {
+    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'And Pico?')!;
+    const split = h2.nextElementSibling!;
+    expect(split.classNames).toBe('md-split md-split-right');
+    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-companion\./);
+    expect(split.querySelector('.md-note-plain .md-note-text')?.text).toBe('Keeping things fun and honest');
+    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
+      'This site is where I keep the things worth remembering: ideas I’m exploring, systems I’m designing, things I’ve learned the hard way, and the occasional rabbit hole I probably didn’t need to go down—but did anyway.',
+    );
+  });
+
+  it('renders exactly the four about sections in order, with one TOC entry per section', () => {
     const sections = p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim());
-    expect(sections.slice(0, 3)).toEqual(['What I do', 'Why I enjoy it', 'How I learn']);
+    expect(sections).toEqual(['What I do', 'Why I enjoy it', 'How I learn', 'And Pico?']);
     expect(p.querySelectorAll('nav.toc a').length).toBe(sections.length);
   });
 });

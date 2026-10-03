@@ -216,3 +216,19 @@ for (const width of [1920, 1440, 1024, 800]) {
     await expect.poll(() => split.locator('.md-thought').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
   });
 }
+
+for (const width of [1920, 1440, 1024, 800]) {
+  test(`about page: “And Pico?” handwritten note sits above the image at ${width}px, clear of the text`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./about/');
+    const split = page.locator('.md-split:has(img[src*="pico-companion"])');
+    await split.locator('.md-split-media').evaluate((el) => el.scrollIntoView({ block: 'center' }));
+    const img = (await split.locator('.md-split-media img').boundingBox())!;
+    const note = (await split.locator('.md-note-text').boundingBox())!;
+    const text = (await split.locator('.md-split-text').boundingBox())!;
+    expect(note.y + note.height).toBeLessThanOrEqual(img.y + 4); // above the image
+    expect(note.x).toBeGreaterThan(text.x + text.width); // never touches the text column
+    expect(note.x + note.width).toBeLessThanOrEqual(width - 12); // on screen
+    await expect.poll(() => split.locator('.md-note-text').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  });
+}
