@@ -10,10 +10,22 @@ describe('home page', () => {
     expect(home.querySelector('#notes')).toBeNull();
   });
 
-  it('shows the hero headline with the highlighted phrase and two CTAs', () => {
-    expect(home.querySelector('.hl .mark')?.text).toBe('how I think');
+  it('shows the hero headline, subtext and two CTAs, with no highlight', () => {
+    expect(home.querySelector('.hero .hl')?.text).toBe('I make computers do interesting things. Then I get suspicious.');
+    expect(home.querySelector('.hero .hl .mark')).toBeNull();
+    expect(home.querySelector('.hero .hero-sub')?.text).toBe(
+      'Writing about AI, software architecture, systems, and everything I learn while building them.',
+    );
     const ctas = home.querySelectorAll('.hero .ctas a').map((a) => a.getAttribute('href'));
     expect(ctas).toEqual([`${BASE}/projects/`, `${BASE}/writing/`]);
+  });
+
+  it('shows the team image with the handwritten note and an arrow', () => {
+    const figure = home.querySelector('.hero figure.hero-figure')!;
+    expect(figure.querySelector('img')?.getAttribute('alt')).toMatch(/Pico/);
+    expect(figure.querySelector('img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/hero-cutout\./);
+    expect(figure.querySelector('.hero-note-text')?.text).toBe('Meet the team: Pico leads, Claude codes, I take credit 😉');
+    expect(figure.querySelector('svg.hero-arrow')).not.toBeNull();
   });
 
   it('shows at most 3 featured projects, featured first, linking to project pages', () => {

@@ -1,27 +1,39 @@
 ---
+import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
-import { splitHighlight } from '../lib/format';
 import { withBase } from '../lib/url';
 
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { heroHeadline, heroHighlight, heroNote } = settings.data;
-const parts = splitHighlight(heroHeadline, heroHighlight);
+const { heroHeadline, heroSub, heroNote, heroImage } = settings.data;
 ---
 <section class="hero wrap">
-  <div class="hero-top">
-    <h1 class="hl">
-      {parts ? <>{parts[0]}<span class="mark">{parts[1]}</span>{parts[2]}</> : heroHeadline}
-    </h1>
-    <div>
-      <p class="side-note">{heroNote}</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href={withBase('/projects/')}>View projects <span class="arr" aria-hidden="true">→</span></a>
-        <a class="btn btn-text" href={withBase('/writing/')}>
-          Read my writing <span class="arr" aria-hidden="true">↗</span>
-          <svg class="scribble" viewBox="0 0 150 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 C 30 2, 60 9, 90 5 S 135 3, 148 6" /></svg>
-        </a>
-      </div>
-    </div>
+  <h1 class="hl">{heroHeadline}</h1>
+  <p class="hero-sub">{heroSub}</p>
+  <div class="ctas">
+    <a class="btn btn-primary" href={withBase('/projects/')}>View projects <span class="arr" aria-hidden="true">→</span></a>
+    <a class="btn btn-text" href={withBase('/writing/')}>
+      Read my writing <span class="arr" aria-hidden="true">↗</span>
+      <svg class="scribble" viewBox="0 0 150 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 C 30 2, 60 9, 90 5 S 135 3, 148 6" /></svg>
+    </a>
   </div>
+  {heroImage && (
+    <figure class="hero-figure">
+      {/* The note's bottom-right corner (the arrow tip) is pinned to Pico's position in the image. */}
+      <figcaption class="hero-note">
+        <span class="hero-note-text">{heroNote}</span>
+        <svg class="hero-arrow" viewBox="0 0 120 80" aria-hidden="true">
+          <path pathLength="1" d="M6 8 C 46 2, 92 14, 113 72" />
+          <path class="hero-arrow-head" pathLength="1" d="M100 62 L114 76 L118 57" />
+        </svg>
+      </figcaption>
+      <Image
+        src={heroImage}
+        alt="A code editor where an AI agent fixes a Python script, while Pico the penguin watches from the top of the window"
+        widths={[640, 1100, 1672]}
+        sizes="(max-width: 1200px) 100vw, 1100px"
+        loading="eager"
+      />
+    </figure>
+  )}
 </section>

@@ -1,12 +1,26 @@
 {
-  "heroHeadline": "Placeholder headline about how I think through systems, trade-offs and the people who run them.",
-  "heroHighlight": "how I think",
-  "heroNote": "(hero copy coming soon: this is placeholder text)",
+  "heroHeadline": "I make computers do interesting things. Then I get suspicious.",
+  "heroSub": "Writing about AI, software architecture, systems, and everything I learn while building them.",
+  "heroNote": "Meet the team: Pico leads, Claude codes, I take credit 😉",
+  "heroImage": "hero-cutout.png",
   "footerStatement": "Let's build something sound.",
   "footerSub": "Open to conversations about architecture, platforms and Python.",
   "socials": [
-    { "label": "GitHub", "url": "https://github.com/jairamshegde", "meta": "github.com/jairamshegde", "note": "Where the code lives." },
-    { "label": "LinkedIn", "url": "https://www.linkedin.com/", "meta": "Placeholder: set your profile URL in the CMS" },
-    { "label": "Email", "url": "mailto:you@example.com", "meta": "Placeholder: set your address in the CMS" }
+    {
+      "label": "GitHub",
+      "url": "https://github.com/jairamshegde",
+      "meta": "github.com/jairamshegde",
+      "note": "Where the code lives."
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/",
+      "meta": "Placeholder: set your profile URL in the CMS"
+    },
+    {
+      "label": "Email",
+      "url": "mailto:you@example.com",
+      "meta": "Placeholder: set your address in the CMS"
+    }
   ]
 }

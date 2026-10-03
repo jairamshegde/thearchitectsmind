@@ -14,7 +14,7 @@ const shapes = {
   notes: noteSchema.shape,
   projects: projectSchema(image).shape,
   about: aboutSchema.shape,
-  settings: settingsSchema.shape,
+  settings: settingsSchema(image).shape,
 };
 
 function fieldsFor(name: keyof typeof shapes): CmsField[] {

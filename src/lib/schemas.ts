@@ -53,18 +53,20 @@ export const aboutSchema = z.object({
   now: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).default([]),
 });
 
-export const settingsSchema = z.object({
-  heroHeadline: z.string().min(1),
-  heroHighlight: optional(z.string()),
-  heroNote: z.string().min(1),
-  footerStatement: z.string().min(1),
-  footerSub: z.string().min(1),
-  socials: z.array(
-    z.object({
-      label: z.string().min(1),
-      url: z.url(),
-      meta: optional(z.string()),
-      note: optional(z.string()),
-    }),
-  ),
-});
+export const settingsSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
+  z.object({
+    heroHeadline: z.string().min(1),
+    heroSub: z.string().min(1),
+    heroNote: z.string().min(1),
+    heroImage: optional(image()),
+    footerStatement: z.string().min(1),
+    footerSub: z.string().min(1),
+    socials: z.array(
+      z.object({
+        label: z.string().min(1),
+        url: z.url(),
+        meta: optional(z.string()),
+        note: optional(z.string()),
+      }),
+    ),
+  });

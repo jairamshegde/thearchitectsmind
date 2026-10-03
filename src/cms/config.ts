@@ -115,8 +115,9 @@ export const cmsConfig: {
           ...besideEntry,
           fields: [
             str('heroHeadline', 'Hero headline'),
-            opt(str('heroHighlight', 'Highlighted phrase', { hint: 'Must appear exactly in the headline' })),
-            text('heroNote', 'Hero handwritten note'),
+            text('heroSub', 'Hero subtext'),
+            text('heroNote', 'Hero handwritten note (points at Pico in the image)'),
+            image('heroImage', 'Hero image'),
             str('footerStatement', 'Footer statement'),
             str('footerSub', 'Footer sub line'),
             {
