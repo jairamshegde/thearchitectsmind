@@ -26,9 +26,20 @@ describe('/about/', () => {
     );
   });
 
-  it('renders the about body with a TOC', () => {
-    expect(p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim())).toEqual(['What I do', 'How I think', 'Elsewhere']);
-    expect(p.querySelectorAll('nav.toc a').length).toBe(3);
+  it('“Why I enjoy it” shows the text on the left and Pico’s whiteboard on the right', () => {
+    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'Why I enjoy it')!;
+    const split = h2.nextElementSibling!;
+    expect(split.classNames).toBe('md-split md-split-right');
+    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-whiteboard\./);
+    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
+      'I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.',
+    );
+  });
+
+  it('renders the about sections in order, with one TOC entry per section', () => {
+    const sections = p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim());
+    expect(sections.slice(0, 2)).toEqual(['What I do', 'Why I enjoy it']);
+    expect(p.querySelectorAll('nav.toc a').length).toBe(sections.length);
   });
 });
 

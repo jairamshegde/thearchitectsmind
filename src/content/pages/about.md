@@ -25,6 +25,12 @@ welcomeNote: "Hey curious reader, I’m Pico"
 
 These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.
 
+## Why I enjoy it
+
+![Pico at a whiteboard covered in boxes and arrows, next to a stack of books](./pico-whiteboard.png "right")
+
+I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.
+
 ## How I think
 
 Placeholder: principles, trade-offs you care about.
