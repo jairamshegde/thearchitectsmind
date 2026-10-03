@@ -1,0 +1,36 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import CaseStudyHeader from '../../components/CaseStudyHeader.astro';
+import { published } from '../../lib/collections';
+import { isCaseStudy } from '../../lib/content';
+import { renderMarkdown } from '../../lib/markdown-text';
+import { withBase } from '../../lib/url';
+
+export async function getStaticPaths() {
+  return (await published('projects')).map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+const { Content, headings } = await render(project);
+const { title, summary, lessons } = project.data;
+const showLessons = isCaseStudy(project.data) && Boolean(lessons);
+---
+<ArticleLayout title={title} description={summary} headings={headings}>
+  <CaseStudyHeader slot="header" project={project} />
+
+  <Content />
+
+  <Fragment slot="after">
+    {showLessons && (
+      <aside class="lessons">
+        <p class="lessons-label">Lessons</p>
+        <Fragment set:html={renderMarkdown(lessons)} />
+      </aside>
+    )}
+    <p class="article-back"><a class="more back-link" href={withBase('/projects/')}>← All projects</a></p>
+  </Fragment>
+</ArticleLayout>

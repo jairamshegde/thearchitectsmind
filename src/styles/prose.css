@@ -109,3 +109,22 @@
 .mermaid-src { margin: 0; text-align: left; white-space: pre-wrap; font-family: var(--font-mono); font-size: 13px; color: var(--graphite); }
 .mermaid-panel:not(.is-rendered):not(.is-error) .mermaid-src { opacity: .55; }
 .mermaid-note { margin: 0 0 10px; text-align: left; font-family: var(--font-hand); font-size: var(--fs-note); color: var(--graphite); }
+
+/* ---------- Case study ---------- */
+.cs-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px 28px; margin: 28px 0 0; padding: 18px 0; border-top: 1px solid var(--line-2); border-bottom: 1px solid var(--line-2); }
+.cs-meta dt { font-size: var(--fs-meta); color: var(--pencil); }
+.cs-meta dd { margin: 4px 0 0; font-size: var(--fs-small); font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.chips li { padding: 2px 10px; border-radius: var(--r-pill); background: var(--card); box-shadow: var(--ring); font-size: 13px; }
+.cs-links { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.cs-links a { text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.cs-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
+.cs-card { padding: 16px 18px; border-radius: var(--r-lg); background: var(--card); box-shadow: var(--shadow-rest); font-size: var(--fs-small); line-height: 1.55; }
+.cs-card-title { margin: 0 0 8px; font-size: var(--fs-meta); font-weight: 650; letter-spacing: .04em; text-transform: uppercase; color: var(--pencil); }
+.cs-card p { margin: 0 0 .6em; }
+.cs-card > :last-child { margin-bottom: 0; }
+@media (max-width: 760px) { .cs-cards { grid-template-columns: 1fr; } }
+.lessons { position: relative; margin: 56px 0 0; padding: 20px 22px; border-radius: 4px; background: #FFE58F; color: #3A3222; font-family: var(--font-hand); font-size: 17px; line-height: 1.45; transform: rotate(-.6deg); box-shadow: 0 10px 18px -10px rgba(0, 0, 0, .35); }
+.lessons-label { margin: 0 0 6px; font-weight: 700; }
+.lessons p { margin: 0 0 .5em; }
+.lessons > :last-child { margin-bottom: 0; }

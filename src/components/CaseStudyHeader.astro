@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { isCaseStudy } from '../lib/content';
+import { renderMarkdown } from '../lib/markdown-text';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const d = Astro.props.project.data;
+const full = isCaseStudy(d);
+const cards: [string, string][] = [];
+for (const [label, body] of [['Problem', d.problem], ['Constraints', d.constraints], ['Outcome', d.outcome]] as const) {
+  if (body) cards.push([label, body]);
+}
+const hasLinks = Boolean(d.links?.repo || d.links?.demo);
+---
+<p class="article-kicker">{full ? 'Case study' : 'Project'} · {d.date.getUTCFullYear()}</p>
+<h1 class="article-title">{d.title}</h1>
+<p class="article-lead">{d.summary}</p>
+
+<dl class="cs-meta">
+  {full && d.role && <div><dt>Role</dt><dd>{d.role}</dd></div>}
+  {full && d.timeline && <div><dt>Timeline</dt><dd>{d.timeline}</dd></div>}
+  <div><dt>Stack</dt><dd><ul class="chips">{d.stack.map((s) => <li>{s}</li>)}</ul></dd></div>
+  {hasLinks && (
+    <div>
+      <dt>Links</dt>
+      <dd class="cs-links">
+        {d.links?.repo && <a href={d.links.repo} rel="noopener">Repository ↗</a>}
+        {d.links?.demo && <a href={d.links.demo} rel="noopener">Live demo ↗</a>}
+      </dd>
+    </div>
+  )}
+</dl>
+
+{full && cards.length > 0 && (
+  <div class="cs-cards">
+    {cards.map(([label, body]) => (
+      <section class="cs-card">
+        <h2 class="cs-card-title">{label}</h2>
+        <Fragment set:html={renderMarkdown(body)} />
+      </section>
+    ))}
+  </div>
+)}
+
+{d.cover && <Image class="article-cover" src={d.cover} alt="" widths={[720, 1440]} sizes="(max-width: 800px) 100vw, 720px" loading="eager" />}
