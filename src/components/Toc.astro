@@ -1,0 +1,33 @@
+---
+import { dashWidth, shouldShowToc, tocItems, type Heading } from '../lib/toc';
+
+interface Props {
+  headings: Heading[];
+  variant: 'rail' | 'inline';
+}
+const { headings, variant } = Astro.props;
+const items = tocItems(headings);
+const show = shouldShowToc(headings);
+---
+{show && variant === 'rail' && (
+  <nav class="toc" aria-label="Contents" data-toc>
+    <ol>
+      {items.map((h) => (
+        <li class={`toc-d${h.depth}`}>
+          <a href={`#${h.slug}`} data-toc-link={h.slug} style={`--dash: ${dashWidth(h.text, h.depth)}px`}>
+            <span class="toc-dash" aria-hidden="true"></span>
+            <span class="toc-text">{h.text}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+)}
+{show && variant === 'inline' && (
+  <details class="toc-inline">
+    <summary>Contents</summary>
+    <ol>
+      {items.map((h) => <li class={`toc-d${h.depth}`}><a href={`#${h.slug}`}>{h.text}</a></li>)}
+    </ol>
+  </details>
+)}

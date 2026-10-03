@@ -22,7 +22,8 @@ export function built(route: string): boolean {
 export function page(route: string): HTMLElement {
   const file = fileFor(route);
   if (!existsSync(file)) throw new Error(`Route not built: ${route} (${file})`);
-  return parse(readFileSync(file, 'utf8'));
+  // node-html-parser keeps <pre> contents as raw text by default; parse them so code lines are queryable.
+  return parse(readFileSync(file, 'utf8'), { blockTextElements: { script: true, noscript: true, style: true } });
 }
 
 /** Raw text of a built file, e.g. raw('/admin/config.yml'). */

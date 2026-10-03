@@ -1,0 +1,29 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { published } from '../../lib/collections';
+import { formatDate } from '../../lib/format';
+import { withBase } from '../../lib/url';
+
+export async function getStaticPaths() {
+  return (await published('notes')).map((note) => ({ params: { slug: note.id }, props: { note } }));
+}
+
+interface Props {
+  note: CollectionEntry<'notes'>;
+}
+const { note } = Astro.props;
+const { Content, headings } = await render(note);
+const { title, description, date, tags } = note.data;
+---
+<ArticleLayout title={title} description={description} headings={headings}>
+  <Fragment slot="header">
+    <p class="article-meta"><time datetime={date.toISOString()}>{formatDate(date)}</time> · {tags.join(' · ')}</p>
+    <h1 class="article-title">{title}</h1>
+    {description && <p class="article-lead">{description}</p>}
+  </Fragment>
+
+  <Content />
+
+  <p slot="after" class="article-back"><a class="more back-link" href={withBase('/notes/')}>← All notes</a></p>
+</ArticleLayout>

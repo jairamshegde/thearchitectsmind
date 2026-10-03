@@ -64,3 +64,8 @@ section[id] { scroll-margin-top: 16px; }
   .note-row { grid-template-columns: 56px minmax(0, 1fr); }
   .note-tags { grid-column: 2; }
 }
+
+/* Footer hover popovers: no hover on touch/narrow screens, and they would overflow the viewport */
+@media (hover: none), (max-width: 560px) {
+  .links .pop { display: none; }
+}

@@ -1,0 +1,39 @@
+---
+import { Image } from 'astro:assets';
+import { render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { published } from '../../lib/collections';
+import { neighbours } from '../../lib/content';
+import { formatDate } from '../../lib/format';
+import { withBase } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const posts = await published('writing');
+  return posts.map((post, i) => ({ params: { slug: post.id }, props: { post, ...neighbours(posts, i) } }));
+}
+
+interface Props {
+  post: CollectionEntry<'writing'>;
+  newer?: CollectionEntry<'writing'>;
+  older?: CollectionEntry<'writing'>;
+}
+const { post, newer, older } = Astro.props;
+const { Content, headings, remarkPluginFrontmatter } = await render(post);
+const { title, description, date, updated, tags, cover } = post.data;
+---
+<ArticleLayout title={title} description={description} headings={headings}>
+  <Fragment slot="header">
+    <p class="article-kicker">{tags.join(' · ')} · {remarkPluginFrontmatter.minutesRead} min read</p>
+    <h1 class="article-title">{title}</h1>
+    <p class="article-lead">{description}</p>
+    <p class="article-meta"><time datetime={date.toISOString()}>{formatDate(date)}</time>{updated && <> · updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></>}</p>
+    {cover && <Image class="article-cover" src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 800px) 100vw, 720px" loading="eager" />}
+  </Fragment>
+
+  <Content />
+
+  <nav slot="after" class="prev-next" aria-label="More writing">
+    {older && <a class="pn pn-prev" href={withBase(`/writing/${older.id}/`)}><span>← Previous</span>{older.data.title}</a>}
+    {newer && <a class="pn pn-next" href={withBase(`/writing/${newer.id}/`)}><span>Next →</span>{newer.data.title}</a>}
+  </nav>
+</ArticleLayout>

@@ -1,0 +1,31 @@
+---
+import '../styles/prose.css';
+import BaseLayout from './BaseLayout.astro';
+import Toc from '../components/Toc.astro';
+import type { Heading } from '../lib/toc';
+
+interface Props {
+  title: string;
+  description?: string;
+  headings: Heading[];
+}
+const { title, description, headings } = Astro.props;
+---
+<BaseLayout title={title} description={description}>
+  <div class="article-shell wrap">
+    <Toc headings={headings} variant="rail" />
+    <article class="article">
+      <header class="article-head"><slot name="header" /></header>
+      <Toc headings={headings} variant="inline" />
+      <div class="prose"><slot /></div>
+      <slot name="after" />
+    </article>
+  </div>
+</BaseLayout>
+
+<script>
+  import { initTocRail } from '../scripts/toc-rail';
+  import { initCopyButtons } from '../scripts/copy-code';
+  initTocRail();
+  initCopyButtons();
+</script>
