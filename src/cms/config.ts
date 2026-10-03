@@ -13,7 +13,8 @@ const title = str('title', 'Title');
 const tags = list('tags', 'Tags', 'Comma-separated, e.g. architecture, python');
 const featured = opt({ name: 'featured', label: 'Featured on the home page', widget: 'boolean', default: false });
 const draft = opt({ name: 'draft', label: 'Draft (untick to publish)', widget: 'boolean', default: true });
-const body = (label = 'Body'): CmsField => ({ name: 'body', label, widget: 'markdown' });
+// Raw first: the rich-text editor cannot make tables and splits each row into its own paragraph.
+const body = (label = 'Body'): CmsField => ({ name: 'body', label, widget: 'markdown', modes: ['raw', 'rich_text'] });
 const httpUrl = ['^https?://\\S+$', 'Must be a full URL starting with https://'];
 const url = (name: string, label: string): CmsField => str(name, label, { pattern: httpUrl });
 
