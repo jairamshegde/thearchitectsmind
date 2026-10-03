@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { withBase } from '../lib/url';
+---
+<BaseLayout title="Not found">
+  <header class="page-head wrap">
+    <p class="article-kicker">404</p>
+    <h1>This page took a different path.</h1>
+    <p class="side-note">Maybe it was renamed, or it never existed.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href={withBase('/')}>Go home <span class="arr" aria-hidden="true">→</span></a>
+      <a class="btn btn-text" href={withBase('/writing/')}>Read my writing <span class="arr" aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+</BaseLayout>

@@ -69,3 +69,7 @@ section[id] { scroll-margin-top: 16px; }
 @media (hover: none), (max-width: 560px) {
   .links .pop { display: none; }
 }
+
+/* 404 */
+.page-head .article-kicker { margin: 0 0 8px; font-size: var(--fs-meta); color: var(--pencil); }
+.page-head .side-note { margin: 16px 0 24px; }
