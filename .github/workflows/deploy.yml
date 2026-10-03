@@ -26,7 +26,11 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
-      - run: npm run test:build   # builds dist/ and asserts on it
+      - run: npm run build
+      # Content-agnostic checks only (base path, drafts, CMS config). The seed-content
+      # tests in tests/build/ run locally via `npm run test:build`, so publishing new
+      # content from the CMS never blocks a deploy.
+      - run: npm run test:deploy
       - uses: actions/upload-pages-artifact@v4
         with:
           path: dist
