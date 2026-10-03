@@ -60,8 +60,15 @@ describe('projectSchema', () => {
 
 describe('aboutSchema and settingsSchema', () => {
   it('parses the about entry', () => {
-    const r = aboutSchema.parse({ title: 'Hi', intro: 'I build things.', now: [{ label: 'Reading', value: 'DDIA' }] });
+    const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I build things.', now: [{ label: 'Reading', value: 'DDIA' }] });
     expect(r.now).toHaveLength(1);
+    expect(r.picoImage).toBeUndefined();
+  });
+
+  it('treats a cleared Pico image or note as unset', () => {
+    const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I', picoImage: '', picoNote: null });
+    expect(r.picoImage).toBeUndefined();
+    expect(r.picoNote).toBeUndefined();
   });
 
   it('parses site settings with mailto links and optional popover text', () => {

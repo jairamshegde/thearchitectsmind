@@ -14,6 +14,6 @@ export const collections = {
   writing: defineCollection({ loader: entryFolders('writing'), schema: ({ image }) => writingSchema(image) }),
   notes: defineCollection({ loader: entryFolders('notes'), schema: noteSchema }),
   projects: defineCollection({ loader: entryFolders('projects'), schema: ({ image }) => projectSchema(image) }),
-  pages: defineCollection({ loader: glob({ pattern: '*.md', base: './src/content/pages' }), schema: aboutSchema }),
+  pages: defineCollection({ loader: glob({ pattern: '*.md', base: './src/content/pages' }), schema: ({ image }) => aboutSchema(image) }),
   settings: defineCollection({ loader: glob({ pattern: '*.json', base: './src/content/settings' }), schema: ({ image }) => settingsSchema(image) }),
 };

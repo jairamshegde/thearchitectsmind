@@ -105,6 +105,8 @@ export const cmsConfig: {
             title,
             text('intro', 'Short intro (home page)'),
             { name: 'now', label: 'Now list (home page)', widget: 'list', required: false, fields: [str('label', 'Label'), str('value', 'Value')] },
+            image('picoImage', 'Pico image (above the Now list)'),
+            opt(text('picoNote', 'Pico handwritten note')),
             body('Full About page'),
           ],
         },

@@ -81,3 +81,28 @@ test('hero headline and subtext sizes on wide screens', async ({ page }) => {
   expect(await px('.hero .hl')).toBeGreaterThanOrEqual(44);
   expect(await px('.hero .hero-sub')).toBeLessThanOrEqual(19);
 });
+
+test.describe('about Pico note', () => {
+  const opacity = (page: import('@playwright/test').Page) =>
+    page.locator('.about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity));
+
+  test('is hidden at the top of the page and appears when jumping to About from the nav', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('./');
+    expect(await opacity(page)).toBe(0);
+    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'About' }).click();
+    await expect.poll(() => opacity(page)).toBe(1);
+  });
+
+  test('appears when scrolled into view', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('./');
+    await page.locator('#about').scrollIntoViewIfNeeded();
+    await expect.poll(() => opacity(page)).toBe(1);
+  });
+
+  test('is visible straight away when opening /#about directly', async ({ page }) => {
+    await page.goto('./#about');
+    await expect.poll(() => opacity(page)).toBe(1);
+  });
+});

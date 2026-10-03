@@ -13,7 +13,7 @@ const shapes = {
   writing: writingSchema(image).shape,
   notes: noteSchema.shape,
   projects: projectSchema(image).shape,
-  about: aboutSchema.shape,
+  about: aboutSchema(image).shape,
   settings: settingsSchema(image).shape,
 };
 

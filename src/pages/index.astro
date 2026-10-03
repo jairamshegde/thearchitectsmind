@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
@@ -44,11 +45,24 @@ if (!about) throw new Error('Missing src/content/pages/about.md');
         <Fragment set:html={renderMarkdown(about.data.intro)} />
         <a class="btn btn-primary" href={withBase('/about/')}>Learn more about me <span class="arr" aria-hidden="true">→</span></a>
       </div>
-      {about.data.now.length > 0 && (
-        <dl class="now">
-          {about.data.now.map((n) => <div><dt>{n.label}</dt><dd>{n.value}</dd></div>)}
-        </dl>
-      )}
+      <div class="about-side">
+        {about.data.picoImage && (
+          <figure class="about-pico" data-reveal-note>
+            {about.data.picoNote && <figcaption class="about-pico-note">{about.data.picoNote}</figcaption>}
+            <Image src={about.data.picoImage} alt="Pico the penguin, squinting suspiciously at a sheet of paper" widths={[200, 400]} sizes="200px" />
+          </figure>
+        )}
+        {about.data.now.length > 0 && (
+          <dl class="now">
+            {about.data.now.map((n) => <div><dt>{n.label}</dt><dd>{n.value}</dd></div>)}
+          </dl>
+        )}
+      </div>
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import { initRevealNotes } from '../scripts/reveal-note';
+  initRevealNotes();
+</script>

@@ -54,6 +54,14 @@ describe('home page', () => {
     expect(card.querySelector('.date')?.text).toBe('Aug 2, 2026');
   });
 
+  it('shows skeptical Pico with his note above the now list', () => {
+    const side = home.querySelector('#about .about-side')!;
+    const pico = side.querySelector('figure.about-pico')!;
+    expect(pico.querySelector('img')?.getAttribute('alt')).toMatch(/Pico/);
+    expect(pico.querySelector('.about-pico-note')?.text).toBe('I’m reading what he wrote. You tell me what it means.');
+    expect(side.childNodes.filter((n) => 'tagName' in n).map((n) => (n as { tagName: string }).tagName)).toEqual(['FIGURE', 'DL']);
+  });
+
   it('shows the about intro, now list and a Learn more button to /about/', () => {
     const about = home.querySelector('#about')!;
     expect(about.querySelectorAll('.now dt').map((d) => d.text)).toEqual(['Building', 'Reading', 'Learning', 'Writing']);
