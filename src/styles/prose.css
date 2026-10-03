@@ -177,6 +177,12 @@
 .md-split-right .md-thought::after { left: auto; right: 8px; }
 .reveal-ready .md-thought { opacity: 0; transform: translateY(8px) scale(.85); transform-origin: 15% 100%; }
 .reveal-ready.is-revealed .md-thought { opacity: 1; transform: none; transition: opacity .35s ease .15s, transform .5s var(--ease-spring) .15s; }
+/* Plain handwritten note ("left: text: …"): above the image on its outer side, no arrow */
+.md-note-plain { bottom: calc(100% + 10px); right: 0; }
+.md-split-left .md-note-plain { right: auto; left: 0; }
+.md-split-right .md-note-plain { left: auto; right: 0; flex-direction: row; }
+.md-note-plain .md-note-text { max-width: 16ch; margin-bottom: 0; font-size: clamp(15px, 1.25vw, 17px); text-wrap: balance; }
+.md-split-right .md-note-plain .md-note-text { text-align: right; transform: rotate(-2deg); }
 @media (max-width: 640px) {
   .md-split-media[data-reveal-note] { margin-top: 0; }
   .md-thought { position: static; display: flex; justify-content: center; margin-bottom: 14px; }

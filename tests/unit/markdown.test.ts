@@ -149,6 +149,14 @@ describe('rehypeSideImage', () => {
     expect(out).not.toContain('md-note-arrow');
   });
 
+  it('"right: text: …" adds a plain handwritten note (no arrow, no bubble)', () => {
+    const out = md('![Pico](./p.png "right: text: Keeping things fun and honest")\n\nText.');
+    expect(out).toContain('<div class="md-split md-split-right">');
+    expect(out).toContain('<span class="md-note md-note-plain"><span class="md-note-text">Keeping things fun and honest</span></span>');
+    expect(out).not.toContain('md-note-arrow');
+    expect(out).not.toContain('md-thought');
+  });
+
   it('leaves images with any other title (captions) alone', () => {
     expect(md('![Pico](./p.png "A caption")\n\nText.')).not.toContain('md-split');
   });

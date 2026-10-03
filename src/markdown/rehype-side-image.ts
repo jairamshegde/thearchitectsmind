@@ -11,14 +11,17 @@ const svgPath = (d: string, className?: string): Element => ({
   type: 'element', tagName: 'path', properties: { ...(className ? { className: [className] } : {}), pathLength: 1, d }, children: [],
 });
 
-/** A paragraph holding only an image titled "left" / "right", optionally "left: a note" or "left: thought: a note". */
-function sideImage(node: RootContent): { img: Element; side: Side; note?: string; thought: boolean } | null {
+type NoteStyle = 'arrow' | 'thought' | 'text';
+
+/** A paragraph holding only an image titled "left" / "right", optionally "left: a note" (with an arrow),
+ *  "left: thought: a note" (thought bubble) or "left: text: a note" (plain handwriting). */
+function sideImage(node: RootContent): { img: Element; side: Side; note?: string; style: NoteStyle } | null {
   if (node.type !== 'element' || node.tagName !== 'p') return null;
   const kids = node.children.filter((c) => !isWhitespace(c));
   const img = kids[0];
   if (kids.length !== 1 || img.type !== 'element' || img.tagName !== 'img') return null;
-  const match = /^(left|right)(?::\s*(thought:\s*)?([\s\S]+))?$/.exec(String(img.properties.title ?? ''));
-  return match ? { img, side: match[1] as Side, thought: Boolean(match[2]), note: match[3]?.trim() } : null;
+  const match = /^(left|right)(?::\s*(?:(thought|text):\s*)?([\s\S]+))?$/.exec(String(img.properties.title ?? ''));
+  return match ? { img, side: match[1] as Side, style: (match[2] as NoteStyle | undefined) ?? 'arrow', note: match[3]?.trim() } : null;
 }
 
 /** Handwritten note with a curvy arrow; the arrow tip is the note's bottom-right corner (see prose.css). */
@@ -36,11 +39,17 @@ const noteFor = (text: string): Element =>
 /** A thought bubble (no arrow): little circles trail from the bubble down to the character's head. */
 const thoughtFor = (text: string): Element => el('span', 'md-thought', [el('span', 'md-thought-text', [{ type: 'text', value: text }])]);
 
+/** Plain handwriting above the image, no arrow or bubble. */
+const plainNoteFor = (text: string): Element => el('span', 'md-note md-note-plain', [el('span', 'md-note-text', [{ type: 'text', value: text }])]);
+
+const annotationFor = (text: string, style: NoteStyle): Element =>
+  style === 'thought' ? thoughtFor(text) : style === 'text' ? plainNoteFor(text) : noteFor(text);
+
 /**
  * `![alt](./pic.png "left")` (or "right") puts the image beside the content that follows it,
  * up to the next heading. `"left: Some note"` also adds a handwritten note with an arrow pointing
- * at the image; `"left: thought: Some note"` shows it as a thought bubble instead. Any other image
- * title is left alone (it becomes a caption).
+ * at the image; `"left: thought: Some note"` shows it as a thought bubble and `"left: text: Some note"`
+ * as plain handwriting. Any other image title is left alone (it becomes a caption).
  */
 export function rehypeSideImage() {
   return (tree: Root) => {
@@ -62,7 +71,7 @@ export function rehypeSideImage() {
       out.push(
         el('div', `md-split md-split-${match.side}`, [
           match.note
-            ? el('div', 'md-split-media', [match.thought ? thoughtFor(match.note) : noteFor(match.note), match.img], { dataRevealNote: '' })
+            ? el('div', 'md-split-media', [annotationFor(match.note, match.style), match.img], { dataRevealNote: '' })
             : el('div', 'md-split-media', [match.img]),
           el('div', 'md-split-text', text as ElementContent[]),
         ]),
