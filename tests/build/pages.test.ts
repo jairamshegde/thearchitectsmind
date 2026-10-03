@@ -14,6 +14,16 @@ describe('/about/', () => {
     expect(pico.querySelector('.about-pico-note')?.text).toBe('Hey curious reader, I’m Pico');
   });
 
+  it('“What I do” shows Pico on the left and the text on the right', () => {
+    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'What I do')!;
+    const split = h2.nextElementSibling!;
+    expect(split.classNames).toBe('md-split md-split-left');
+    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-builder\./);
+    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
+      'These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.',
+    );
+  });
+
   it('renders the about body with a TOC', () => {
     expect(p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim())).toEqual(['What I do', 'How I think', 'Elsewhere']);
     expect(p.querySelectorAll('nav.toc a').length).toBe(3);

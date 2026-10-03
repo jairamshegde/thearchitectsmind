@@ -21,7 +21,9 @@ welcomeNote: "Hey curious reader, I’m Pico"
 
 ## What I do
 
-Placeholder: a few paragraphs about the work you do.
+![Pico building with blocks and a toolbox](./pico-builder.png "left")
+
+These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.
 
 ## How I think
 
