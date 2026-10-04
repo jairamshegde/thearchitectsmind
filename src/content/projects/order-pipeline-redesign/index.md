@@ -1,16 +1,20 @@
 ---
-title: "Order pipeline redesign"
-summary: "Split a synchronous checkout into an event-driven pipeline that survives payment-provider outages."
-stack: [Python, FastAPI, PostgreSQL, Kafka]
+title: Order pipeline redesign
+summary: Split a synchronous checkout into an event-driven pipeline that survives payment-provider outages.
+stack:
+  - Python
+  - FastAPI
+  - PostgreSQL
+  - Kafka
 date: 2026-06-01
 links:
-  repo: "https://github.com/jairamshegde/order-pipeline"
-role: "Lead architect"
-timeline: "Jan – May 2026"
-problem: "Checkout called payments, stock and email **synchronously**. Any slow dependency failed the whole order."
-constraints: "No downtime migration, a team of four, and the existing PostgreSQL schema had to stay."
-outcome: "Checkout p99 dropped from 2.4s to 380ms; zero lost orders during two provider outages."
-lessons: "Model the outbox table first. Every later decision got easier once events were durable."
+  repo: https://github.com/jairamshegde/
+role: Lead architect
+timeline: Jan – May 2026
+problem: Checkout called payments, stock and email **synchronously**. Any slow dependency failed the whole order.
+constraints: No downtime migration, a team of four, and the existing PostgreSQL schema had to stay.
+outcome: Checkout p99 dropped from 2.4s to 380ms; zero lost orders during two provider outages.
+lessons: Model the outbox table first. Every later decision got easier once events were durable.
 cover: cover.svg
 featured: true
 draft: false
