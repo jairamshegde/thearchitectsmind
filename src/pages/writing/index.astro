@@ -1,9 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import LatestPost from '../../components/LatestPost.astro';
 import PostCard from '../../components/PostCard.astro';
 import { published } from '../../lib/collections';
+import { topTags } from '../../lib/content';
 
-const posts = await published('writing');
+const [latest, ...rest] = await published('writing');
+const tags = topTags(rest, 10);
 ---
 <BaseLayout title="Writing" description="Long-form writing on architecture and engineering.">
   <header class="page-head wrap">
@@ -11,6 +14,29 @@ const posts = await published('writing');
     <p>Long-form pieces on how systems are shaped, and why.</p>
   </header>
   <div class="wrap page-body">
-    {posts.length > 0 ? <div class="writing-grid">{posts.map((post) => <PostCard post={post} />)}</div> : <p class="empty">First post coming soon.</p>}
+    {latest ? <LatestPost post={latest} /> : <p class="empty">First post coming soon.</p>}
+    {rest.length > 0 && (
+      <>
+        {tags.length > 0 && (
+          <div class="tag-filter" role="group" aria-label="Filter posts by tag">
+            <button type="button" aria-pressed="true" data-tag="">All</button>
+            {tags.map((tag) => <button type="button" aria-pressed="false" data-tag={tag}>{tag}</button>)}
+          </div>
+        )}
+        <div class="writing-grid">{rest.map((post) => <PostCard post={post} />)}</div>
+      </>
+    )}
   </div>
 </BaseLayout>
+
+<script>
+  const buttons = [...document.querySelectorAll<HTMLButtonElement>('.tag-filter button')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.writing-grid .post')];
+  for (const button of buttons) {
+    button.addEventListener('click', () => {
+      const tag = button.dataset.tag!;
+      for (const b of buttons) b.setAttribute('aria-pressed', String(b === button));
+      for (const card of cards) card.hidden = tag !== '' && !JSON.parse(card.dataset.tags!).includes(tag);
+    });
+  }
+</script>

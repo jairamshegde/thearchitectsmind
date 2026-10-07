@@ -243,13 +243,11 @@ img, svg { max-width: 100%; }
 .post:hover, .post:focus-visible { transform: translateY(-6px); box-shadow: var(--shadow-lift); }
 .post .thumb { display: block; aspect-ratio: 16 / 9; border-radius: var(--r-md); overflow: hidden; }
 .post .body { display: block; padding: 0 8px; }
-.post .date { display: block; font-size: var(--fs-meta); color: var(--pencil); margin-top: 16px; }
-.post h3 { position: relative; margin: 4px 0 0; padding-bottom: 6px; font-weight: 650; font-size: var(--fs-h3); letter-spacing: -.02em; line-height: 1.25; }
+.post h3 { position: relative; margin: 16px 0 0; padding-bottom: 6px; font-weight: 650; font-size: var(--fs-h3); letter-spacing: -.02em; line-height: 1.25; }
 .post h3 .ul { position: absolute; left: 0; bottom: -3px; height: 8px; width: min(100%, 200px); overflow: visible; }
 .post h3 .ul path { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 420; stroke-dashoffset: 420; transition: stroke-dashoffset .55s ease; }
 .post:hover h3 .ul path, .post:focus-visible h3 .ul path { stroke-dashoffset: 0; }
 .post p { font-size: var(--fs-small); color: var(--graphite); margin: 10px 0 0; line-height: 1.55; }
-.post .tags { display: block; font-size: var(--fs-meta); color: var(--pencil); margin-top: 12px; }
 
 /* ---------------------------------------------------------------------
    9. About

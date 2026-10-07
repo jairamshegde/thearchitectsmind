@@ -51,7 +51,7 @@ describe('home page', () => {
   it('uses the dot-grid fallback with the first tag when a post has no cover', () => {
     const card = home.querySelectorAll('#writing a.post').find((c) => c.getAttribute('href')?.includes('boundaries-before-boxes'))!;
     expect(card.querySelector('.thumb-fallback .hand')?.text).toBe('architecture');
-    expect(card.querySelector('.date')?.text).toBe('Aug 2, 2026');
+    expect(card.querySelector('.post-meta time')?.text).toBe('Aug 2, 2026');
   });
 
   it('shows skeptical Pico with his note above the now list', () => {

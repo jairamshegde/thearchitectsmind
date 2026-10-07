@@ -9,10 +9,29 @@ describe('/writing/', () => {
   const p = page('/writing/');
   it('lists published posts newest first, without drafts', () => {
     expect(p.querySelector('h1')?.text).toBe('Writing');
-    const hrefs = p.querySelectorAll('a.post').map((a) => a.getAttribute('href'));
+    const hrefs = p.querySelectorAll('a.latest, a.post').map((a) => a.getAttribute('href'));
     const starter = [`${BASE}/writing/designing-for-failure/`, `${BASE}/writing/boundaries-before-boxes/`];
     expect(starterOrder(hrefs, starter)).toEqual(starter);
     expect(hrefs).not.toContain(`${BASE}/writing/unpublished-idea/`);
+  });
+
+  it('shows the newest post once, above the grid, with date and read time', () => {
+    const latest = p.querySelectorAll('a.latest');
+    expect(latest).toHaveLength(1);
+    const gridHrefs = p.querySelectorAll('.writing-grid a.post').map((a) => a.getAttribute('href'));
+    expect(gridHrefs).not.toContain(latest[0].getAttribute('href'));
+    for (const card of p.querySelectorAll('a.latest, a.post')) {
+      expect(card.querySelector('.post-meta time')?.getAttribute('datetime')).toBeTruthy();
+      expect(card.querySelector('.post-meta')?.text).toMatch(/\d+ min read/);
+    }
+  });
+
+  it('offers "All" plus at most 10 tag filters, each matching a grid card', () => {
+    const buttons = p.querySelectorAll('.tag-filter button');
+    expect(buttons[0].text).toBe('All');
+    expect(buttons.length).toBeLessThanOrEqual(11);
+    const gridTags = p.querySelectorAll('.writing-grid a.post').flatMap((a) => JSON.parse(a.getAttribute('data-tags')!));
+    for (const b of buttons.slice(1)) expect(gridTags).toContain(b.getAttribute('data-tag'));
   });
 });
 
