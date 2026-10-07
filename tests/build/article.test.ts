@@ -13,7 +13,7 @@ describe('writing article: kitchen sink', () => {
   it('renders the header in order: cover, title, subheading, tags with date and read time; no description', () => {
     const head = p.querySelector('.article-head')!;
     const order = head.children.map((c) => c.classNames.split(' ')[0]);
-    expect(order).toEqual(['more', 'article-cover', 'article-title', 'article-sub', 'article-info']);
+    expect(order).toEqual(['article-crumb', 'article-cover', 'article-title', 'article-sub', 'article-info']);
     expect(head.querySelector('h1.article-title')?.text).toBe('Designing for failure: a field guide');
     expect(head.querySelector('.article-sub')?.text).toBe('A checklist for when dependencies misbehave.');
     expect(head.querySelectorAll('.article-tags li').map((li) => li.text)).toEqual(['architecture', 'reliability', 'python']);
@@ -72,7 +72,7 @@ describe('notes', () => {
     expect(p.querySelector('nav.toc')).toBeNull();
     expect(p.querySelector('details.toc-inline')).toBeNull();
     expect(p.querySelector('.article-meta')?.text).toBe('Sep 12, 2026 · python');
-    expect(p.querySelector('.back-link')?.getAttribute('href')).toBe(`${BASE}/notes/`);
+    expect(p.querySelector('.article-head a.article-crumb')?.getAttribute('href')).toBe(`${BASE}/notes/`);
   });
 
   it('shows the TOC for a note with three headings', () => {

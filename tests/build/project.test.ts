@@ -19,10 +19,10 @@ describe('full case study', () => {
     expect(cards[0].querySelector('strong')?.text).toBe('synchronously');
   });
 
-  it('renders the body with a diagram, then Lessons, then a back link', () => {
+  it('renders the body with a diagram, then Lessons, with the back link at the top', () => {
     expect(p.querySelector('.prose figure.mermaid-panel')).not.toBeNull();
     expect(p.querySelector('aside.lessons')?.text).toContain('Model the outbox table first');
-    expect(p.querySelector('.back-link')?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    expect(p.querySelector('.article-head a.article-crumb')?.getAttribute('href')).toBe(`${BASE}/projects/`);
   });
 });
 

@@ -6,7 +6,7 @@
 .article-kicker, .article-meta { margin: 0; font-size: var(--fs-meta); color: var(--pencil); }
 .article-title { margin: 10px 0 0; font-weight: 700; font-variation-settings: "opsz" 96; font-size: var(--fs-hero); line-height: 1.12; letter-spacing: -.03em; text-wrap: balance; }
 .article-lead { margin: 16px 0 0; font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; color: var(--graphite); }
-.article-head .article-meta:not(:first-child) { margin-top: 18px; }
+.article-head .article-title ~ .article-meta { margin-top: 18px; }
 /* Writing header: cover is always 2:1 (1500 x 750); taller or wider images are cropped, not squashed */
 .article-cover { display: block; width: 100%; height: auto; margin-top: 28px; border-radius: var(--r-lg); }
 .post-cover { aspect-ratio: 2 / 1; object-fit: cover; margin: 0 0 32px; }
@@ -16,7 +16,6 @@
 .article-info .post-meta { margin-top: 0; }
 .article-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
 .article-tags li { padding: 4px 12px; border: 1px solid var(--line-2); border-radius: var(--r-pill); font-size: var(--fs-meta); color: var(--graphite); }
-.article-back { margin: 56px 0 0; }
 
 /* ---------- TOC rail (≥1100px) ---------- */
 .toc { display: none; }
@@ -140,7 +139,10 @@
 .lessons > :last-child { margin-bottom: 0; }
 
 /* Back link at the top of an article */
-.article-crumb { display: inline-block; margin-bottom: 18px; }
+.article-crumb { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; padding: 8px 16px 8px 14px; border: 1px solid var(--line-2); border-radius: var(--r-pill); background: var(--card); color: var(--ink); font-size: 15px; font-weight: 600; text-decoration: none; transition: border-color var(--dur-fast) ease, box-shadow var(--dur-fast) ease; }
+.article-crumb:hover, .article-crumb:focus-visible { border-color: var(--ink); box-shadow: var(--shadow-rest); }
+.article-crumb .arr { display: inline-block; transition: transform .3s ease; }
+.article-crumb:hover .arr { transform: translateX(-4px); }
 
 /* ---------- Side-by-side image + text: ![alt](./img.png "left" | "right") ---------- */
 .md-split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: clamp(20px, 3vw, 40px); align-items: center; margin: 1.4em 0 2em; }

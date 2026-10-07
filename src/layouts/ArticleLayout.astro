@@ -8,14 +8,19 @@ interface Props {
   title: string;
   description?: string;
   headings: Heading[];
+  /** Index page this article belongs to, linked at the top. */
+  back?: { href: string; label: string };
 }
-const { title, description, headings } = Astro.props;
+const { title, description, headings, back } = Astro.props;
 ---
 <BaseLayout title={title} description={description}>
   <div class="article-shell wrap">
     <Toc headings={headings} variant="rail" />
     <article class="article">
-      <header class="article-head"><slot name="header" /></header>
+      <header class="article-head">
+        {back && <a class="article-crumb" href={back.href}><span class="arr" aria-hidden="true">←</span> {back.label}</a>}
+        <slot name="header" />
+      </header>
       <Toc headings={headings} variant="inline" />
       <div class="prose"><slot /></div>
       <slot name="after" />

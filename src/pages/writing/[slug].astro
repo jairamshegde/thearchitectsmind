@@ -21,9 +21,8 @@ const { post, newer, older } = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
 const { title, subheading, description, date, tags, cover } = post.data;
 ---
-<ArticleLayout title={title} description={description} headings={headings}>
+<ArticleLayout title={title} description={description} headings={headings} back={{ href: withBase('/writing/'), label: 'All writing' }}>
   <Fragment slot="header">
-    <a class="more article-crumb" href={withBase('/writing/')}>← All writing</a>
     {cover && <Image class="article-cover post-cover" src={cover} alt="" widths={[860, 1500]} sizes="(max-width: 900px) 100vw, 860px" loading="eager" />}
     <h1 class="article-title">{title}</h1>
     {subheading && <p class="article-sub">{subheading}</p>}
