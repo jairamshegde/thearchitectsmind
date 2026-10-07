@@ -169,11 +169,13 @@ html { scroll-padding-top: calc(var(--nav-h) + 12px); }
 }
 
 /* Footer: Pico (magnifying glass) to the right of the statement; above it on phones */
-.foot-statement { display: flex; align-items: center; justify-content: center; gap: clamp(16px, 2.5vw, 32px); }
+/* Three columns, so the statement stays on the page's centre line (like the sub line and links) and Pico sits in the right gutter */
+.foot-statement { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(16px, 2.5vw, 32px); }
+.foot-statement .big { grid-column: 2; }
 .foot-statement:has(.foot-pico) .big { font-size: clamp(30px, 4.6vw, 70px); }
-.foot-pico { flex: none; margin: 0; width: clamp(150px, 17vw, 250px); }
+.foot-pico { grid-column: 3; justify-self: start; margin: 0; width: clamp(140px, 15vw, 220px); }
 .foot-pico img { display: block; width: 100%; height: auto; }
 @media (max-width: 640px) {
-  .foot-statement { flex-direction: column-reverse; gap: 8px; }
+  .foot-statement { display: flex; flex-direction: column-reverse; align-items: center; gap: 8px; }
   .foot-pico { width: 170px; }
 }
