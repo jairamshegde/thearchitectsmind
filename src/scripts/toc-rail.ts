@@ -7,7 +7,8 @@ export function initTocRail(): void {
     .filter((p): p is { link: HTMLAnchorElement; target: HTMLElement } => p.target !== null);
   if (pairs.length === 0) return;
 
-  const OFFSET = 120;
+  // A jump lands a heading ~120px down (scroll-padding 96 + scroll-margin 24), give or take a sub-pixel; stay clear of that line.
+  const OFFSET = 128;
   let queued = false;
   const update = () => {
     queued = false;
