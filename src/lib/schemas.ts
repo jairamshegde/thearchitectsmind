@@ -14,6 +14,7 @@ const flags = { featured: z.boolean().default(false), draft: z.boolean().default
 export const writingSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
     title: z.string().min(1),
+    subheading: optional(z.string()),
     description: z.string().min(1),
     date,
     tags,

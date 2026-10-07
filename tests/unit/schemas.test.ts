@@ -14,6 +14,11 @@ describe('writingSchema', () => {
     expect(r.featured).toBe(false);
   });
 
+  it('treats a cleared subheading as not set', () => {
+    expect(writingSchema(image).parse({ ...valid, subheading: 'S' }).subheading).toBe('S');
+    expect(writingSchema(image).parse({ ...valid, subheading: '' }).subheading).toBeUndefined();
+  });
+
   it('rejects a post without tags', () => {
     expect(() => writingSchema(image).parse({ ...valid, tags: [] })).toThrow();
   });

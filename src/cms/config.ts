@@ -59,7 +59,8 @@ export const cmsConfig: {
   collections: [
     folder('writing', 'Writing', 'Post', [
       title,
-      text('description', 'Description', { hint: 'One or two sentences; shown on cards and under the title.' }),
+      opt(str('subheading', 'Subheading', { hint: 'Optional line shown under the title.' })),
+      text('description', 'Description', { hint: 'One or two sentences; shown on cards and in search previews.' }),
       date('date', 'Date'),
       opt(date('updated', 'Updated')),
       tags,
