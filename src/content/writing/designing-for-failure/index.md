@@ -1,5 +1,6 @@
 ---
 title: "Designing for failure: a field guide"
+subheading: "A checklist for when dependencies misbehave."
 description: "How I map blast radius, budget retries and keep systems honest when dependencies misbehave."
 date: 2026-09-20
 updated: 2026-09-28

@@ -7,7 +7,15 @@
 .article-title { margin: 10px 0 0; font-weight: 700; font-variation-settings: "opsz" 96; font-size: var(--fs-hero); line-height: 1.12; letter-spacing: -.03em; text-wrap: balance; }
 .article-lead { margin: 16px 0 0; font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; color: var(--graphite); }
 .article-head .article-meta:not(:first-child) { margin-top: 18px; }
+/* Writing header: cover is always 2:1 (1500 x 750); taller or wider images are cropped, not squashed */
 .article-cover { display: block; width: 100%; height: auto; margin-top: 28px; border-radius: var(--r-lg); }
+.post-cover { aspect-ratio: 2 / 1; object-fit: cover; margin: 0 0 32px; }
+.post-cover + .article-title { margin-top: 0; }
+.article-sub { margin: 14px 0 0; font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; color: var(--graphite); }
+.article-info { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; margin-top: 22px; }
+.article-info .post-meta { margin-top: 0; }
+.article-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.article-tags li { padding: 4px 12px; border: 1px solid var(--line-2); border-radius: var(--r-pill); font-size: var(--fs-meta); color: var(--graphite); }
 .article-back { margin: 56px 0 0; }
 
 /* ---------- TOC rail (≥1100px) ---------- */

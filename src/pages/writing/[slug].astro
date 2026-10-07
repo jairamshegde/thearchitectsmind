@@ -2,9 +2,9 @@
 import { Image } from 'astro:assets';
 import { render, type CollectionEntry } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import PostMeta from '../../components/PostMeta.astro';
 import { published } from '../../lib/collections';
 import { neighbours } from '../../lib/content';
-import { formatDate } from '../../lib/format';
 import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
@@ -19,16 +19,18 @@ interface Props {
 }
 const { post, newer, older } = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
-const { title, description, date, updated, tags, cover } = post.data;
+const { title, subheading, description, date, tags, cover } = post.data;
 ---
 <ArticleLayout title={title} description={description} headings={headings}>
   <Fragment slot="header">
     <a class="more article-crumb" href={withBase('/writing/')}>← All writing</a>
-    <p class="article-kicker">{tags.join(' · ')} · {remarkPluginFrontmatter.minutesRead} min read</p>
+    {cover && <Image class="article-cover post-cover" src={cover} alt="" widths={[860, 1500]} sizes="(max-width: 900px) 100vw, 860px" loading="eager" />}
     <h1 class="article-title">{title}</h1>
-    <p class="article-lead">{description}</p>
-    <p class="article-meta"><time datetime={date.toISOString()}>{formatDate(date)}</time>{updated && <> · updated <time datetime={updated.toISOString()}>{formatDate(updated)}</time></>}</p>
-    {cover && <Image class="article-cover" src={cover} alt="" widths={[720, 1440]} sizes="(max-width: 800px) 100vw, 720px" loading="eager" />}
+    {subheading && <p class="article-sub">{subheading}</p>}
+    <div class="article-info">
+      <ul class="article-tags">{tags.map((tag) => <li>{tag}</li>)}</ul>
+      <PostMeta date={date} minutes={remarkPluginFrontmatter.minutesRead} />
+    </div>
   </Fragment>
 
   <Content />

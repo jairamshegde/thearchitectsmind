@@ -10,12 +10,20 @@ describe('writing article: kitchen sink', () => {
     expect(back?.text.trim()).toBe('← All writing');
   });
 
-  it('renders the header: kicker, title, lead, dates, cover', () => {
-    expect(p.querySelector('.article-kicker')?.text).toMatch(/^architecture · reliability · python · \d+ min read$/);
-    expect(p.querySelector('h1.article-title')?.text).toBe('Designing for failure: a field guide');
-    expect(p.querySelector('.article-lead')?.text).toContain('blast radius');
-    expect(p.querySelector('.article-meta')?.text).toBe('Sep 20, 2026 · updated Sep 28, 2026');
-    expect(p.querySelector('img.article-cover')).not.toBeNull();
+  it('renders the header in order: cover, title, subheading, tags with date and read time; no description', () => {
+    const head = p.querySelector('.article-head')!;
+    const order = head.children.map((c) => c.classNames.split(' ')[0]);
+    expect(order).toEqual(['more', 'article-cover', 'article-title', 'article-sub', 'article-info']);
+    expect(head.querySelector('h1.article-title')?.text).toBe('Designing for failure: a field guide');
+    expect(head.querySelector('.article-sub')?.text).toBe('A checklist for when dependencies misbehave.');
+    expect(head.querySelectorAll('.article-tags li').map((li) => li.text)).toEqual(['architecture', 'reliability', 'python']);
+    expect(head.querySelector('.post-meta time')?.text).toBe('Sep 20, 2026');
+    expect(head.querySelector('.post-meta')?.text).toMatch(/\d+ min read/);
+    expect(head.text).not.toContain('blast radius');
+  });
+
+  it('omits the subheading when a post has none', () => {
+    expect(page('/writing/boundaries-before-boxes/').querySelector('.article-sub')).toBeNull();
   });
 
   it('builds the TOC rail and the inline Contents panel from H2/H3, with clean heading text', () => {
