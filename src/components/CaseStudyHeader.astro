@@ -27,8 +27,8 @@ const hasLinks = Boolean(d.links?.repo || d.links?.demo);
     <div>
       <dt>Links</dt>
       <dd class="cs-links">
-        {d.links?.repo && <a href={d.links.repo} rel="noopener">Repository ↗</a>}
-        {d.links?.demo && <a href={d.links.demo} rel="noopener">Live demo ↗</a>}
+        {d.links?.repo && <a href={d.links.repo} rel="noopener">Repository <span aria-hidden="true">↗</span></a>}
+        {d.links?.demo && <a href={d.links.demo} rel="noopener">Live demo <span aria-hidden="true">↗</span></a>}
       </dd>
     </div>
   )}
