@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import type { CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NoteRow from '../../components/NoteRow.astro';
+import Pagination from '../../components/Pagination.astro';
+import { published } from '../../lib/collections';
+import { groupByYear } from '../../lib/content';
+
+// /notes/ is page 1, then /notes/2/, /notes/3/ ...
+export const getStaticPaths = (async ({ paginate }) => paginate(await published('notes'), { pageSize: 10 })) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<CollectionEntry<'notes'>>;
+}
+const { page } = Astro.props;
+const groups = groupByYear(page.data);
+---
+<BaseLayout title={page.currentPage === 1 ? 'Notes' : `Notes, page ${page.currentPage}`} description="Short notes and quick tutorials on what I'm learning.">
+  <header class="page-head wrap">
+    <h1>Notes</h1>
+    <p>Short notes and quick tutorials from what I'm learning and building.</p>
+  </header>
+  <div class="wrap page-body">
+    {groups.length === 0 && <p class="empty">First note coming soon.</p>}
+    {groups.map((g) => (
+      <section class="year-group">
+        <h2>{g.year}</h2>
+        <ol class="note-list">{g.items.map((note) => <NoteRow note={note} />)}</ol>
+      </section>
+    ))}
+    <Pagination current={page.currentPage} last={page.lastPage} base="/notes/" label="Notes pages" />
+  </div>
+</BaseLayout>

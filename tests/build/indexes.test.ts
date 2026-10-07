@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BASE, page } from './helpers';
+import { BASE, built, page } from './helpers';
 
 // Content published from the CMS is added to these lists, so assert on the starter
 // entries' relative order (and draft exclusion), not on the exact list.
@@ -48,6 +48,32 @@ describe('/notes/', () => {
     const slots = rows.find((a) => a.getAttribute('href') === starter[0])!;
     expect(slots.querySelector('.note-date')?.text).toBe('Sep 12');
     expect(slots.querySelector('.note-tags')?.text).toBe('python');
+  });
+});
+
+describe('/notes/ pagination', () => {
+  // The number of notes grows from the CMS, so check whatever pages were built.
+  const pages: number[] = [];
+  for (let n = 1; n === 1 || built(`/notes/${n}/`); n++) pages.push(n);
+  const route = (n: number) => (n === 1 ? '/notes/' : `/notes/${n}/`);
+
+  it('shows at most 10 notes per page and never builds /notes/1/', () => {
+    for (const n of pages) expect(page(route(n)).querySelectorAll('a.note-row').length).toBeLessThanOrEqual(10);
+    expect(built('/notes/1/')).toBe(false);
+  });
+
+  it('links every page with Newer/Older and marks the current page', () => {
+    for (const n of pages) {
+      const nav = page(route(n)).querySelector('nav.pagination');
+      if (pages.length === 1) {
+        expect(nav).toBeNull();
+        continue;
+      }
+      expect(nav?.querySelector('[aria-current="page"]')?.text).toBe(String(n));
+      expect(nav?.querySelectorAll('.pg-num').length).toBe(pages.length);
+      expect(nav?.querySelector('a[rel="prev"]')?.getAttribute('href') ?? null).toBe(n > 1 ? `${BASE}${route(n - 1)}` : null);
+      expect(nav?.querySelector('a[rel="next"]')?.getAttribute('href') ?? null).toBe(n < pages.length ? `${BASE}${route(n + 1)}` : null);
+    }
   });
 });
 

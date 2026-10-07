@@ -1,0 +1,25 @@
+---
+import { withBase } from '../lib/url';
+
+interface Props {
+  current: number;
+  last: number;
+  /** Index path; page 1 lives here, page n at <base><n>/. */
+  base: string;
+  label: string;
+}
+const { current, last, base, label } = Astro.props;
+const href = (n: number) => withBase(n === 1 ? base : `${base}${n}/`);
+const pages = Array.from({ length: last }, (_, i) => i + 1);
+---
+{last > 1 && (
+  <nav class="pagination" aria-label={label}>
+    {current > 1 ? <a class="pg-step" rel="prev" href={href(current - 1)}><span aria-hidden="true">←</span> Newer</a> : <span class="pg-step" aria-hidden="true" />}
+    <ol>
+      {pages.map((n) => (
+        <li>{n === current ? <span class="pg-num" aria-current="page">{n}</span> : <a class="pg-num" href={href(n)} aria-label={`Page ${n}`}>{n}</a>}</li>
+      ))}
+    </ol>
+    {current < last ? <a class="pg-step" rel="next" href={href(current + 1)}>Older <span aria-hidden="true">→</span></a> : <span class="pg-step" aria-hidden="true" />}
+  </nav>
+)}
