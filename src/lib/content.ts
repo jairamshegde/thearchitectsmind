@@ -27,3 +27,10 @@ export function neighbours<T>(sorted: T[], index: number): { newer?: T; older?: 
 }
 
 export const isCaseStudy = (d: { problem?: string; outcome?: string }): boolean => Boolean(d.problem || d.outcome);
+
+/** The n most-used tags, most used first; ties sort alphabetically. */
+export function topTags(items: { data: { tags: string[] } }[], n: number): string[] {
+  const counts = new Map<string, number>();
+  for (const tag of items.flatMap((i) => i.data.tags)) counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  return [...counts].sort(([a, x], [b, y]) => y - x || a.localeCompare(b)).slice(0, n).map(([tag]) => tag);
+}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { byDateDesc, groupByYear, isCaseStudy, isVisible, neighbours, pickHome } from '../../src/lib/content';
+import { byDateDesc, groupByYear, isCaseStudy, isVisible, neighbours, pickHome, topTags } from '../../src/lib/content';
 
 const e = (date: string, extra: { draft?: boolean; featured?: boolean; id?: string } = {}) => ({
   id: extra.id ?? date,
@@ -62,5 +62,16 @@ describe('isCaseStudy', () => {
     expect(isCaseStudy({ problem: 'x' })).toBe(true);
     expect(isCaseStudy({ outcome: 'y' })).toBe(true);
     expect(isCaseStudy({})).toBe(false);
+  });
+});
+
+describe('topTags', () => {
+  const t = (...tags: string[]) => ({ data: { tags } });
+  it('ranks tags by how many entries use them, ties alphabetical, capped at n', () => {
+    const items = [t('python', 'arch'), t('arch'), t('zeta', 'python'), t('arch', 'beta')];
+    expect(topTags(items, 3)).toEqual(['arch', 'python', 'beta']);
+  });
+  it('returns fewer than n when there are fewer tags', () => {
+    expect(topTags([t('a')], 10)).toEqual(['a']);
   });
 });
