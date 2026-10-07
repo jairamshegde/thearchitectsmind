@@ -174,7 +174,7 @@ img, svg { max-width: 100%; }
    Markup: <a class="btn btn-text">Read My Writing <span class="arr">↗</span>
            <svg class="scribble" viewBox="0 0 150 10" preserveAspectRatio="none"><path d="M2 6 C 30 2, 60 9, 90 5 S 135 3, 148 6"/></svg></a> */
 .btn-text { padding: 6px 0; }
-.btn-text:hover .arr { transform: translate(3px, -3px); }
+.btn-text:hover .arr { transform: translateX(4px); }
 .btn-text .scribble { position: absolute; left: -2px; right: -6px; bottom: -5px; height: 10px; overflow: visible; }
 .btn-text .scribble path { fill: none; stroke: var(--accent); stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 170; stroke-dashoffset: 170; transition: stroke-dashoffset .45s ease; }
 .btn-text:hover .scribble path, .btn-text:focus-visible .scribble path { stroke-dashoffset: 0; }
