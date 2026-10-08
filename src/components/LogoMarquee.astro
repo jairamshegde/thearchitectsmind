@@ -1,0 +1,50 @@
+---
+import { withBase } from '../lib/url';
+
+// Files live in public/logos/. Most come from Simple Icons; Azure AI Foundry from Lobe Icons;
+// Arize Phoenix, DeepEval and Ragas from each project's own repo.
+const rows = [
+  [
+    ['claude', 'Claude'],
+    ['claudecode', 'Claude Code'],
+    ['openai', 'OpenAI'],
+    ['cursor', 'Cursor'],
+    ['langgraph', 'LangGraph'],
+    ['azureai', 'Azure AI Foundry'],
+    ['fastapi', 'FastAPI'],
+    ['supabase', 'Supabase'],
+    ['arizephoenix', 'Arize Phoenix'],
+    ['deepeval', 'DeepEval'],
+  ],
+  [
+    ['ragas', 'Ragas'],
+    ['obsidian', 'Obsidian'],
+    ['python', 'Python'],
+    ['docker', 'Docker'],
+    ['celery', 'Celery'],
+    ['redis', 'Redis'],
+    ['qdrant', 'Qdrant'],
+    ['ollama', 'Ollama'],
+    ['deepseek', 'DeepSeek'],
+  ],
+];
+---
+<section class="logos" aria-label="Tools I work with">
+  {rows.map((row) => (
+    <div class="logos-row">
+      {/* Two copies of the list; the track slides by exactly one copy, so the loop has no seam. */}
+      <div class="logos-track">
+        {[false, true].map((copy) => (
+          <ul aria-hidden={copy ? 'true' : undefined}>
+            {row.map(([slug, name]) => (
+              <li>
+                <span class="logo-icon" style={`--icon: url(${withBase(`/logos/${slug}.svg`)})`} aria-hidden="true"></span>
+                {name}
+              </li>
+            ))}
+          </ul>
+        ))}
+      </div>
+    </div>
+  ))}
+</section>

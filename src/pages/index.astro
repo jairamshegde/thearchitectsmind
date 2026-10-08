@@ -3,6 +3,7 @@ import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import LogoMarquee from '../components/LogoMarquee.astro';
 import ProjectList from '../components/ProjectList.astro';
 import PostCard from '../components/PostCard.astro';
 import { published } from '../lib/collections';
@@ -17,6 +18,7 @@ if (!about) throw new Error('Missing src/content/pages/about.md');
 ---
 <BaseLayout>
   <Hero />
+  <LogoMarquee />
 
   <section class="sec wrap" id="projects">
     <div class="sec-head">

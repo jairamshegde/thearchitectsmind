@@ -4,9 +4,9 @@ import { BASE, page } from './helpers';
 describe('home page', () => {
   const home = page('/');
 
-  it('orders sections Hero → Featured projects → Writing → About and has no Notes section', () => {
+  it('orders sections Hero → Logos → Featured projects → Writing → About and has no Notes section', () => {
     const ids = home.querySelectorAll('main > section').map((s) => s.getAttribute('id') ?? s.classNames);
-    expect(ids).toEqual(['hero wrap', 'projects', 'writing', 'about']);
+    expect(ids).toEqual(['hero wrap', 'logos', 'projects', 'writing', 'about']);
     expect(home.querySelector('#notes')).toBeNull();
   });
 
@@ -26,6 +26,21 @@ describe('home page', () => {
     expect(figure.querySelector('img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/hero-cutout\./);
     expect(figure.querySelector('.hero-note-text')?.text).toBe('Meet the team: Pico leads, Claude codes, I take credit 😉');
     expect(figure.querySelector('svg.hero-arrow')).not.toBeNull();
+  });
+
+  it('shows 19 tool logos in two rows, each row duplicated once and hidden from screen readers', () => {
+    const rows = home.querySelectorAll('.logos .logos-row');
+    expect(rows.length).toBe(2);
+    for (const row of rows) {
+      const [list, copy] = row.querySelectorAll('ul');
+      expect(list.getAttribute('aria-hidden')).toBeUndefined();
+      expect(copy.getAttribute('aria-hidden')).toBe('true');
+      expect(copy.text).toBe(list.text);
+    }
+    const names = rows.flatMap((row) => row.querySelectorAll('ul:not([aria-hidden]) li').map((li) => li.text.trim()));
+    expect(names).toHaveLength(19);
+    expect(names).toContain('Claude Code');
+    expect(home.querySelector('.logos .logo-icon')?.getAttribute('style')).toContain(`${BASE}/logos/claude.svg`);
   });
 
   it('shows at most 3 featured projects, featured first, linking to project pages', () => {

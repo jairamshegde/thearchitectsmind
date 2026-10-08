@@ -141,6 +141,24 @@ a.pg-step:hover { text-decoration: underline; text-underline-offset: 4px; }
   .hero-arrow { display: none; }
 }
 
+/* ---------- Logo marquee: two rows scrolling in opposite directions, faded at the edges ---------- */
+.logos { display: grid; gap: 18px; max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent); }
+.logos-track { display: flex; width: max-content; animation: logos-scroll 60s linear infinite; }
+.logos-row:nth-child(2) .logos-track { animation-direction: reverse; }
+.logos-row:hover .logos-track { animation-play-state: paused; }
+/* padding-right equals the gap, so both copies are the same width and -50% lands on the seam */
+.logos-track ul { display: flex; gap: 44px; margin: 0; padding: 0 44px 0 0; list-style: none; }
+.logos-track li { display: flex; align-items: center; gap: 10px; white-space: nowrap; font-size: 17px; font-weight: 600; letter-spacing: -.01em; color: var(--graphite); }
+.logo-icon { flex: none; width: 24px; height: 24px; background: currentColor; -webkit-mask: var(--icon) center / contain no-repeat; mask: var(--icon) center / contain no-repeat; }
+@keyframes logos-scroll { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) {
+  .logos { -webkit-mask-image: none; mask-image: none; }
+  .logos-track { width: auto; animation: none; }
+  .logos-track ul { flex-wrap: wrap; justify-content: center; gap: 14px 32px; padding: 0; }
+  .logos-track ul[aria-hidden] { display: none; }
+}
+
 /* ---------- About: skeptical Pico with a handwritten note, above the Now list ---------- */
 .about-side { display: flex; flex-direction: column; gap: 18px; }
 .about-pico { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin: -24px 0 0; }
