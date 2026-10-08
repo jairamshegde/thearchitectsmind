@@ -29,7 +29,8 @@ const rows = [
   ],
 ];
 ---
-<section class="logos" aria-label="Tools I work with">
+<section class="logos" aria-labelledby="logos-label">
+  <p class="logos-label" id="logos-label">Tools I build with. Pico keeps an eye on all of them.</p>
   {rows.map((row) => (
     <div class="logos-row">
       {/* Two copies of the list; the track slides by exactly one copy, so the loop has no seam. */}

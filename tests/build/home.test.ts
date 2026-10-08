@@ -29,6 +29,7 @@ describe('home page', () => {
   });
 
   it('shows 19 tool logos in two rows, each row duplicated once and hidden from screen readers', () => {
+    expect(home.querySelector('.logos .logos-label')?.text).toBe('Tools I build with. Pico keeps an eye on all of them.');
     const rows = home.querySelectorAll('.logos .logos-row');
     expect(rows.length).toBe(2);
     for (const row of rows) {
