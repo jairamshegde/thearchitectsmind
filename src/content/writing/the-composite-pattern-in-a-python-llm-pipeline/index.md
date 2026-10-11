@@ -10,7 +10,7 @@ tags:
   - llm
   - langgraph
 cover: phase_5_cover_image.png
-featured: false
+featured: true
 draft: false
 ---
 
