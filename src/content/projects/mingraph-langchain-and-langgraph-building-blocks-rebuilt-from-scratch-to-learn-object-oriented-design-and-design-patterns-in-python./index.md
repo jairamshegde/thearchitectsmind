@@ -1,5 +1,5 @@
 ---
-title: 'Mingraph : LangChain and LangGraph building blocks, rebuilt from scratch to learn object-oriented design and design patterns in Python.'
+title: 'Mingraph : Minimal LangChain and LangGraph Implementation (Build from Scratch)'
 summary: 'mingraph follows the idea behind build-your-own-x: the best way to understand a technology is to rebuild it from scratch. Read the blog series from the link, it is getting small traction.'
 stack:
   - python
@@ -10,8 +10,6 @@ stack:
 date: 2026-10-11
 links:
   repo: https://github.com/jairamshegde/mingraph
-role: Senior AI Engineer
-timeline: Sep - Oct 2026
 problem: 'mingraph follows the idea behind build-your-own-x: the best way to understand a technology is to rebuild it from scratch. Here the goal is object-oriented design. Instead of studying patterns in isolation, each one is learned by rebuilding a LangChain/LangGraph piece that actually needs it, so every concept comes with a real problem it solves.'
 lessons: To learn object-oriented design and design patterns in Python.
 cover: Building Blocks of an AI System.png
