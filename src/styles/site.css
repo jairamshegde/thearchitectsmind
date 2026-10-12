@@ -65,12 +65,25 @@ section[id] { scroll-margin-top: 16px; }
 /* Projects: stage panels and case-study badge */
 .proj-list > li { display: block; }
 .stage { overflow: hidden; }
-.stage-panel { position: absolute; inset: 0; display: grid; place-items: center; padding: 28px; }
+.stage-panel { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1fr); }
+.stage-panel.has-cover { grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); }
 .stage-panel[hidden] { display: none; }
-.stage-panel img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: var(--r-md); }
-.stage-fallback { text-align: center; }
-.stage-title { margin: 0; font-weight: 700; font-size: var(--fs-h2); letter-spacing: -.03em; line-height: 1.1; }
-.stage-fallback .hand { margin: 10px 0 0; color: var(--graphite); }
+.stage-copy { align-self: center; padding: 32px 24px 32px clamp(24px, 3vw, 36px); }
+.stage-summary { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--graphite); }
+.stage-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 20px 0 26px; padding: 0; list-style: none; }
+.stage-tags li { padding: 3px 10px; border-radius: var(--r-pill); background: var(--page); box-shadow: 0 0 0 1px var(--line-2); font-size: 12.5px; color: var(--graphite); }
+.stage-copy .ctas { gap: 14px 20px; }
+.stage-copy .btn { font-size: 15px; white-space: nowrap; }
+.stage-copy .btn-primary { padding: 11px 18px; }
+.stage-copy .gh { flex: none; }
+/* Cover teaser: wide, vertically centred, bleeding off the right edge */
+.stage-cover { align-self: center; height: 66%; overflow: hidden; border-radius: var(--r-md) 0 0 var(--r-md); box-shadow: 0 0 0 1px var(--line), 0 18px 40px -24px rgba(30, 40, 60, .45); }
+.stage-cover img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: left center; }
+@media (max-width: 900px) {
+  .stage { height: auto; }
+  .stage-panel, .stage-panel.has-cover { position: relative; grid-template-columns: minmax(0, 1fr); }
+  .stage-cover { height: 240px; margin: 0 0 28px clamp(24px, 3vw, 36px); }
+}
 .badge { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: var(--r-pill); border: 1px solid var(--line-2); font-size: 12px; color: var(--graphite); }
 
 /* About section CTA */
