@@ -1,0 +1,46 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { published } from '../../../lib/collections';
+import { postPath, seriesParts } from '../../../lib/content';
+import { withBase } from '../../../lib/url';
+
+export async function getStaticPaths() {
+  const posts = await published('writing');
+  return (await getCollection('series')).map((series) => ({
+    params: { series: series.id },
+    props: { series, parts: seriesParts(posts, series.id) },
+  }));
+}
+
+interface Props {
+  series: CollectionEntry<'series'>;
+  parts: CollectionEntry<'writing'>[];
+}
+const { series, parts } = Astro.props;
+const { title, description } = series.data;
+---
+<BaseLayout title={title} description={description}>
+  <header class="page-head wrap">
+    <p class="article-kicker"><a href={withBase('/writing/')}>Writing</a> · Series · {parts.length} {parts.length === 1 ? 'part' : 'parts'}</p>
+    <h1>{title}</h1>
+    <p>{description}</p>
+  </header>
+  <div class="wrap page-body">
+    {parts.length === 0 ? <p class="empty">First part coming soon.</p> : (
+      <ol class="series-list">
+        {parts.map((post, i) => (
+          <li>
+            <a class="series-row" href={withBase(postPath(post))}>
+              <span class="series-num">Part {i + 1}</span>
+              <span>
+                <span class="series-title">{post.data.title}</span>
+                <span class="series-desc">{post.data.description}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    )}
+  </div>
+</BaseLayout>

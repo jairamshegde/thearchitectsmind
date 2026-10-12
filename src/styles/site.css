@@ -118,6 +118,15 @@ a.pg-step:hover { text-decoration: underline; text-underline-offset: 4px; }
   .note-tags { grid-column: 2; }
 }
 
+/* Series page: parts in order */
+.series-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line-2); max-width: 860px; }
+.series-row { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 20px 12px 20px 4px; border-top: 1px solid var(--line-2); text-decoration: none; transition: background-color .25s ease; }
+.series-row:hover { background: var(--card); }
+.series-num { font-size: var(--fs-meta); color: var(--pencil); font-variant-numeric: tabular-nums; }
+.series-title { display: block; font-size: 18px; font-weight: 650; letter-spacing: -.01em; line-height: 1.3; }
+.series-desc { display: block; margin-top: 4px; font-size: var(--fs-small); line-height: 1.5; color: var(--graphite); }
+.page-head .article-kicker a { color: inherit; }
+
 /* Footer hover popovers: no hover on touch/narrow screens, and they would overflow the viewport */
 @media (hover: none), (max-width: 560px) {
   .links .pop { display: none; }

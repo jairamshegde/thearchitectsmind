@@ -105,6 +105,9 @@
 .astro-code .line.diff.remove::before { content: "-"; color: var(--err); }
 
 /* ---------- Previous / Next ---------- */
+.series-mark { margin: 64px 0 0; font-size: var(--fs-meta); color: var(--pencil); }
+.series-mark a { color: var(--ink); font-weight: 600; text-underline-offset: 3px; }
+.series-mark + .prev-next { margin-top: 12px; }
 .prev-next { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line-2); }
 .prev-next:empty { display: none; }
 .pn { display: flex; flex-direction: column; gap: 4px; font-weight: 650; letter-spacing: -.01em; text-decoration: none; }
