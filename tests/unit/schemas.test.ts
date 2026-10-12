@@ -28,6 +28,13 @@ describe('writingSchema', () => {
     expect(r.cover).toBeUndefined();
     expect(r.updated).toBeUndefined();
   });
+  it('accepts an optional series and positive whole part number, unset when the CMS clears them', () => {
+    expect(writingSchema(image).parse({ ...valid, series: 'mingraph', part: 3 })).toMatchObject({ series: 'mingraph', part: 3 });
+    const r = writingSchema(image).parse({ ...valid, series: null, part: null });
+    expect([r.series, r.part]).toEqual([undefined, undefined]);
+    expect(() => writingSchema(image).parse({ ...valid, part: 0 })).toThrow();
+    expect(() => writingSchema(image).parse({ ...valid, part: 1.5 })).toThrow();
+  });
 });
 
 describe('noteSchema', () => {

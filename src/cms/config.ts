@@ -21,8 +21,11 @@ const url = (name: string, label: string): CmsField => str(name, label, { patter
 /** Uploaded media sits beside the entry file, referenced by a relative path Astro can optimise. */
 const besideEntry = { media_folder: '', public_folder: '' };
 
+/** You type the slug when creating an entry (it becomes the URL) and can rename it later. */
+const editableSlug = { editable: true };
+
 /** One folder per entry (<slug>/index.md); uploaded images are stored beside it. */
-const folder = (name: string, label: string, label_singular: string, fields: CmsField[]) => ({
+const folder = (name: string, label: string, label_singular: string, fields: CmsField[], slug: string | typeof editableSlug = '{{slug}}') => ({
   name,
   label,
   label_singular,
@@ -31,12 +34,27 @@ const folder = (name: string, label: string, label_singular: string, fields: Cms
   extension: 'md',
   format: 'frontmatter',
   create: true,
-  slug: '{{slug}}',
+  slug,
   ...besideEntry,
   fields,
 });
 
-type FolderCollection = ReturnType<typeof folder>;
+/** One file per series (<slug>.md). Its slug is the series part of each post's URL. */
+const series = {
+  name: 'series',
+  label: 'Series',
+  label_singular: 'Series',
+  folder: 'src/content/series',
+  path: '{{slug}}',
+  extension: 'md',
+  format: 'frontmatter',
+  create: true,
+  slug: editableSlug,
+  ...besideEntry,
+  fields: [title, text('description', 'Description', { hint: 'Shown at the top of the series page.' })],
+};
+
+type FolderCollection = ReturnType<typeof folder> | typeof series;
 type FileCollection = {
   name: string;
   label: string;
@@ -65,10 +83,13 @@ export const cmsConfig: {
       opt(date('updated', 'Updated')),
       tags,
       image('cover', 'Cover image'),
+      opt({ name: 'series', label: 'Series', widget: 'relation', collection: 'series', hint: 'Optional. Puts the post at /writing/<series>/<slug>/.' }),
+      opt({ name: 'part', label: 'Part in series', widget: 'number', value_type: 'int', min: 1, hint: 'Required when a series is picked: 1, 2, 3...' }),
       featured,
       draft,
       body(),
-    ]),
+    ], editableSlug),
+    series,
     folder('notes', 'Notes', 'Note', [
       title,
       date('date', 'Date'),
