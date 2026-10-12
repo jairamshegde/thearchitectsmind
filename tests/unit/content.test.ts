@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { byDateDesc, groupByYear, isCaseStudy, isVisible, neighbours, pickHome, topTags } from '../../src/lib/content';
+import { byDateDesc, groupByYear, isCaseStudy, isVisible, neighbours, pickHome, postPath, seriesParts, topTags } from '../../src/lib/content';
 
 const e = (date: string, extra: { draft?: boolean; featured?: boolean; id?: string } = {}) => ({
   id: extra.id ?? date,
@@ -73,5 +73,29 @@ describe('topTags', () => {
   });
   it('returns fewer than n when there are fewer tags', () => {
     expect(topTags([t('a')], 10)).toEqual(['a']);
+  });
+});
+
+describe('postPath', () => {
+  it('nests series posts under the series slug', () => {
+    expect(postPath({ id: 'strategy', data: { series: 'mingraph', part: 3 } })).toBe('/writing/mingraph/strategy/');
+    expect(postPath({ id: 'loose-post', data: {} })).toBe('/writing/loose-post/');
+  });
+});
+
+describe('seriesParts', () => {
+  const post = (id: string, series?: string, part?: number) => ({ id, data: { series, part } });
+
+  it('returns only that series, in part order, whatever the input order', () => {
+    const posts = [post('c', 'mg', 3), post('x', 'other', 1), post('a', 'mg', 1), post('loose'), post('b', 'mg', 2)];
+    expect(seriesParts(posts, 'mg').map((p) => p.id)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('throws when a series post has no part number', () => {
+    expect(() => seriesParts([post('a', 'mg', 1), post('b', 'mg')], 'mg')).toThrow(/"b".*no part number/);
+  });
+
+  it('throws when two posts share a part number', () => {
+    expect(() => seriesParts([post('a', 'mg', 2), post('b', 'mg', 2)], 'mg')).toThrow(/two posts as part 2/);
   });
 });

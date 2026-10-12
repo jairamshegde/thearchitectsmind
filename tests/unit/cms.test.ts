@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import Ajv from 'ajv';
 import { z } from 'astro/zod';
 import { cmsConfig, type CmsField } from '../../src/cms/config';
-import { aboutSchema, noteSchema, projectSchema, settingsSchema, writingSchema } from '../../src/lib/schemas';
+import { aboutSchema, noteSchema, projectSchema, seriesSchema, settingsSchema, writingSchema } from '../../src/lib/schemas';
 
 const sveltiaSchema = JSON.parse(readFileSync('node_modules/@sveltia/cms/schema/sveltia-cms.json', 'utf8'));
 const validate = new Ajv({ strict: false, allErrors: true, validateFormats: false, logger: false }).compile(sveltiaSchema);
@@ -11,6 +11,7 @@ const validate = new Ajv({ strict: false, allErrors: true, validateFormats: fals
 const image = () => z.string();
 const shapes = {
   writing: writingSchema(image).shape,
+  series: seriesSchema.shape,
   notes: noteSchema.shape,
   projects: projectSchema(image).shape,
   about: aboutSchema(image).shape,

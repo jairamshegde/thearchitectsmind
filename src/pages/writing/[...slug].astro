@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import PostMeta from '../../components/PostMeta.astro';
+import { published } from '../../lib/collections';
+import { neighbours, postPath, postSlug, seriesParts } from '../../lib/content';
+import { withBase } from '../../lib/url';
+
+export async function getStaticPaths() {
+  const posts = await published('writing');
+  const allSeries = new Map((await getCollection('series')).map((s) => [s.id, s]));
+  return posts.map((post, i) => {
+    const name = post.data.series;
+    if (!name) {
+      if (allSeries.has(post.id)) throw new Error(`Post "${post.id}" has the same slug as a series; rename one of them`);
+      const { newer, older } = neighbours(posts, i);
+      return { params: { slug: postSlug(post) }, props: { post, prev: older, next: newer } };
+    }
+    const series = allSeries.get(name);
+    if (!series) throw new Error(`Post "${post.id}" names series "${name}", which does not exist`);
+    const parts = seriesParts(posts, name);
+    const at = parts.indexOf(post);
+    return {
+      params: { slug: postSlug(post) },
+      props: { post, prev: parts[at - 1], next: parts[at + 1], series: { entry: series, at: at + 1, of: parts.length } },
+    };
+  });
+}
+
+interface Props {
+  post: CollectionEntry<'writing'>;
+  prev?: CollectionEntry<'writing'>;
+  next?: CollectionEntry<'writing'>;
+  series?: { entry: CollectionEntry<'series'>; at: number; of: number };
+}
+const { post, prev, next, series } = Astro.props;
+const { Content, headings, remarkPluginFrontmatter } = await render(post);
+const { title, subheading, description, date, tags, cover } = post.data;
+---
+<ArticleLayout title={title} description={description} headings={headings} back={{ href: withBase('/writing/'), label: 'All writing' }}>
+  <Fragment slot="header">
+    {cover && <Image class="article-cover post-cover" src={cover} alt="" widths={[860, 1500]} sizes="(max-width: 900px) 100vw, 860px" loading="eager" />}
+    <h1 class="article-title">{title}</h1>
+    {subheading && <p class="article-sub">{subheading}</p>}
+    <div class="article-info">
+      <ul class="article-tags">{tags.map((tag) => <li>{tag}</li>)}</ul>
+      <PostMeta date={date} minutes={remarkPluginFrontmatter.minutesRead} />
+    </div>
+  </Fragment>
+
+  <Content />
+
+  <Fragment slot="after">
+    {series && (
+      <p class="series-mark">
+        Part {series.at} of {series.of} in <a href={withBase(`/writing/${series.entry.id}/`)}>{series.entry.data.title}</a>
+      </p>
+    )}
+    <nav class="prev-next" aria-label={series ? 'More in this series' : 'More writing'}>
+      {prev && <a class="pn pn-prev" href={withBase(postPath(prev))}><span>← Previous</span>{prev.data.title}</a>}
+      {next && <a class="pn pn-next" href={withBase(postPath(next))}><span>Next →</span>{next.data.title}</a>}
+    </nav>
+  </Fragment>
+</ArticleLayout>

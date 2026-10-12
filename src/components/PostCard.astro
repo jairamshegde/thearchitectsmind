@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { render, type CollectionEntry } from 'astro:content';
 import PostMeta from './PostMeta.astro';
+import { postPath } from '../lib/content';
 import { withBase } from '../lib/url';
 
 interface Props {
@@ -11,7 +12,7 @@ const { post } = Astro.props;
 const { title, description, date, tags, cover } = post.data;
 const { remarkPluginFrontmatter } = await render(post);
 ---
-<a class="post" href={withBase(`/writing/${post.id}/`)} data-tags={JSON.stringify(tags)}>
+<a class="post" href={withBase(postPath(post))} data-tags={JSON.stringify(tags)}>
   <span class="thumb">
     {cover ? (
       <Image src={cover} alt="" widths={[400, 800]} sizes="(max-width: 900px) 100vw, 380px" />

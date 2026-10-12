@@ -20,8 +20,15 @@ export const writingSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
     tags,
     updated: optional(z.coerce.date()),
     cover: optional(image()),
+    series: optional(z.string().min(1)),
+    part: optional(z.coerce.number().int().positive()),
     ...flags,
   });
+
+export const seriesSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+});
 
 export const noteSchema = z.object({
   title: z.string().min(1),
