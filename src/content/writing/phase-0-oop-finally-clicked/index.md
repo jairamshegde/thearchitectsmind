@@ -9,6 +9,8 @@ tags:
   - oops
   - aha!
 cover: late_night_coding_session.png
+series: mingraph
+part: 1
 featured: true
 draft: false
 ---
