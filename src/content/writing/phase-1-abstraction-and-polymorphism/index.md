@@ -11,6 +11,8 @@ tags:
   - LLM
   - langchain
 cover: phase_1_cover_image.png
+series: mingraph
+part: 2
 featured: false
 draft: false
 ---
