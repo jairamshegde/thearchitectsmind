@@ -55,7 +55,7 @@
   --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.045em, leading .92 */
   --fs-hero:    clamp(30px, 3.2vw, 46px);  /* hero sentence, 700, -.03em, 1.16 */
   --fs-h2:      clamp(28px, 3vw, 38px);    /* section titles, 700, -.03em, 1.1 */
-  --fs-lead:    clamp(20px, 1.9vw, 24px);  /* about paragraphs, 400, -.01em, 1.45 */
+  --fs-lead:    clamp(20px, 1.9vw, 24px);  /* about hook line, 400, -.01em, 1.45 */
   --fs-h3:      clamp(18px, 1.55vw, 21px); /* card titles, 650, -.02em, 1.25 */
   --fs-item:    clamp(20px, 1.9vw, 24px);  /* project names, 650, -.02em, 1.2 */
   --fs-body:    16px;                      /* 400, 1.6 */
@@ -249,7 +249,9 @@ img, svg { max-width: 100%; }
    9. About
    --------------------------------------------------------------------- */
 .about-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 80px); }
-.about-grid p { font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; margin: 0 0 18px; max-width: 32em; }
+.about-grid p { font-size: 17.5px; line-height: 1.6; color: var(--graphite); margin: 0 0 10px; max-width: 34em; text-wrap: pretty; }
+/* First intro paragraph is the hook: lead size, the rest read as body */
+.about-grid p:first-child { font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; color: var(--ink); margin-bottom: 16px; max-width: 26em; }
 .now { margin: 0; font-size: var(--fs-small); }
 .now div { display: grid; grid-template-columns: 96px 1fr; gap: 12px; padding: 13px 0; border-top: 1px solid var(--line-2); transition: background-color .25s ease, padding .25s ease; }
 .now div:last-child { border-bottom: 1px solid var(--line-2); }

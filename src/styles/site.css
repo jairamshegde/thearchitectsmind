@@ -87,7 +87,7 @@ section[id] { scroll-margin-top: 16px; }
 .badge { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: var(--r-pill); border: 1px solid var(--line-2); font-size: 12px; color: var(--graphite); }
 
 /* About section CTA */
-.about-grid .btn { margin-top: 8px; }
+.about-grid .btn { margin-top: 18px; }
 
 /* Index page headers */
 .page-head { padding: clamp(24px, 6vh, 64px) var(--gutter) clamp(28px, 5vh, 48px); }
