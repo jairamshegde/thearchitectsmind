@@ -79,10 +79,16 @@ describe('/notes/ pagination', () => {
 
 describe('/projects/', () => {
   const p = page('/projects/');
-  it('lists projects with a Case study badge only on full case studies', () => {
+  it('lists project titles only, with summary, stack and links in the stage panel', () => {
     const rows = p.querySelectorAll('.proj-row');
-    const byHref = (h: string) => rows.find((r) => r.getAttribute('href') === `${BASE}/projects/${h}/`)!;
-    expect(byHref('order-pipeline-redesign').querySelector('.badge')?.text).toBe('Case study');
-    expect(byHref('dotfiles-cli').querySelector('.badge')).toBeNull();
+    const i = rows.findIndex((r) => r.getAttribute('href') === `${BASE}/projects/order-pipeline-redesign/`);
+    expect(rows[i].querySelector('.name')?.text).toBe('Order pipeline redesign');
+    expect(rows[i].querySelector('.blurb, .meta, .year, .badge')).toBeNull();
+    const panel = p.querySelector(`[data-stage-panel="${i}"]`)!;
+    expect(panel.querySelector('.stage-summary')?.text).toMatch(/^Split a synchronous checkout/);
+    expect(panel.querySelectorAll('.stage-tags li').map((li) => li.text)).toEqual(['Python', 'FastAPI', 'PostgreSQL', 'Kafka']);
+    expect(panel.querySelector('.btn-primary')?.getAttribute('href')).toBe(`${BASE}/projects/order-pipeline-redesign/`);
+    expect(panel.querySelector('a.btn-text')?.getAttribute('href')).toBe('https://github.com/jairamshegde/');
+    expect(panel.querySelector('.stage-cover img')).not.toBeNull();
   });
 });

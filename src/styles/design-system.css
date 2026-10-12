@@ -198,24 +198,19 @@ img, svg { max-width: 100%; }
 /* ---------------------------------------------------------------------
    7. Projects: quiet list + sticky preview panel
    --------------------------------------------------------------------- */
-.proj-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--gap-lg); align-items: start; }
+.proj-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.45fr); gap: var(--gap-lg); align-items: start; }
 .proj-list { list-style: none; margin: 0; padding: 0; border-bottom: 1px solid var(--line-2); }
 .proj-row {
-  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; column-gap: 14px;
+  display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; column-gap: 14px; align-items: center;
   padding: 26px 16px 26px 8px; border-top: 1px solid var(--line-2);
   text-decoration: none; color: var(--ink); transition: background-color .3s ease;
 }
-.proj-row .num, .proj-row .year { font-size: 14px; color: var(--pencil); padding-top: 4px; font-variant-numeric: tabular-nums; }
+.proj-row .num { font-size: 14px; color: var(--pencil); font-variant-numeric: tabular-nums; }
 .proj-row .name { display: block; font-weight: 650; font-size: var(--fs-item); letter-spacing: -.02em; line-height: 1.2; transition: transform var(--dur-base) var(--ease-out); }
-.proj-row .blurb { display: block; font-size: var(--fs-small); color: var(--graphite); margin-top: 6px; line-height: 1.5; }
-.proj-row .meta { display: block; font-size: var(--fs-meta); color: var(--pencil); margin-top: 8px; }
+.proj-row .chev { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; color: var(--pencil); transition: transform var(--dur-base) var(--ease-out), color .3s ease; }
 .proj-row:hover, .proj-row.is-active { background: var(--card); }
 .proj-row:hover .name, .proj-row.is-active .name { transform: translateX(4px); }
-/* Handwritten note that slides open under the active row */
-.proj-row .note { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .4s ease; }
-.proj-row .note > span { overflow: hidden; font-family: var(--font-hand); font-size: var(--fs-note); color: var(--graphite); opacity: 0; transition: opacity .3s ease .15s; }
-.proj-row.is-active .note { grid-template-rows: 1fr; }
-.proj-row.is-active .note > span { opacity: 1; }
+.proj-row:hover .chev, .proj-row.is-active .chev { color: var(--ink); transform: translateX(3px); }
 
 .stage {
   position: sticky; top: 24px; height: clamp(430px, 56vh, 480px);
