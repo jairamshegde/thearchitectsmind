@@ -1,9 +1,9 @@
 ---
 title: Abstraction and polymorphism, built from three LLM adapters
-subheading: 'LangGraph from Scratch: Design Patterns in Python, Phase 1: one base class, three providers, and the two OOP ideas hiding inside them'
-description: 'LangGraph from Scratch: Design Patterns in Python, Phase 1: one base class, three providers, and the two OOP ideas hiding inside them'
+subheading: 'LangGraph from Scratch, Phase 1: one base class, three providers, and the two OOP ideas hiding inside them'
+description: 'LangGraph from Scratch, Phase 1: one base class, three providers, and the two OOP ideas hiding inside them.'
 date: 2026-10-11
-updated: 2026-10-12
+updated: 2026-10-13
 tags:
   - python
   - oop
