@@ -10,6 +10,8 @@ tags:
   - oop
   - design-patterns
 cover: phase_6_cover_image.png
+series: mingraph
+part: 7
 featured: true
 draft: false
 ---
