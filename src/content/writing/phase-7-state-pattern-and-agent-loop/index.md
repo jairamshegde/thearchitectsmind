@@ -10,6 +10,8 @@ tags:
   - design-patterns
   - LLM
 cover: phase_7_cover_image.png
+series: mingraph
+part: 7
 featured: true
 draft: false
 ---
