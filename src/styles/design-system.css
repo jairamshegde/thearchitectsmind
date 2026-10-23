@@ -4,14 +4,15 @@
    Fonts (put this in <head>):
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=JetBrains+Mono:wght@400..700&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
    Roles
-   - Bricolage Grotesque: everything (headings, body, UI). Variable, with an
-     optical-size axis, so big headlines get tighter shapes automatically.
+   - Cabinet Grotesk (Fontshare): headings and titles. Loaded from
+     https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap
+   - IBM Plex Sans: body text and UI.
    - Shantell Sans: handwritten notes only (annotations, margin notes,
      sticky notes). Never for body copy or buttons.
-   - System monospace: code only.
+   - JetBrains Mono: code only.
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -47,9 +48,10 @@
   --warn:       #FBBF24;
 
   /* Type */
-  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Cabinet Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-hand: "Shantell Sans", "Comic Neue", "Segoe Print", "Bradley Hand", cursive;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Type scale (fluid). Tracking tightens as size grows. */
   --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.045em, leading .92 */
@@ -126,6 +128,7 @@ img, svg { max-width: 100%; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
 .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
 .hand { font-family: var(--font-hand); }
+h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title { font-family: var(--font-display); }
 
 /* ---------------------------------------------------------------------
    3. Navigation
