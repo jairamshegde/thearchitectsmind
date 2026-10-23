@@ -4,14 +4,14 @@
    Fonts (put this in <head>):
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=JetBrains+Mono:wght@400..700&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
    Roles
-   - Bricolage Grotesque: everything (headings, body, UI). Variable, with an
-     optical-size axis, so big headlines get tighter shapes automatically.
+   - Funnel Display: headings and titles.
+   - IBM Plex Sans: body text and UI.
    - Shantell Sans: handwritten notes only (annotations, margin notes,
      sticky notes). Never for body copy or buttons.
-   - System monospace: code only.
+   - JetBrains Mono: code only.
    ===================================================================== */
 
 /* ---------------------------------------------------------------------
@@ -47,12 +47,13 @@
   --warn:       #FBBF24;
 
   /* Type */
-  --font-sans: "Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Funnel Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-hand: "Shantell Sans", "Comic Neue", "Segoe Print", "Bradley Hand", cursive;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Type scale (fluid). Tracking tightens as size grows. */
-  --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.045em, leading .92 */
+  --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.03em, leading 1.05 */
   --fs-hero:    clamp(30px, 3.2vw, 46px);  /* hero sentence, 700, -.03em, 1.16 */
   --fs-h2:      clamp(28px, 3vw, 38px);    /* section titles, 700, -.03em, 1.1 */
   --fs-lead:    clamp(20px, 1.9vw, 24px);  /* about hook line, 400, -.01em, 1.45 */
@@ -118,7 +119,6 @@ body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: 1.6;
-  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
@@ -126,6 +126,7 @@ img, svg { max-width: 100%; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 4px; }
 .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gutter); }
 .hand { font-family: var(--font-hand); }
+h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title { font-family: var(--font-display); }
 
 /* ---------------------------------------------------------------------
    3. Navigation
@@ -146,7 +147,7 @@ img, svg { max-width: 100%; }
 }
 .hl {
   margin: 0; max-width: 24ch;
-  font-weight: 700; font-variation-settings: "opsz" 96;
+  font-weight: 700;
   font-size: var(--fs-hero); line-height: 1.16; letter-spacing: -.03em; text-wrap: pretty;
 }
 /* Marker highlight behind a phrase */
@@ -263,7 +264,7 @@ img, svg { max-width: 100%; }
    10. Footer
    --------------------------------------------------------------------- */
 .foot { padding: clamp(80px, 13vh, 140px) 0 0; text-align: center; }
-.big { margin: 0; font-weight: 800; font-variation-settings: "opsz" 96; font-size: var(--fs-display); line-height: .92; letter-spacing: -.045em; }
+.big { margin: 0; font-weight: 800; font-size: var(--fs-display); line-height: 1.05; letter-spacing: -.03em; }
 .foot .sub { font-size: 17px; color: var(--graphite); margin: 26px 0 0; }
 .links { display: flex; justify-content: center; gap: clamp(22px, 5vw, 52px); margin: 32px 0 0; list-style: none; padding: 0; }
 .links > li { position: relative; }
