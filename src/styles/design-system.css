@@ -120,7 +120,6 @@ body {
   font-family: var(--font-sans);
   font-size: var(--fs-body);
   line-height: 1.6;
-  font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
 }
 a { color: inherit; }
@@ -149,7 +148,7 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
 }
 .hl {
   margin: 0; max-width: 24ch;
-  font-weight: 700; font-variation-settings: "opsz" 96;
+  font-weight: 700;
   font-size: var(--fs-hero); line-height: 1.16; letter-spacing: -.03em; text-wrap: pretty;
 }
 /* Marker highlight behind a phrase */
@@ -266,7 +265,7 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
    10. Footer
    --------------------------------------------------------------------- */
 .foot { padding: clamp(80px, 13vh, 140px) 0 0; text-align: center; }
-.big { margin: 0; font-weight: 800; font-variation-settings: "opsz" 96; font-size: var(--fs-display); line-height: .92; letter-spacing: -.045em; }
+.big { margin: 0; font-weight: 800; font-size: var(--fs-display); line-height: .92; letter-spacing: -.045em; }
 .foot .sub { font-size: 17px; color: var(--graphite); margin: 26px 0 0; }
 .links { display: flex; justify-content: center; gap: clamp(22px, 5vw, 52px); margin: 32px 0 0; list-style: none; padding: 0; }
 .links > li { position: relative; }
