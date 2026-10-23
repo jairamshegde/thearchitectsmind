@@ -53,7 +53,7 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   /* Type scale (fluid). Tracking tightens as size grows. */
-  --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.045em, leading .92 */
+  --fs-display: clamp(46px, 8.6vw, 124px); /* footer statement, weight 800, tracking -.03em, leading 1.05 */
   --fs-hero:    clamp(30px, 3.2vw, 46px);  /* hero sentence, 700, -.03em, 1.16 */
   --fs-h2:      clamp(28px, 3vw, 38px);    /* section titles, 700, -.03em, 1.1 */
   --fs-lead:    clamp(20px, 1.9vw, 24px);  /* about hook line, 400, -.01em, 1.45 */
@@ -264,7 +264,7 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
    10. Footer
    --------------------------------------------------------------------- */
 .foot { padding: clamp(80px, 13vh, 140px) 0 0; text-align: center; }
-.big { margin: 0; font-weight: 800; font-size: var(--fs-display); line-height: .92; letter-spacing: -.045em; }
+.big { margin: 0; font-weight: 800; font-size: var(--fs-display); line-height: 1.05; letter-spacing: -.03em; }
 .foot .sub { font-size: 17px; color: var(--graphite); margin: 26px 0 0; }
 .links { display: flex; justify-content: center; gap: clamp(22px, 5vw, 52px); margin: 32px 0 0; list-style: none; padding: 0; }
 .links > li { position: relative; }
