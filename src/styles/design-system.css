@@ -4,11 +4,10 @@
    Fonts (put this in <head>):
    <link rel="preconnect" href="https://fonts.googleapis.com">
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=JetBrains+Mono:wght@400..700&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Funnel+Display:wght@300..800&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=JetBrains+Mono:wght@400..700&family=Shantell+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
    Roles
-   - Cabinet Grotesk (Fontshare): headings and titles. Loaded from
-     https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@400,500,700,800&display=swap
+   - Funnel Display: headings and titles.
    - IBM Plex Sans: body text and UI.
    - Shantell Sans: handwritten notes only (annotations, margin notes,
      sticky notes). Never for body copy or buttons.
@@ -48,7 +47,7 @@
   --warn:       #FBBF24;
 
   /* Type */
-  --font-display: "Cabinet Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Funnel Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   --font-hand: "Shantell Sans", "Comic Neue", "Segoe Print", "Bradley Hand", cursive;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
