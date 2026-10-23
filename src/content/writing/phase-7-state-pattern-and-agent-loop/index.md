@@ -11,7 +11,7 @@ tags:
   - LLM
 cover: phase_7_cover_image.png
 series: mingraph
-part: 7
+part: 8
 featured: true
 draft: false
 ---
