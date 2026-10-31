@@ -1,0 +1,28 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../lib/url';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+const { project } = Astro.props;
+const { title, summary, stack, cover, links } = project.data;
+const href = withBase(`/projects/${project.id}/`);
+---
+<article class="latest-proj">
+  <a class="thumb" href={href} tabindex="-1" aria-hidden="true">
+    {cover ? (
+      <Image src={cover} alt="" widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 600px" />
+    ) : (
+      <span class="thumb-fallback"><span class="hand">{stack[0]}</span></span>
+    )}
+  </a>
+  <div class="body">
+    <span class="kicker">Latest project</span>
+    <h2><a href={href}>{title}</a></h2>
+    <p class="proj-summary">{summary}</p>
+    <ul class="proj-tags">{stack.map((s) => <li>{s}</li>)}</ul>
+    {links?.repo && <a class="btn btn-primary" href={links.repo} target="_blank" rel="noopener">View Project <span class="arr" aria-hidden="true">↗</span></a>}
+  </div>
+</article>
