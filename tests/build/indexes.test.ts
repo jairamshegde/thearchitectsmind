@@ -81,23 +81,24 @@ describe('/projects/', () => {
   const p = page('/projects/');
   const href = (slug: string) => `${BASE}/projects/${slug}/`;
 
-  it('shows the newest project once, above the list, with summary, stack and a View Project link', () => {
+  it('shows the newest project once, above the list, with summary, stack and a View Project link to the repo', () => {
     const latest = p.querySelectorAll('.latest-proj');
     expect(latest).toHaveLength(1);
-    const exploreHref = latest[0].querySelector('.btn-primary')?.getAttribute('href');
+    const titleHref = latest[0].querySelector('h2 a')?.getAttribute('href');
     const cardHrefs = p.querySelectorAll('.proj-card h3 a').map((a) => a.getAttribute('href'));
-    expect(cardHrefs).not.toContain(exploreHref);
+    expect(cardHrefs).not.toContain(titleHref);
+    expect(latest[0].querySelector('.btn-primary')?.getAttribute('href')).toMatch(/^https:\/\/github\.com\//);
     expect(latest[0].querySelector('.proj-summary')?.text).toBeTruthy();
     expect(latest[0].querySelectorAll('.proj-tags li').length).toBeGreaterThan(0);
   });
 
-  it('renders each other project as a card with summary, stack, cover, View Project and GitHub links', () => {
+  it('renders each other project as a card with summary, stack, cover and a View Project link to the repo', () => {
     const card = p.querySelectorAll('.proj-card').find((c) => c.querySelector('h3 a')?.getAttribute('href') === href('order-pipeline-redesign'))!;
     expect(card.querySelector('h3')?.text).toBe('Order pipeline redesign');
     expect(card.querySelector('.proj-summary')?.text).toMatch(/^Split a synchronous checkout/);
     expect(card.querySelectorAll('.proj-tags li').map((li) => li.text)).toEqual(['Python', 'FastAPI', 'PostgreSQL', 'Kafka']);
-    expect(card.querySelector('.btn-primary')?.getAttribute('href')).toBe(href('order-pipeline-redesign'));
-    expect(card.querySelector('a.btn-text')?.getAttribute('href')).toBe('https://github.com/jairamshegde/');
+    expect(card.querySelector('h3 a')?.getAttribute('href')).toBe(href('order-pipeline-redesign'));
+    expect(card.querySelector('.btn-primary')?.getAttribute('href')).toBe('https://github.com/jairamshegde/');
     expect(card.querySelector('.thumb img')).not.toBeNull();
   });
 
