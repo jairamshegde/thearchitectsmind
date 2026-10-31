@@ -93,7 +93,10 @@ section[id] { scroll-margin-top: 16px; }
 .proj-card .body { padding: 4px 12px 4px 0; }
 .proj-card h3 { margin: 0; font-weight: 650; font-size: var(--fs-h3); letter-spacing: -.02em; line-height: 1.25; }
 .proj-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; }
-.proj-foot .btn-primary { padding: 9px 16px; font-size: 14px; }
+.proj-foot .ctas { gap: 10px 20px; }
+.proj-foot .btn { font-size: 14px; white-space: nowrap; }
+.proj-foot .btn-primary { padding: 9px 16px; }
+.latest-proj .gh, .proj-foot .gh { flex: none; }
 @media (max-width: 900px) {
   .proj-card { grid-template-columns: 88px minmax(0, 1fr); align-items: start; }
   .proj-card .thumb { aspect-ratio: 1; }

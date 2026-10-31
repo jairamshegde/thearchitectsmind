@@ -81,7 +81,7 @@ describe('/projects/', () => {
   const p = page('/projects/');
   const href = (slug: string) => `${BASE}/projects/${slug}/`;
 
-  it('shows the newest project once, above the list, with summary, stack and an Explore link', () => {
+  it('shows the newest project once, above the list, with summary, stack and a View Project link', () => {
     const latest = p.querySelectorAll('.latest-proj');
     expect(latest).toHaveLength(1);
     const exploreHref = latest[0].querySelector('.btn-primary')?.getAttribute('href');
@@ -91,12 +91,13 @@ describe('/projects/', () => {
     expect(latest[0].querySelectorAll('.proj-tags li').length).toBeGreaterThan(0);
   });
 
-  it('renders each other project as a card with summary, stack, cover and Explore link', () => {
+  it('renders each other project as a card with summary, stack, cover, View Project and GitHub links', () => {
     const card = p.querySelectorAll('.proj-card').find((c) => c.querySelector('h3 a')?.getAttribute('href') === href('order-pipeline-redesign'))!;
     expect(card.querySelector('h3')?.text).toBe('Order pipeline redesign');
     expect(card.querySelector('.proj-summary')?.text).toMatch(/^Split a synchronous checkout/);
     expect(card.querySelectorAll('.proj-tags li').map((li) => li.text)).toEqual(['Python', 'FastAPI', 'PostgreSQL', 'Kafka']);
     expect(card.querySelector('.btn-primary')?.getAttribute('href')).toBe(href('order-pipeline-redesign'));
+    expect(card.querySelector('a.btn-text')?.getAttribute('href')).toBe('https://github.com/jairamshegde/');
     expect(card.querySelector('.thumb img')).not.toBeNull();
   });
 
