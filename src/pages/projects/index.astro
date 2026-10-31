@@ -12,7 +12,7 @@ const tags = topTags(rest.map((p) => ({ data: { tags: p.data.stack.map((s) => s.
 <BaseLayout title="Projects" description="Projects and case studies.">
   <header class="page-head wrap">
     <h1>Projects and case studies</h1>
-    <p>Things I've designed and built, some broken down as full case studies.</p>
+    <p class="one-line">Things I've designed and built, some broken down as full case studies.</p>
   </header>
   <div class="wrap page-body">
     {latest ? <LatestProject project={latest} /> : <p class="empty">First project write-up coming soon.</p>}

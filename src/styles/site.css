@@ -132,6 +132,7 @@ section[id] { scroll-margin-top: 16px; }
 .page-head { padding: clamp(24px, 6vh, 64px) var(--gutter) clamp(28px, 5vh, 48px); }
 .page-head h1 { margin: 0; font-weight: 700; font-size: var(--fs-hero); letter-spacing: -.03em; line-height: 1.1; }
 .page-head p { margin: 12px 0 0; max-width: 40ch; font-size: var(--fs-lead); line-height: 1.45; color: var(--graphite); }
+.page-head p.one-line { max-width: none; font-size: 18px; }
 .page-body { padding-bottom: var(--section-y); }
 
 /* Pagination: Newer / numbers / Older */
