@@ -11,16 +11,18 @@ const { title, summary, stack, cover } = project.data;
 const href = withBase(`/projects/${project.id}/`);
 ---
 <article class="latest-proj">
-  <span class="kicker">Latest project</span>
   <a class="thumb" href={href} tabindex="-1" aria-hidden="true">
     {cover ? (
-      <Image src={cover} alt="" widths={[800, 1600]} sizes="(max-width: 1200px) 100vw, 1100px" />
+      <Image src={cover} alt="" widths={[600, 1200]} sizes="(max-width: 900px) 100vw, 600px" />
     ) : (
       <span class="thumb-fallback"><span class="hand">{stack[0]}</span></span>
     )}
   </a>
-  <h2><a href={href}>{title}</a></h2>
-  <p class="proj-summary">{summary}</p>
-  <ul class="proj-tags">{stack.map((s) => <li>{s}</li>)}</ul>
-  <a class="btn btn-primary" href={href}>Explore <span class="arr" aria-hidden="true">→</span></a>
+  <div class="body">
+    <span class="kicker">Latest project</span>
+    <h2><a href={href}>{title}</a></h2>
+    <p class="proj-summary">{summary}</p>
+    <ul class="proj-tags">{stack.map((s) => <li>{s}</li>)}</ul>
+    <a class="btn btn-primary" href={href}>Explore <span class="arr" aria-hidden="true">→</span></a>
+  </div>
 </article>
