@@ -79,16 +79,35 @@ describe('/notes/ pagination', () => {
 
 describe('/projects/', () => {
   const p = page('/projects/');
-  it('lists project titles only, with summary, stack and links in the stage panel', () => {
-    const rows = p.querySelectorAll('.proj-row');
-    const i = rows.findIndex((r) => r.getAttribute('href') === `${BASE}/projects/order-pipeline-redesign/`);
-    expect(rows[i].querySelector('.name')?.text).toBe('Order pipeline redesign');
-    expect(rows[i].querySelector('.blurb, .meta, .year, .badge')).toBeNull();
-    const panel = p.querySelector(`[data-stage-panel="${i}"]`)!;
-    expect(panel.querySelector('.stage-summary')?.text).toMatch(/^Split a synchronous checkout/);
-    expect(panel.querySelectorAll('.stage-tags li').map((li) => li.text)).toEqual(['Python', 'FastAPI', 'PostgreSQL', 'Kafka']);
-    expect(panel.querySelector('.btn-primary')?.getAttribute('href')).toBe(`${BASE}/projects/order-pipeline-redesign/`);
-    expect(panel.querySelector('a.btn-text')?.getAttribute('href')).toBe('https://github.com/jairamshegde/');
-    expect(panel.querySelector('.stage-cover img')).not.toBeNull();
+  const href = (slug: string) => `${BASE}/projects/${slug}/`;
+
+  it('shows the newest project once, above the list, with summary, stack and an Explore link', () => {
+    const latest = p.querySelectorAll('.latest-proj');
+    expect(latest).toHaveLength(1);
+    const exploreHref = latest[0].querySelector('.btn-primary')?.getAttribute('href');
+    const cardHrefs = p.querySelectorAll('.proj-card h3 a').map((a) => a.getAttribute('href'));
+    expect(cardHrefs).not.toContain(exploreHref);
+    expect(latest[0].querySelector('.proj-summary')?.text).toBeTruthy();
+    expect(latest[0].querySelectorAll('.proj-tags li').length).toBeGreaterThan(0);
+  });
+
+  it('renders each other project as a card with summary, stack, cover and Explore link', () => {
+    const card = p.querySelectorAll('.proj-card').find((c) => c.querySelector('h3 a')?.getAttribute('href') === href('order-pipeline-redesign'))!;
+    expect(card.querySelector('h3')?.text).toBe('Order pipeline redesign');
+    expect(card.querySelector('.proj-summary')?.text).toMatch(/^Split a synchronous checkout/);
+    expect(card.querySelectorAll('.proj-tags li').map((li) => li.text)).toEqual(['Python', 'FastAPI', 'PostgreSQL', 'Kafka']);
+    expect(card.querySelector('.btn-primary')?.getAttribute('href')).toBe(href('order-pipeline-redesign'));
+    expect(card.querySelector('.thumb img')).not.toBeNull();
+  });
+
+  it('offers "All" plus at most 10 lowercase stack filters, each matching a card', () => {
+    const buttons = p.querySelectorAll('.more-projects .tag-filter button');
+    expect(buttons[0].text).toBe('All');
+    expect(buttons.length).toBeLessThanOrEqual(11);
+    const cardTags = p.querySelectorAll('.proj-card').flatMap((c) => JSON.parse(c.getAttribute('data-tags')!));
+    for (const b of buttons.slice(1)) {
+      expect(b.getAttribute('data-tag')).toBe(b.getAttribute('data-tag')!.toLowerCase());
+      expect(cardTags).toContain(b.getAttribute('data-tag'));
+    }
   });
 });

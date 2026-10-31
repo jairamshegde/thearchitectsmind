@@ -1,16 +1,72 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import ProjectList from '../../components/ProjectList.astro';
+import LatestProject from '../../components/LatestProject.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
 import { published } from '../../lib/collections';
+import { topTags } from '../../lib/content';
 
-const projects = await published('projects');
+const [latest, ...rest] = await published('projects');
+// Projects have no tags; filter on the stack, lowercased so "Python" and "python" match.
+const tags = topTags(rest.map((p) => ({ data: { tags: p.data.stack.map((s) => s.toLowerCase()) } })), 10);
 ---
 <BaseLayout title="Projects" description="Projects and case studies.">
   <header class="page-head wrap">
-    <h1>Projects</h1>
+    <h1>Projects and case studies</h1>
     <p>Things I've designed and built, some broken down as full case studies.</p>
   </header>
   <div class="wrap page-body">
-    {projects.length > 0 ? <ProjectList projects={projects} /> : <p class="empty">First project write-up coming soon.</p>}
+    {latest ? <LatestProject project={latest} /> : <p class="empty">First project write-up coming soon.</p>}
+    {rest.length > 0 && (
+      <section class="more-projects" aria-labelledby="more-projects">
+        <h2 id="more-projects">More projects</h2>
+        {tags.length > 0 && (
+          <div class="tag-filter" role="group" aria-label="Filter projects by tag">
+            <button type="button" aria-pressed="true" data-tag="">All</button>
+            {tags.map((tag) => <button type="button" aria-pressed="false" data-tag={tag}>{tag}</button>)}
+          </div>
+        )}
+        <div class="proj-cards">{rest.map((project) => <ProjectCard project={project} />)}</div>
+        <nav class="pagination" aria-label="Project pages" hidden></nav>
+      </section>
+    )}
   </div>
 </BaseLayout>
+
+<script>
+  const PER_PAGE = 5;
+  const section = document.querySelector<HTMLElement>('.more-projects');
+  if (section) {
+    const buttons = [...section.querySelectorAll<HTMLButtonElement>('.tag-filter button')];
+    const cards = [...section.querySelectorAll<HTMLElement>('.proj-card')];
+    const nav = section.querySelector<HTMLElement>('.pagination')!;
+    let tag = '';
+
+    const show = (page: number) => {
+      const matching = cards.filter((c) => tag === '' || JSON.parse(c.dataset.tags!).includes(tag));
+      const last = Math.ceil(matching.length / PER_PAGE);
+      for (const card of cards) card.hidden = !matching.slice((page - 1) * PER_PAGE, page * PER_PAGE).includes(card);
+      nav.hidden = last < 2;
+      const step = (n: number, label: string) =>
+        n >= 1 && n <= last ? `<button type="button" class="pg-step" data-page="${n}">${label}</button>` : '<span class="pg-step" aria-hidden="true"></span>';
+      const nums = Array.from({ length: last }, (_, i) => i + 1).map((n) =>
+        n === page ? `<li><span class="pg-num" aria-current="page">${n}</span></li>` : `<li><button type="button" class="pg-num" data-page="${n}" aria-label="Page ${n}">${n}</button></li>`,
+      );
+      nav.innerHTML = `${step(page - 1, '<span aria-hidden="true">←</span> Newer')}<ol>${nums.join('')}</ol>${step(page + 1, 'Older <span aria-hidden="true">→</span>')}`;
+    };
+
+    for (const button of buttons) {
+      button.addEventListener('click', () => {
+        tag = button.dataset.tag!;
+        for (const b of buttons) b.setAttribute('aria-pressed', String(b === button));
+        show(1);
+      });
+    }
+    nav.addEventListener('click', (e) => {
+      const target = (e.target as HTMLElement).closest<HTMLElement>('[data-page]');
+      if (!target) return;
+      show(Number(target.dataset.page));
+      section.scrollIntoView({ block: 'start' });
+    });
+    show(1);
+  }
+</script>
