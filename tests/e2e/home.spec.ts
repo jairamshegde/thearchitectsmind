@@ -103,7 +103,7 @@ for (const width of [1920, 1440, 1024, 375]) {
   test(`footer statement is exactly two lines, one per sentence, at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./');
-    await expect(page.locator('.foot .big .big-line')).toHaveText(['Every system has a story.', 'The fun is finding it.']);
+    await expect(page.locator('.foot .big .big-line')).toHaveText(['Draw the boxes first.', 'Then argue about the arrows.']);
     const { height, lineHeight, overflow } = await page.locator('.foot .big').evaluate((el) => ({
       height: el.getBoundingClientRect().height,
       lineHeight: parseFloat(getComputedStyle(el).lineHeight),

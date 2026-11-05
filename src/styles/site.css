@@ -241,7 +241,7 @@ a.pg-step:hover, button.pg-step:hover { text-decoration: underline; text-underli
 }
 
 /* Footer statement: one sentence per line, sized so the longer sentence fits on one line */
-.foot .big { font-size: clamp(30px, 5.8vw, 84px); }
+.foot .big { font-size: clamp(22px, 3.4vw, 46px); }
 .foot .big-line { display: block; }
 @media (min-width: 360px) { .foot .big-line { white-space: nowrap; } }
 
@@ -268,10 +268,9 @@ html { scroll-padding-top: calc(var(--nav-h) + 12px); }
 /* Three columns, so the statement stays on the page's centre line (like the sub line and links) and Pico sits in the right gutter */
 .foot-statement { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: clamp(16px, 2.5vw, 32px); }
 .foot-statement .big { grid-column: 2; }
-.foot-statement:has(.foot-pico) .big { font-size: clamp(30px, 4.6vw, 70px); }
-.foot-pico { grid-column: 3; justify-self: start; margin: 0; width: clamp(140px, 15vw, 220px); }
+.foot-pico { grid-column: 3; justify-self: start; margin: 0; width: clamp(110px, 10vw, 160px); }
 .foot-pico img { display: block; width: 100%; height: auto; }
 @media (max-width: 640px) {
   .foot-statement { display: flex; flex-direction: column-reverse; align-items: center; gap: 8px; }
-  .foot-pico { width: 170px; }
+  .foot-pico { width: 130px; }
 }

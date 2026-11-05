@@ -3,8 +3,8 @@
   "heroSub": "Writing about AI, software architecture, systems, and everything I learn while building them.",
   "heroNote": "Meet the team: Pico leads, Claude codes, I take credit 😉",
   "heroImage": "hero-cutout.png",
-  "footerStatement": "Every system has a story. The fun is finding it.",
-  "footerSub": "Open to conversations about AI, architecture, and Graphs.",
+  "footerStatement": "Draw the boxes first. Then argue about the arrows.",
+  "footerSub": "Open to conversations about agents, retrieval and system design.",
   "footerImage": "pico-finding.png",
   "socials": [
     {
@@ -12,16 +12,6 @@
       "url": "https://github.com/jairamshegde",
       "meta": "github.com/jairamshegde",
       "note": "Where the code lives."
-    },
-    {
-      "label": "LinkedIn",
-      "url": "https://www.linkedin.com/",
-      "meta": "Placeholder: set your profile URL in the CMS"
-    },
-    {
-      "label": "Email",
-      "url": "mailto:you@example.com",
-      "meta": "Placeholder: set your address in the CMS"
     }
   ]
 }
