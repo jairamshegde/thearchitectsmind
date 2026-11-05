@@ -4,7 +4,7 @@
 .article { width: 100%; max-width: var(--article-w); margin: 0 auto; }
 .article-head { margin-bottom: 40px; }
 .article-kicker, .article-meta { margin: 0; font-size: var(--fs-meta); color: var(--pencil); }
-.article-title { margin: 10px 0 0; font-weight: 700; font-size: var(--fs-hero); line-height: 1.12; letter-spacing: -.03em; text-wrap: balance; }
+.article-title { margin: 10px 0 0; font-weight: 600; font-size: var(--fs-hero); line-height: 1.12; letter-spacing: -.025em; text-wrap: balance; }
 .article-lead { margin: 16px 0 0; font-size: var(--fs-lead); line-height: 1.45; letter-spacing: -.01em; color: var(--graphite); }
 .article-head .article-title ~ .article-meta { margin-top: 18px; }
 /* Writing header: cover is always 2:1 (1500 x 750); taller or wider images are cropped, not squashed */
@@ -55,7 +55,7 @@
 .prose p, .prose ul, .prose ol { margin: 0 0 1.1em; }
 .prose li + li { margin-top: .3em; }
 .prose h2, .prose h3, .prose h4 { scroll-margin-top: 24px; letter-spacing: -.02em; }
-.prose h2, .about-now h2 { margin: 2.2em 0 .6em; font-size: clamp(24px, 2.4vw, 30px); line-height: 1.2; font-weight: 700; }
+.prose h2, .about-now h2 { margin: 2.2em 0 .6em; font-size: clamp(24px, 2.4vw, 30px); line-height: 1.2; font-weight: 600; }
 .prose h3 { margin: 1.8em 0 .5em; font-size: clamp(19px, 1.7vw, 22px); line-height: 1.25; font-weight: 650; }
 .prose h4 { margin: 1.6em 0 .4em; font-size: 17.5px; font-weight: 650; }
 .prose a { text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 3px; }
