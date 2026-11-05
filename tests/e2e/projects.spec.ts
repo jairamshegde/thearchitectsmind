@@ -5,6 +5,7 @@ test('more projects shows 5 per page, and a tag filter pages through its matches
   const cards = page.locator('.proj-card');
   const visible = page.locator('.proj-card:visible');
   const total = await cards.count();
+  test.skip(total === 0, 'Only the latest project exists, so there is no More projects list.');
   await expect(visible).toHaveCount(Math.min(total, 5));
 
   const nav = page.locator('.more-projects .pagination');

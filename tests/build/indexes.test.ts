@@ -79,7 +79,6 @@ describe('/notes/ pagination', () => {
 
 describe('/projects/', () => {
   const p = page('/projects/');
-  const href = (slug: string) => `${BASE}/projects/${slug}/`;
 
   it('shows the newest project once, above the list, with summary, stack and a View Project link to the repo', () => {
     const latest = p.querySelectorAll('.latest-proj');
@@ -90,26 +89,5 @@ describe('/projects/', () => {
     expect(latest[0].querySelector('.btn-primary')?.getAttribute('href')).toMatch(/^https:\/\/github\.com\//);
     expect(latest[0].querySelector('.proj-summary')?.text).toBeTruthy();
     expect(latest[0].querySelectorAll('.proj-tags li').length).toBeGreaterThan(0);
-  });
-
-  it('renders each other project as a card with summary, stack, cover and a View Project link to the repo', () => {
-    const card = p.querySelectorAll('.proj-card').find((c) => c.querySelector('h3 a')?.getAttribute('href') === href('order-pipeline-redesign'))!;
-    expect(card.querySelector('h3')?.text).toBe('Order pipeline redesign');
-    expect(card.querySelector('.proj-summary')?.text).toMatch(/^Split a synchronous checkout/);
-    expect(card.querySelectorAll('.proj-tags li').map((li) => li.text)).toEqual(['Python', 'FastAPI', 'PostgreSQL', 'Kafka']);
-    expect(card.querySelector('h3 a')?.getAttribute('href')).toBe(href('order-pipeline-redesign'));
-    expect(card.querySelector('.btn-primary')?.getAttribute('href')).toBe('https://github.com/jairamshegde/');
-    expect(card.querySelector('.thumb img')).not.toBeNull();
-  });
-
-  it('offers "All" plus at most 10 lowercase stack filters, each matching a card', () => {
-    const buttons = p.querySelectorAll('.more-projects .tag-filter button');
-    expect(buttons[0].text).toBe('All');
-    expect(buttons.length).toBeLessThanOrEqual(11);
-    const cardTags = p.querySelectorAll('.proj-card').flatMap((c) => JSON.parse(c.getAttribute('data-tags')!));
-    for (const b of buttons.slice(1)) {
-      expect(b.getAttribute('data-tag')).toBe(b.getAttribute('data-tag')!.toLowerCase());
-      expect(cardTags).toContain(b.getAttribute('data-tag'));
-    }
   });
 });
