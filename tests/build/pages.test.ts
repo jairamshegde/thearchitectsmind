@@ -3,66 +3,31 @@ import { BASE, page } from './helpers';
 
 describe('/about/', () => {
   const p = page('/about/');
-  it('opens with the welcome section: kicker, title, lead, and Pico with his note', () => {
-    expect(p.querySelector('.article-kicker')?.text).toBe('Welcome to my place 🛋️');
-    expect(p.querySelector('h1.article-title')?.text).toBe("Hi, I'm Jairam 👋");
-    expect(p.querySelector('.article-lead')?.text).toBe(
-      'I’m an AI engineer who likes to build things that are slightly more complicated than they probably need to be.',
-    );
+  it('opens with the kicker, name, lead, and Pico with his note', () => {
+    expect(p.querySelector('.article-kicker')?.text).toBe('About');
+    expect(p.querySelector('h1.article-title')?.text).toBe('Jairam Hegde');
+    expect(p.querySelector('.article-lead')?.text).toMatch(/^I’m a GenAI engineer\./);
     const pico = p.querySelector('.about-welcome figure.about-pico')!;
-    expect(pico.querySelector('img')?.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico.querySelector('.about-pico-note')?.text).toBe('Hey curious reader, I’m Pico');
+    expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-welcome\./);
+    expect(pico.querySelector('.about-pico-note')?.text).toBe('I’m Pico. I’m the one asking what happens when the API is down.');
   });
 
-  it('“What I do” shows Pico on the left and the text on the right', () => {
-    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'What I do')!;
-    const split = h2.nextElementSibling!;
-    expect(split.classNames).toBe('md-split md-split-left');
-    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-builder\./);
-    expect(split.querySelector('.md-note .md-note-text')?.text).toBe('Build it. Break it. Figure out why. Repeat.');
-    expect(split.querySelector('.md-note svg.md-note-arrow')).not.toBeNull();
-    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
-      'These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.',
-    );
+  it('has What I build and How I work, with one Pico, no section images and no table of contents', () => {
+    expect(p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim())).toEqual(['What I build', 'How I work']);
+    expect(p.querySelectorAll('.prose img')).toHaveLength(0);
+    expect(p.querySelectorAll('main img')).toHaveLength(1);
+    expect(p.querySelector('nav.toc')).toBeNull();
+    expect(p.querySelector('details.toc-inline')).toBeNull();
   });
 
-  it('“Why I enjoy it” shows the text on the left and Pico’s whiteboard on the right', () => {
-    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'Why I enjoy it')!;
-    const split = h2.nextElementSibling!;
-    expect(split.classNames).toBe('md-split md-split-right');
-    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-whiteboard\./);
-    expect(split.querySelector('.md-note .md-note-text')?.text).toBe('It started simple…');
-    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
-      'I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.',
-    );
+  it('links Mingraph to its writing series', () => {
+    expect(p.querySelector('.prose a[href$="/writing/mingraph/"]')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
   });
 
-  it('“How I learn” shows Pico learning on the left with a thought bubble, text on the right', () => {
-    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'How I learn')!;
-    const split = h2.nextElementSibling!;
-    expect(split.classNames).toBe('md-split md-split-left');
-    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-learning\./);
-    expect(split.querySelector('.md-thought-text')?.text).toBe('Still so much to learn…');
-    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
-      'I learn mostly by building, breaking things, figuring out why, and building them again. I dive deep into docs, read, experiment, and sometimes go down rabbit holes — even the ones I probably didn’t need to go down.',
-    );
-  });
-
-  it('“And Pico?” shows the text on the left and relaxed Pico on the right, with a handwritten note', () => {
-    const h2 = p.querySelectorAll('.prose h2').find((h) => h.text.replace('#', '').trim() === 'And Pico?')!;
-    const split = h2.nextElementSibling!;
-    expect(split.classNames).toBe('md-split md-split-right');
-    expect(split.querySelector('.md-split-media img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-companion\./);
-    expect(split.querySelector('.md-note-plain .md-note-text')?.text).toBe('Keeping things fun and honest');
-    expect(split.querySelector('.md-split-text')?.text.trim()).toBe(
-      'Pico is here to make sure I don’t take any of this too seriously. A curious little penguin, part debugger, part cheerleader, and always ready with a question (usually a good one).',
-    );
-  });
-
-  it('renders exactly the four about sections in order, with one TOC entry per section', () => {
-    const sections = p.querySelectorAll('.prose h2').map((h) => h.text.replace('#', '').trim());
-    expect(sections).toEqual(['What I do', 'Why I enjoy it', 'How I learn', 'And Pico?']);
-    expect(p.querySelectorAll('nav.toc a').length).toBe(sections.length);
+  it('ends with the Now list', () => {
+    const now = p.querySelector('.about-now')!;
+    expect(now.querySelector('h2')?.text).toBe('Now');
+    expect(now.querySelectorAll('.now dt').map((d) => d.text)).toEqual(['Building', 'Writing', 'Reading', 'Exploring']);
   });
 });
 

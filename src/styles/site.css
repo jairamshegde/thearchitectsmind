@@ -206,13 +206,13 @@ html { scroll-padding-top: calc(var(--nav-h) + 12px); }
 @media (max-width: 560px) { .site-header .nav { padding: 12px 0; } }
 
 /* ---------- About page: welcome section with Pico on the right ---------- */
-.about-welcome { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 300px); gap: 32px; align-items: center; }
+.about-welcome { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 260px); gap: 40px; align-items: center; }
 .about-welcome .about-pico { flex-direction: column; align-items: center; gap: 6px; margin: 0; }
 .about-welcome .about-pico img { width: 100%; }
 .about-welcome .about-pico-note { max-width: none; text-align: center; }
 @media (max-width: 760px) {
   .about-welcome { grid-template-columns: minmax(0, 1fr); }
-  .about-welcome .about-pico { max-width: 300px; margin: 8px auto 0; }
+  .about-welcome .about-pico { max-width: 260px; margin: 8px auto 0; }
 }
 
 /* Footer: Pico (magnifying glass) to the right of the statement; above it on phones */

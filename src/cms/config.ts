@@ -126,8 +126,8 @@ export const cmsConfig: {
           ...besideEntry,
           fields: [
             title,
-            text('intro', 'Short intro (home page)'),
-            { name: 'now', label: 'Now list (home page)', widget: 'list', required: false, fields: [str('label', 'Label'), str('value', 'Value')] },
+            text('intro', 'Short description (search results and link previews)'),
+            { name: 'now', label: 'Now list (About page)', widget: 'list', required: false, fields: [str('label', 'Label'), str('value', 'Value')] },
             opt(str('welcome', 'About page: welcome line (above the title)')),
             opt(text('lead', 'About page: intro sentence (below the title)')),
             image('welcomeImage', 'About page: Pico image beside the welcome'),

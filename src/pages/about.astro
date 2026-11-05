@@ -5,10 +5,11 @@ import ArticleLayout from '../layouts/ArticleLayout.astro';
 
 const about = await getEntry('pages', 'about');
 if (!about) throw new Error('Missing src/content/pages/about.md');
-const { Content, headings } = await render(about);
-const { title, welcome, lead, welcomeImage, welcomeNote } = about.data;
+const { Content } = await render(about);
+const { title, welcome, lead, intro, now, welcomeImage, welcomeNote } = about.data;
+// No table of contents (headings={[]}): the page is short enough to read top to bottom.
 ---
-<ArticleLayout title="About" description={lead ?? about.data.intro} headings={headings}>
+<ArticleLayout title="About" description={intro} headings={[]}>
   <div slot="header" class="about-welcome">
     <div>
       <p class="article-kicker">{welcome ?? 'About'}</p>
@@ -18,9 +19,17 @@ const { title, welcome, lead, welcomeImage, welcomeNote } = about.data;
     {welcomeImage && (
       <figure class="about-pico" data-reveal-note>
         {welcomeNote && <figcaption class="about-pico-note">{welcomeNote}</figcaption>}
-        <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[320, 640]} sizes="300px" loading="eager" />
+        <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[320, 640]} sizes="260px" loading="eager" />
       </figure>
     )}
   </div>
   <Content />
+  {now.length > 0 && (
+    <section class="about-now" slot="after">
+      <h2>Now</h2>
+      <dl class="now">
+        {now.map((n) => <div><dt>{n.label}</dt><dd>{n.value}</dd></div>)}
+      </dl>
+    </section>
+  )}
 </ArticleLayout>

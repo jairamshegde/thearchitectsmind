@@ -1,42 +1,28 @@
 ---
-title: "Hi, I'm Jairam 👋"
-welcome: "Welcome to my place 🛋️"
-lead: "I’m an AI engineer who likes to build things that are slightly more complicated than they probably need to be."
-intro: |
-  I’m usually somewhere between “let’s build it” and “wait, why does this work?”
-
-  I write about AI, software architecture, and the systems hiding underneath.
-
-  Mostly the things I learn by building, breaking, and following the rabbit hole.
+title: "Jairam Hegde"
+welcome: "About"
+lead: "I’m a GenAI engineer. I design and build agents, retrieval pipelines and the backend that keeps them running."
+intro: "Jairam Hegde is a GenAI engineer who designs and builds agents and retrieval systems, and writes about the architecture underneath them."
 now:
-  - { label: "Building", value: "Minimal version of LangGraph (Mingraph)" }
+  - { label: "Building", value: "Mingraph, LangChain and LangGraph rebuilt from scratch" }
+  - { label: "Writing", value: "The Mingraph series, one design pattern per phase" }
   - { label: "Reading", value: "An Illustrated Guide to AI Agents" }
-  - { label: "Learning", value: "Agent evals" }
-  - { label: "Writing", value: "Phase 6 of Mingraph learning" }
+  - { label: "Exploring", value: "Evals for multi-step agents" }
 welcomeImage: pico-welcome.png
-welcomeNote: "Hey curious reader, I’m Pico"
+welcomeNote: "I’m Pico. I’m the one asking what happens when the API is down."
 ---
 
-## What I do
+## What I build
 
-![Pico building with blocks and a toolbox](./pico-builder.png "left: Build it. Break it. Figure out why. Repeat.")
+GenAI systems that have to hold up outside a demo. That means agents that call tools, retrieval over real documents, and the evals and tracing that show whether a change helped.
 
-These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.
+Underneath sits ordinary backend work: APIs, queues, caches and vector stores. Most of what decides whether an AI feature stays up lives there.
 
-## Why I enjoy it
+**Usual stack.** Python, FastAPI, LangGraph, Qdrant, Redis, Celery, Supabase and Docker. I work with OpenAI, Anthropic, DeepSeek and local models through Ollama, often via Azure AI Foundry, and use Ragas, DeepEval and Arize Phoenix for evals and tracing.
 
-![Pico at a whiteboard covered in boxes and arrows, next to a stack of books](./pico-whiteboard.png "right: It started simple…")
+## How I work
 
-I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.
-
-## How I learn
-
-![Pico in headphones reading “How Things Work”, a lightbulb above his head](./pico-learning.png "left: thought: Still so much to learn…")
-
-I learn mostly by building, breaking things, figuring out why, and building them again. I dive deep into docs, read, experiment, and sometimes go down rabbit holes — even the ones I probably didn’t need to go down.
-
-## And Pico?
-
-![Pico relaxing in a beanbag with his headphones on](./pico-companion.png "right: text: Keeping things fun and honest")
-
-Pico is here to make sure I don’t take any of this too seriously. A curious little penguin, part debugger, part cheerleader, and always ready with a question (usually a good one).
+- **Keep the model's decisions small.** Control flow lives in plain code. The model makes narrow, typed choices, such as which tool to call and with what arguments. That is easier to test than a prompt that says "decide what to do next".
+- **Measure before calling it better.** If an eval doesn't show that a change helped, I don't call it an improvement.
+- **Know what the framework does for you.** I rebuilt the core of LangChain and LangGraph in [Mingraph](/writing/mingraph/) to see where their abstractions leak. Now I decide case by case whether a framework is worth it.
+- **Treat cost as a design input.** A pipeline gets a token budget before it gets users.
