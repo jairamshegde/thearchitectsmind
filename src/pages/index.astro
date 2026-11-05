@@ -1,31 +1,39 @@
 ---
-import { Image } from 'astro:assets';
-import { getEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import LogoMarquee from '../components/LogoMarquee.astro';
-import ProjectList from '../components/ProjectList.astro';
-import PostCard from '../components/PostCard.astro';
 import { published } from '../lib/collections';
-import { pickHome } from '../lib/content';
-import { renderMarkdown } from '../lib/markdown-text';
+import { pickHome, postPath } from '../lib/content';
+import { formatDate } from '../lib/format';
 import { withBase } from '../lib/url';
 
 const projects = pickHome(await published('projects'), 3);
-const posts = pickHome(await published('writing'), 3);
-const about = await getEntry('pages', 'about');
-if (!about) throw new Error('Missing src/content/pages/about.md');
+const posts = pickHome(await published('writing'), 5);
 ---
 <BaseLayout>
   <Hero />
-  <LogoMarquee />
 
   <section class="sec wrap" id="projects">
     <div class="sec-head">
-      <h2>Featured projects</h2>
+      <h2>Projects</h2>
       <a class="more" href={withBase('/projects/')}>All projects <span class="arr" aria-hidden="true">→</span></a>
     </div>
-    {projects.length > 0 ? <ProjectList projects={projects} /> : <p class="empty">First project write-up coming soon.</p>}
+    {projects.length > 0 ? (
+      <ul class="rows">
+        {projects.map((p) => (
+          <li>
+            <a class="row" href={withBase(`/projects/${p.id}/`)}>
+              <span class="row-main">
+                <span class="row-title">{p.data.title}</span>
+                <span class="row-desc">{p.data.summary}</span>
+              </span>
+              <span class="row-meta">{p.data.stack.slice(0, 3).join(' · ')}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="empty">First project write-up coming soon.</p>
+    )}
   </section>
 
   <section class="sec wrap" id="writing">
@@ -34,33 +42,22 @@ if (!about) throw new Error('Missing src/content/pages/about.md');
       <a class="more" href={withBase('/writing/')}>All writing <span class="arr" aria-hidden="true">→</span></a>
     </div>
     {posts.length > 0 ? (
-      <div class="writing-grid">{posts.map((post) => <PostCard post={post} />)}</div>
+      <ul class="rows">
+        {posts.map((post) => (
+          <li>
+            <a class="row" href={withBase(postPath(post))}>
+              <span class="row-main">
+                <span class="row-title">{post.data.title}</span>
+                <span class="row-desc">{post.data.description}</span>
+              </span>
+              <time class="row-meta" datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time>
+            </a>
+          </li>
+        ))}
+      </ul>
     ) : (
       <p class="empty">First post coming soon.</p>
     )}
-  </section>
-
-  <section class="sec wrap" id="about">
-    <div class="sec-head"><h2>About</h2></div>
-    <div class="about-grid">
-      <div>
-        <Fragment set:html={renderMarkdown(about.data.intro)} />
-        <a class="btn btn-primary" href={withBase('/about/')}>Learn more about me <span class="arr" aria-hidden="true">→</span></a>
-      </div>
-      <div class="about-side">
-        {about.data.picoImage && (
-          <figure class="about-pico" data-reveal-note>
-            {about.data.picoNote && <figcaption class="about-pico-note">{about.data.picoNote}</figcaption>}
-            <Image src={about.data.picoImage} alt="Pico the penguin, squinting suspiciously at a sheet of paper" widths={[200, 400]} sizes="200px" />
-          </figure>
-        )}
-        {about.data.now.length > 0 && (
-          <dl class="now">
-            {about.data.now.map((n) => <div><dt>{n.label}</dt><dd>{n.value}</dd></div>)}
-          </dl>
-        )}
-      </div>
-    </div>
   </section>
 </BaseLayout>
 

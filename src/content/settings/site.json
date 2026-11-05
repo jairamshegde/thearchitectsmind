@@ -1,8 +1,9 @@
 {
+  "heroKicker": "Jairam Hegde · GenAI engineer",
   "heroHeadline": "I make computers do interesting things. Then I get suspicious.",
-  "heroSub": "Writing about AI, software architecture, systems, and everything I learn while building them.",
-  "heroNote": "Meet the team: Pico leads, Claude codes, I take credit 😉",
-  "heroImage": "hero-cutout.png",
+  "heroSub": "I design and build GenAI systems, mostly agents and retrieval pipelines. Here I write about how they're put together and where they break.",
+  "heroNote": "Pico runs code review here. He has never approved a first draft.",
+  "heroImage": "pico-skeptical.png",
   "footerStatement": "Draw the boxes first. Then argue about the arrows.",
   "footerSub": "Open to conversations about agents, retrieval and system design.",
   "footerImage": "pico-finding.png",

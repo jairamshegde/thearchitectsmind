@@ -5,37 +5,29 @@ import { withBase } from '../lib/url';
 
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { heroHeadline, heroSub, heroNote, heroImage } = settings.data;
+const { heroKicker, heroHeadline, heroSub, heroNote, heroImage } = settings.data;
 // One line per sentence: "I make computers do interesting things." / "Then I get suspicious."
 const headlineLines = heroHeadline.split(/(?<=[.!?])\s+/);
+const scribble = 'M2 6 C 30 2, 60 9, 90 5 S 135 3, 148 6';
 ---
 <section class="hero wrap">
-  <h1 class="hl">{headlineLines.map((line, i) => <>{i > 0 && ' '}<span class="hl-line">{line}</span></>)}</h1>
-  <p class="hero-sub">{heroSub}</p>
-  <div class="ctas">
-    <a class="btn btn-primary" href={withBase('/projects/')}>View projects <span class="arr" aria-hidden="true">→</span></a>
-    <a class="btn btn-text" href={withBase('/writing/')}>
-      Read my writing <span class="arr" aria-hidden="true">→</span>
-      <svg class="scribble" viewBox="0 0 150 10" preserveAspectRatio="none" aria-hidden="true"><path d="M2 6 C 30 2, 60 9, 90 5 S 135 3, 148 6" /></svg>
-    </a>
+  <div class="hero-text">
+    {heroKicker && <p class="hero-kicker">{heroKicker}</p>}
+    <h1 class="hl">{headlineLines.map((line, i) => <>{i > 0 && ' '}<span class="hl-line">{line}</span></>)}</h1>
+    <p class="hero-sub">{heroSub}</p>
+    <div class="ctas">
+      {[['View projects', '/projects/'], ['Read the writing', '/writing/']].map(([label, href]) => (
+        <a class="btn btn-text" href={withBase(href)}>
+          {label} <span class="arr" aria-hidden="true">→</span>
+          <svg class="scribble" viewBox="0 0 150 10" preserveAspectRatio="none" aria-hidden="true"><path d={scribble} /></svg>
+        </a>
+      ))}
+    </div>
   </div>
   {heroImage && (
-    <figure class="hero-figure">
-      {/* The note's bottom-right corner (the arrow tip) is pinned to Pico's position in the image. */}
-      <figcaption class="hero-note">
-        <span class="hero-note-text">{heroNote}</span>
-        <svg class="hero-arrow" viewBox="0 0 120 80" aria-hidden="true">
-          <path pathLength="1" d="M4 14 C 58 -6, 120 8, 120 76" />
-          <path class="hero-arrow-head" pathLength="1" d="M111 65 L120 80 L128 66" />
-        </svg>
-      </figcaption>
-      <Image
-        src={heroImage}
-        alt="A code editor where an AI agent fixes a Python script, while Pico the penguin watches from the top of the window"
-        widths={[640, 1100, 1672]}
-        sizes="(max-width: 1200px) 100vw, 1100px"
-        loading="eager"
-      />
+    <figure class="about-pico hero-pico" data-reveal-note>
+      <figcaption class="about-pico-note">{heroNote}</figcaption>
+      <Image src={heroImage} alt="Pico the penguin, squinting suspiciously at a sheet of paper" widths={[220, 440]} sizes="220px" loading="eager" />
     </figure>
   )}
 </section>

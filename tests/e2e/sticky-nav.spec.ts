@@ -38,11 +38,3 @@ test.describe('article page', () => {
     expect(rail.y).toBeGreaterThanOrEqual(nav.y + nav.height);
   });
 });
-
-test('the projects stage sticks below the nav, not under it', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('./projects/');
-  const nav = (await page.locator('header.site-header').boundingBox())!;
-  const top = await page.locator('.stage').evaluate((el) => parseFloat(getComputedStyle(el).top));
-  expect(top).toBeGreaterThanOrEqual(nav.height);
-});

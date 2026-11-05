@@ -13,8 +13,6 @@ now:
   - { label: "Reading", value: "An Illustrated Guide to AI Agents" }
   - { label: "Learning", value: "Agent evals" }
   - { label: "Writing", value: "Phase 6 of Mingraph learning" }
-picoImage: pico-skeptical.png
-picoNote: "I’m reading what he wrote. You tell me what it means."
 welcomeImage: pico-welcome.png
 welcomeNote: "Hey curious reader, I’m Pico"
 ---

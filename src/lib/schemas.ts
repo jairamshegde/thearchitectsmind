@@ -60,8 +60,6 @@ export const aboutSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
     title: z.string().min(1),
     intro: z.string().min(1),
     now: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).default([]),
-    picoImage: optional(image()),
-    picoNote: optional(z.string()),
     welcome: optional(z.string()),
     lead: optional(z.string()),
     welcomeImage: optional(image()),
@@ -70,6 +68,7 @@ export const aboutSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
 
 export const settingsSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
+    heroKicker: optional(z.string()),
     heroHeadline: z.string().min(1),
     heroSub: z.string().min(1),
     heroNote: z.string().min(1),
