@@ -1,28 +1,33 @@
 ---
 title: "Jairam Hegde"
-welcome: "About"
-lead: "I’m a GenAI engineer. I design and build agents, retrieval pipelines and the backend that keeps them running."
-intro: "Jairam Hegde is a GenAI engineer who designs and builds agents and retrieval systems, and writes about the architecture underneath them."
-now:
-  - { label: "Building", value: "Mingraph, LangChain and LangGraph rebuilt from scratch" }
-  - { label: "Writing", value: "The Mingraph series, one design pattern per phase" }
-  - { label: "Reading", value: "An Illustrated Guide to AI Agents" }
-  - { label: "Exploring", value: "Evals for multi-step agents" }
+intro: "Jairam Hegde is an engineer who turns hard problems into simple systems. Lately those problems are AI agents, and whether they really work."
+lead: "I’m happiest when a problem doesn’t have an obvious answer yet."
+leadMore: "Lately those problems are AI agents, and whether they really work."
 welcomeImage: pico-welcome.png
-welcomeNote: "I’m Pico. I’m the one asking what happens when the API is down."
+welcomeNote: "I’m Pico. I ask what the real problem is. Every time."
+summary:
+  - { label: "approach", value: "Problem first, tools second" }
+  - { label: "working on now", value: "AI agents, evals and observability" }
+  - { label: "usual stack", value: "Python, FastAPI, LangGraph, Qdrant" }
+  - { label: "reviewed by", value: "Pico" }
+steps:
+  - { title: "Find the real problem.", text: "The problem people describe is rarely the one that needs fixing. I ask until the two match." }
+  - { title: "Break it into small pieces.", text: "Each piece gets one job, so I can reason about it and replace it on its own." }
+  - { title: "Build the simplest thing that works.", text: "Plain code first. I add a framework, or a model, only when a piece needs it." }
+  - { title: "Prove it works.", text: "A test, an eval, a number. If I can’t show the fix worked, it isn’t done." }
+signoff: "A fix nobody measured. \"It looks better\" is where I start checking, not where I stop."
+quirks:
+  - "Rebuilds things from scratch to see how they work. See [Mingraph](/writing/mingraph/)."
+  - "Draws the boxes before writing any code."
+  - "Asks \"what problem are we solving?\" in every design review. Pico started it."
+now:
+  - { label: "building", value: "Mingraph, LangChain and LangGraph rebuilt from scratch" }
+  - { label: "writing", value: "The Mingraph series, one design pattern per part" }
+  - { label: "reading", value: "An Illustrated Guide to AI Agents" }
+  - { label: "exploring", value: "Evals for multi-step agents" }
+contact: "Open to conversations about agents, evals, or any problem that needs taking apart."
 ---
 
-## What I build
+AI agents, and the checks around them. I build agents that call tools, and retrieval systems that answer from documents. Then I build the evals that score each answer, and the traces that show which step went wrong.
 
-GenAI systems that have to hold up outside a demo. That means agents that call tools, retrieval over real documents, and the evals and tracing that show whether a change helped.
-
-Underneath sits ordinary backend work: APIs, queues, caches and vector stores. Most of what decides whether an AI feature stays up lives there.
-
-**Usual stack.** Python, FastAPI, LangGraph, Qdrant, Redis, Celery, Supabase and Docker. I work with OpenAI, Anthropic, DeepSeek and local models through Ollama, often via Azure AI Foundry, and use Ragas, DeepEval and Arize Phoenix for evals and tracing.
-
-## How I work
-
-- **Keep the model's decisions small.** Control flow lives in plain code. The model makes narrow, typed choices, such as which tool to call and with what arguments. That is easier to test than a prompt that says "decide what to do next".
-- **Measure before calling it better.** If an eval doesn't show that a change helped, I don't call it an improvement.
-- **Know what the framework does for you.** I rebuilt the core of LangChain and LangGraph in [Mingraph](/writing/mingraph/) to see where their abstractions leak. Now I decide case by case whether a framework is worth it.
-- **Treat cost as a design input.** A pipeline gets a token budget before it gets users.
+Usually on Python and FastAPI, with LangGraph, Qdrant, Redis and Celery underneath, and Ragas, DeepEval and Arize Phoenix to check the results.

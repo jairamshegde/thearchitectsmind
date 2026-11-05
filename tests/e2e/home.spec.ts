@@ -61,7 +61,7 @@ for (const width of [1920, 1440, 1024]) {
 test('about page: Pico’s welcome note writes itself in on load', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./about/');
-  await expect.poll(() => page.locator('.about-welcome .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  await expect.poll(() => page.locator('.about-head .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
 test('footer: the statement sits left, Pico and the links right, on desktop', async ({ page }) => {
@@ -105,4 +105,14 @@ test('writing: phones show the plain list without the details panel', async ({ p
   await page.goto('./');
   await expect(page.locator('#writing .viewer-details')).toBeHidden();
   await expect(page.locator('#writing .viewer-item').first()).toBeVisible();
+});
+
+test('about page: one column on phones, Pico above the name, nothing scrolls sideways', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('./about/');
+  const pico = (await page.locator('.about-head .about-pico img').boundingBox())!;
+  const name = (await page.locator('.about-head h1').boundingBox())!;
+  expect(pico.y + pico.height).toBeLessThanOrEqual(name.y + 2);
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
 });

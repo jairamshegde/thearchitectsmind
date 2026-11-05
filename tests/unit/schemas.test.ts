@@ -75,6 +75,9 @@ describe('aboutSchema and settingsSchema', () => {
     const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I build things.', now: [{ label: 'Reading', value: 'DDIA' }] });
     expect(r.now).toHaveLength(1);
     expect(r.welcomeImage).toBeUndefined();
+    expect(r.summary).toEqual([]);
+    expect(r.steps).toEqual([]);
+    expect(r.quirks).toEqual([]);
   });
 
   it('treats a cleared Pico image or note as unset', () => {
