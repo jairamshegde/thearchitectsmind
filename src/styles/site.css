@@ -263,8 +263,9 @@ html { scroll-padding-top: calc(var(--nav-h) + 12px); }
 }
 
 /* ---------- Footer: the statement on the left; Pico, the sub line and links on the right ---------- */
-.foot { margin-top: clamp(24px, 4vh, 40px); padding-top: clamp(64px, 10vh, 96px); border-top: 1px solid var(--line); text-align: left; }
-.foot-main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 32px 48px; align-items: end; }
+/* The rule sits on .foot-main, not .foot, so it spans the content width like the .sig rule below */
+.foot { margin-top: clamp(24px, 4vh, 40px); padding-top: 0; text-align: left; }
+.foot-main { padding-top: clamp(64px, 10vh, 96px); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 32px 48px; align-items: end; }
 .foot .big { font-size: clamp(26px, 2.8vw, 40px); line-height: 1.2; letter-spacing: -.025em; }
 .foot .big-line { display: block; }
 .foot .big-line + .big-line { color: var(--graphite); }
@@ -273,6 +274,7 @@ html { scroll-padding-top: calc(var(--nav-h) + 12px); }
 .foot-pico img { display: block; width: 100%; height: auto; }
 .foot .sub { margin: 0; font-size: 15.5px; line-height: 1.5; }
 .foot .links { justify-content: flex-end; margin-top: 14px; }
+.foot .links > li > a::after { transform: scaleX(1); }
 /* The popover opens leftwards from the link, so it stays inside the page at the right edge */
 .foot .pop { left: auto; right: 0; transform: translateY(8px); }
 .foot .links > li:hover .pop, .foot .links > li:focus-within .pop { transform: none; }
