@@ -13,8 +13,8 @@ test('hero headline and subtext sizes on wide screens', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1000 });
   await page.goto('./');
   const px = (sel: string) => page.locator(sel).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  expect(await px('.hero .hl-main')).toBe(100);
-  expect(await px('.hero .hl-lead')).toBe(34);
+  expect(await px('.hero .hl-main')).toBe(76);
+  expect(await px('.hero .hl-lead')).toBe(28);
   expect(await px('.hero .hero-sub')).toBeLessThanOrEqual(20);
 });
 
@@ -30,19 +30,17 @@ for (const width of [1440, 375]) {
   });
 }
 
-test('hero drawing: one wide picture on desktop, two stacked halves with Pico between on phones', async ({ page }) => {
+test('hero image fills the content width on desktop and runs edge to edge on phones', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./');
-  await expect(page.locator('.hero .art-wide')).toBeVisible();
-  await expect(page.locator('.hero .art-half').first()).toBeHidden();
+  const wide = (await page.locator('.hero-art img').boundingBox())!;
+  const sub = (await page.locator('.hero .ctas').boundingBox())!;
+  expect(wide.y).toBeGreaterThan(sub.y + sub.height);
+  expect(wide.width).toBeGreaterThan(1000);
   await page.setViewportSize({ width: 375, height: 800 });
-  const [top, bottom] = await page.locator('.hero .art-half').all();
-  await expect(page.locator('.hero .art-wide')).toBeHidden();
-  const a = (await top.boundingBox())!;
-  const pico = (await page.locator('.hero-pico').boundingBox())!;
-  const b = (await bottom.boundingBox())!;
-  expect(pico.y).toBeGreaterThan(a.y + a.height - 20);
-  expect(b.y).toBeGreaterThan(pico.y + pico.height - 20);
+  const phone = (await page.locator('.hero-art img').boundingBox())!;
+  expect(Math.round(phone.x)).toBe(0);
+  expect(Math.round(phone.width)).toBe(375);
 });
 
 for (const width of [1920, 1440, 1024]) {

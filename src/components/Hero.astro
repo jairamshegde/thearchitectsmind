@@ -7,7 +7,7 @@ import { withBase } from '../lib/url';
 
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { heroLead, heroHeadline, heroSub, heroNote, heroImage } = settings.data;
+const { heroLead, heroHeadline, heroSub, heroImage } = settings.data;
 
 // The first link points at the featured project, named by the part of its title before any colon.
 const [project] = pickHome(await published('projects'), 1);
@@ -16,26 +16,6 @@ const ctas: [string, string][] = [
   ['Read the writing', '/writing/'],
 ];
 
-// The drawing: seven pieces dumped in a heap (the problem) and the same pieces laid out (the system).
-// Coordinates come from the approved mock; the orange piece is the real problem in both halves.
-const heap = [
-  { x: 145, y: 172, w: 72, h: 100, r: 9, c: 'a' },
-  { x: 182, y: 71, w: 156, h: 94, r: 20 },
-  { x: 264, y: 133, w: 156, h: 100, r: 0 },
-  { x: 162, y: 50, w: 75, h: 41, r: -9 },
-  { x: 249, y: 35, w: 75, h: 100, r: 21 },
-  { x: 120, y: 99, w: 156, h: 44, r: -32, c: 'f' },
-  { x: 352, y: 212, w: 75, h: 41, r: 26 },
-];
-const tiles = [
-  { x: 640, y: 60, w: 200, h: 120 },
-  { x: 852, y: 60, w: 200, h: 56, c: 'f' },
-  { x: 852, y: 128, w: 96, h: 52 },
-  { x: 956, y: 128, w: 96, h: 52 },
-  { x: 640, y: 192, w: 96, h: 128 },
-  { x: 748, y: 192, w: 92, h: 128, c: 'a' },
-  { x: 852, y: 192, w: 200, h: 128 },
-];
 const underline = 'M3 8 C 50 3, 110 11, 197 5';
 ---
 <section class="hero wrap">
@@ -50,25 +30,9 @@ const underline = 'M3 8 C 50 3, 110 11, 197 5';
     ))}
   </div>
 
-  <div class="hero-art">
-    <svg class="art-wide" viewBox="0 0 1104 380" role="img" aria-label="Seven pieces dumped in a heap on the left, and the same pieces laid out cleanly on the right">
-      <g id="hero-art">
-        <text class="art-zone" x="60" y="24">THE PROBLEM</text>
-        <text class="art-zone" x="1044" y="24" text-anchor="end">THE SYSTEM</text>
-        {heap.map((p) => (
-          <rect class:list={['art-piece', p.c]} x={p.x} y={p.y} width={p.w} height={p.h} rx="13" transform={`rotate(${p.r} ${p.x + p.w / 2} ${p.y + p.h / 2})`} />
-        ))}
-        <path class="art-wire" d="M500 150 C 530 140, 574 140, 604 150 M596 143 L605 150 L595 156" />
-        {tiles.map((t) => <rect class:list={['art-piece', t.c]} x={t.x} y={t.y} width={t.w} height={t.h} rx="16" />)}
-        <text class="art-note" x="794" y="356" text-anchor="middle" transform="rotate(-2 794 356)">{heroNote}</text>
-        <path class="art-pen" d="M796 336 C 798 330, 796 326, 794 322" />
-      </g>
-    </svg>
-    {/* Phones: the two halves stacked, with Pico between them */}
-    <svg class="art-half" viewBox="40 0 452 330" aria-hidden="true"><use href="#hero-art" /></svg>
-    {heroImage && (
-      <Image class="hero-pico" src={heroImage} alt="Pico the penguin, squinting suspiciously at a sheet of paper" widths={[132, 264]} sizes="132px" loading="eager" />
-    )}
-    <svg class="art-half" viewBox="620 0 450 370" aria-hidden="true"><use href="#hero-art" /></svg>
-  </div>
+  {heroImage && (
+    <figure class="hero-art">
+      <Image src={heroImage} alt="A heap of docs, links, videos, PDFs, code and notes turned into an AI agent with search, generation and tool steps, checked by traces and evals, while Pico sketches the plan" widths={[720, 1104, 1600, 2061]} sizes="(max-width: 1200px) 100vw, 1104px" loading="eager" />
+    </figure>
+  )}
 </section>

@@ -88,7 +88,7 @@ describe('aboutSchema and settingsSchema', () => {
 
   it('parses site settings with mailto links and optional popover text', () => {
     const r = settingsSchema(image).parse({
-      heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', heroNote: 'N', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
+      heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
       socials: [{ label: 'Email', url: 'mailto:me@example.com', meta: '', note: '' }],
     });
     expect(r.socials[0].meta).toBeUndefined();

@@ -19,15 +19,11 @@ describe('home page', () => {
     expect(ctas.map((a) => a.getAttribute('href'))).toEqual([expect.stringMatching(new RegExp(`^${BASE}/projects/[^/]+/$`)), `${BASE}/writing/`]);
   });
 
-  it('draws the problem and the system, with Pico and his note', () => {
-    const art = home.querySelector('.hero .hero-art')!;
-    expect(art.querySelector('svg.art-wide')?.getAttribute('aria-label')).toMatch(/heap/);
-    expect(art.querySelectorAll('#hero-art rect.art-piece')).toHaveLength(14);
-    expect(art.querySelector('.art-note')?.text).toBe('big problem. small pieces.');
-    expect(art.querySelectorAll('svg.art-half use')).toHaveLength(2);
-    const pico = art.querySelector('img.hero-pico')!;
-    expect(pico.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-skeptical\./);
+  it('shows the hero image with alt text', () => {
+    const art = home.querySelector('.hero figure.hero-art')!;
+    const img = art.querySelector('img')!;
+    expect(img.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/hero_new_workflow\./);
+    expect(img.getAttribute('alt')).toMatch(/Pico/);
   });
 
   it('features at most 3 projects with year and stack, a link to the page and the repo', () => {
