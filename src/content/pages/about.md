@@ -1,44 +1,33 @@
 ---
-title: "Hi, I'm Jairam 👋"
-welcome: "Welcome to my place 🛋️"
-lead: "I’m an AI engineer who likes to build things that are slightly more complicated than they probably need to be."
-intro: |
-  I’m usually somewhere between “let’s build it” and “wait, why does this work?”
-
-  I write about AI, software architecture, and the systems hiding underneath.
-
-  Mostly the things I learn by building, breaking, and following the rabbit hole.
-now:
-  - { label: "Building", value: "Minimal version of LangGraph (Mingraph)" }
-  - { label: "Reading", value: "An Illustrated Guide to AI Agents" }
-  - { label: "Learning", value: "Agent evals" }
-  - { label: "Writing", value: "Phase 6 of Mingraph learning" }
-picoImage: pico-skeptical.png
-picoNote: "I’m reading what he wrote. You tell me what it means."
+title: "Jairam Hegde"
+intro: "Jairam Hegde is an engineer who turns hard problems into simple systems. Lately those problems are AI agents, and whether they really work."
+lead: "I’m happiest when a problem doesn’t have an obvious answer yet."
+leadMore: "Lately those problems are AI agents, and whether they really work."
 welcomeImage: pico-welcome.png
-welcomeNote: "Hey curious reader, I’m Pico"
+welcomeNote: "I’m Pico. I ask what the real problem is. Every time."
+summary:
+  - { label: "approach", value: "Problem first, tools second" }
+  - { label: "working on now", value: "AI agents, evals and observability" }
+  - { label: "usual stack", value: "Python, FastAPI, LangGraph, Qdrant" }
+  - { label: "reviewed by", value: "Pico" }
+steps:
+  - { title: "Find the real problem.", text: "The problem people describe is rarely the one that needs fixing. I ask until the two match." }
+  - { title: "Break it into small pieces.", text: "Each piece gets one job, so I can reason about it and replace it on its own." }
+  - { title: "Build the simplest thing that works.", text: "Plain code first. I add a framework, or a model, only when a piece needs it." }
+  - { title: "Prove it works.", text: "A test, an eval, a number. If I can’t show the fix worked, it isn’t done." }
+signoff: "A fix nobody measured. \"It looks better\" is where I start checking, not where I stop."
+quirks:
+  - "Rebuilds things from scratch to see how they work. See [Mingraph](/writing/mingraph/)."
+  - "Draws the boxes before writing any code."
+  - "Asks \"what problem are we solving?\" in every design review. Pico started it."
+now:
+  - { label: "building", value: "Mingraph, LangChain and LangGraph rebuilt from scratch" }
+  - { label: "writing", value: "The Mingraph series, one design pattern per part" }
+  - { label: "reading", value: "An Illustrated Guide to AI Agents" }
+  - { label: "exploring", value: "Evals for multi-step agents" }
+contact: "Open to conversations about agents, evals, or any problem that needs taking apart."
 ---
 
-## What I do
+AI agents, and the checks around them. I build agents that call tools, and retrieval systems that answer from documents. Then I build the evals that score each answer, and the traces that show which step went wrong.
 
-![Pico building with blocks and a toolbox](./pico-builder.png "left: Build it. Break it. Figure out why. Repeat.")
-
-These days, that usually means AI systems, agents, retrieval, software architecture, and figuring out how to make all of them behave when they meet the real world.
-
-## Why I enjoy it
-
-![Pico at a whiteboard covered in boxes and arrows, next to a stack of books](./pico-whiteboard.png "right: It started simple…")
-
-I enjoy the part where a simple idea turns into a messy system. The unexpected failure. The strange edge case. The question that starts with “why did that happen?” and somehow ends three hours later with a whiteboard full of arrows.
-
-## How I learn
-
-![Pico in headphones reading “How Things Work”, a lightbulb above his head](./pico-learning.png "left: thought: Still so much to learn…")
-
-I learn mostly by building, breaking things, figuring out why, and building them again. I dive deep into docs, read, experiment, and sometimes go down rabbit holes — even the ones I probably didn’t need to go down.
-
-## And Pico?
-
-![Pico relaxing in a beanbag with his headphones on](./pico-companion.png "right: text: Keeping things fun and honest")
-
-Pico is here to make sure I don’t take any of this too seriously. A curious little penguin, part debugger, part cheerleader, and always ready with a question (usually a good one).
+Usually on Python and FastAPI, with LangGraph, Qdrant, Redis and Celery underneath, and Ragas, DeepEval and Arize Phoenix to check the results.

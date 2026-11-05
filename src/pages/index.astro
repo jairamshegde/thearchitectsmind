@@ -1,31 +1,49 @@
 ---
 import { Image } from 'astro:assets';
-import { getEntry } from 'astro:content';
+import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import LogoMarquee from '../components/LogoMarquee.astro';
-import ProjectList from '../components/ProjectList.astro';
-import PostCard from '../components/PostCard.astro';
 import { published } from '../lib/collections';
-import { pickHome } from '../lib/content';
-import { renderMarkdown } from '../lib/markdown-text';
+import { isCaseStudy, pickHome, postPath } from '../lib/content';
+import { formatDate } from '../lib/format';
 import { withBase } from '../lib/url';
 
 const projects = pickHome(await published('projects'), 3);
-const posts = pickHome(await published('writing'), 3);
-const about = await getEntry('pages', 'about');
-if (!about) throw new Error('Missing src/content/pages/about.md');
+const posts = await Promise.all(
+  pickHome(await published('writing'), 5).map(async (post) => ({
+    post,
+    minutes: (await render(post)).remarkPluginFrontmatter.minutesRead as number,
+  })),
+);
 ---
 <BaseLayout>
   <Hero />
-  <LogoMarquee />
 
   <section class="sec wrap" id="projects">
     <div class="sec-head">
-      <h2>Featured projects</h2>
+      <h2>Projects</h2>
       <a class="more" href={withBase('/projects/')}>All projects <span class="arr" aria-hidden="true">→</span></a>
     </div>
-    {projects.length > 0 ? <ProjectList projects={projects} /> : <p class="empty">First project write-up coming soon.</p>}
+    {projects.length > 0 ? (
+      <div class="home-projects">
+        {projects.map((p) => (
+          <article class="home-proj">
+            <div>
+              <p class="home-proj-meta">{[p.data.date.getUTCFullYear(), ...p.data.stack.slice(0, 3)].join(' · ')}</p>
+              <h3><a href={withBase(`/projects/${p.id}/`)}>{p.data.title}</a></h3>
+              <p class="home-proj-sum">{p.data.summary}</p>
+              <div class="home-links">
+                <a class="home-link accent" href={withBase(`/projects/${p.id}/`)}>{isCaseStudy(p.data) ? 'Read the case study' : 'Read more'} <span class="arr" aria-hidden="true">→</span></a>
+                {p.data.links?.repo && <a class="home-link" href={p.data.links.repo} rel="noopener">GitHub <span aria-hidden="true">↗</span></a>}
+              </div>
+            </div>
+            {p.data.cover && <Image class="home-proj-img" src={p.data.cover} alt="" widths={[560, 1120]} sizes="(max-width: 720px) 100vw, 560px" />}
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p class="empty">First project write-up coming soon.</p>
+    )}
   </section>
 
   <section class="sec wrap" id="writing">
@@ -34,37 +52,52 @@ if (!about) throw new Error('Missing src/content/pages/about.md');
       <a class="more" href={withBase('/writing/')}>All writing <span class="arr" aria-hidden="true">→</span></a>
     </div>
     {posts.length > 0 ? (
-      <div class="writing-grid">{posts.map((post) => <PostCard post={post} />)}</div>
+      <div class="viewer" data-viewer>
+        <ul class="viewer-list">
+          {posts.map(({ post, minutes }, i) => (
+            <li>
+              <a class:list={['viewer-item', { sel: i === 0 }]} href={withBase(postPath(post))} data-index={i}>
+                <span class="viewer-title">{post.data.title}</span>
+                <span class="viewer-meta"><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time> · {minutes} min</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        {/* The selected post's details; the list's hover and focus pick which one shows */}
+        <div class="viewer-details" aria-hidden="true">
+          {posts.map(({ post, minutes }, i) => (
+            <div class="viewer-detail" hidden={i !== 0}>
+              {post.data.cover ? (
+                <Image src={post.data.cover} alt="" widths={[520, 1040]} sizes="520px" />
+              ) : (
+                <span class="viewer-fallback"><span class="hand">{post.data.tags[0]}</span></span>
+              )}
+              <p class="viewer-meta">{formatDate(post.data.date)} · {minutes} min read</p>
+              <h3>{post.data.title}</h3>
+              <p class="viewer-desc">{post.data.description}</p>
+              <a class="home-link accent" href={withBase(postPath(post))} tabindex="-1">Read the post <span class="arr">→</span></a>
+            </div>
+          ))}
+        </div>
+      </div>
     ) : (
       <p class="empty">First post coming soon.</p>
     )}
   </section>
-
-  <section class="sec wrap" id="about">
-    <div class="sec-head"><h2>About</h2></div>
-    <div class="about-grid">
-      <div>
-        <Fragment set:html={renderMarkdown(about.data.intro)} />
-        <a class="btn btn-primary" href={withBase('/about/')}>Learn more about me <span class="arr" aria-hidden="true">→</span></a>
-      </div>
-      <div class="about-side">
-        {about.data.picoImage && (
-          <figure class="about-pico" data-reveal-note>
-            {about.data.picoNote && <figcaption class="about-pico-note">{about.data.picoNote}</figcaption>}
-            <Image src={about.data.picoImage} alt="Pico the penguin, squinting suspiciously at a sheet of paper" widths={[200, 400]} sizes="200px" />
-          </figure>
-        )}
-        {about.data.now.length > 0 && (
-          <dl class="now">
-            {about.data.now.map((n) => <div><dt>{n.label}</dt><dd>{n.value}</dd></div>)}
-          </dl>
-        )}
-      </div>
-    </div>
-  </section>
 </BaseLayout>
 
 <script>
-  import { initRevealNotes } from '../scripts/reveal-note';
-  initRevealNotes();
+  // Hovering or focusing a post in the list shows its details in the side panel.
+  for (const viewer of document.querySelectorAll<HTMLElement>('[data-viewer]')) {
+    const items = [...viewer.querySelectorAll<HTMLElement>('.viewer-item')];
+    const details = [...viewer.querySelectorAll<HTMLElement>('.viewer-detail')];
+    const select = (i: number) => {
+      items.forEach((item, j) => item.classList.toggle('sel', j === i));
+      details.forEach((detail, j) => (detail.hidden = j !== i));
+    };
+    items.forEach((item, i) => {
+      item.addEventListener('pointerenter', () => select(i));
+      item.addEventListener('focus', () => select(i));
+    });
+  }
 </script>

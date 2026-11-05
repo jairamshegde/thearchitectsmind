@@ -1,12 +1,11 @@
 ---
-title: 'Mingraph : Minimal LangChain and LangGraph Implementation (Build from Scratch)'
-summary: 'mingraph follows the idea behind build-your-own-x: the best way to understand a technology is to rebuild it from scratch. Read the blog series from the link, it is getting small traction.'
+title: 'Mingraph: LangChain and LangGraph rebuilt from scratch'
+summary: 'The core of LangChain and LangGraph rebuilt in plain Python: provider adapters, tools, memory, retrieval and the agent loop. Each phase applies one design pattern and has its own write-up.'
 stack:
-  - python
-  - oop
-  - design-pattern
-  - langchain
-  - langgraph
+  - Python
+  - LangChain
+  - LangGraph
+  - Design patterns
 date: 2026-10-11
 links:
   repo: https://github.com/jairamshegde/mingraph

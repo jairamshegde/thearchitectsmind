@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 
-const POST = './writing/designing-for-failure/';
+// A real series post: 13 sections, code blocks and tables. The sample posts were deleted from the CMS.
+const POST = './writing/mingraph/phase-7-state-pattern-and-agent-loop/';
 
 test.describe('desktop', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
@@ -10,8 +11,8 @@ test.describe('desktop', () => {
     await page.goto(POST);
     const rail = page.getByRole('navigation', { name: 'Contents' });
     await expect(rail.locator('a').first()).toHaveAttribute('aria-current', 'location');
-    await page.locator('#comparing-strategies').evaluate((el) => el.scrollIntoView());
-    await expect(rail.locator('a[data-toc-link="comparing-strategies"]')).toHaveAttribute('aria-current', 'location');
+    await page.locator('#the-run-that-got-tokyo-wrong').evaluate((el) => el.scrollIntoView());
+    await expect(rail.locator('a[data-toc-link="the-run-that-got-tokyo-wrong"]')).toHaveAttribute('aria-current', 'location');
   });
 
   test('rail reveals heading text on hover and jumps on click', async ({ page }) => {
@@ -21,9 +22,9 @@ test.describe('desktop', () => {
     await expect(text).toHaveCSS('opacity', '0');
     await page.locator('nav.toc').hover();
     await expect(text).toHaveCSS('opacity', '1');
-    await page.locator('nav.toc').getByText('Retries without regret').click();
-    await expect(page).toHaveURL(/#retries-without-regret$/);
-    await expect(page.locator('#retries-without-regret')).toBeInViewport();
+    await page.locator('nav.toc').getByText('The run that got Tokyo wrong').click();
+    await expect(page).toHaveURL(/#the-run-that-got-tokyo-wrong$/);
+    await expect(page.locator('#the-run-that-got-tokyo-wrong')).toBeInViewport();
   });
 
   test('copy button copies the code', async ({ page }) => {
@@ -32,7 +33,7 @@ test.describe('desktop', () => {
     await frame.getByRole('button', { name: 'Copy' }).click();
     await expect(frame.getByRole('button', { name: 'Copied' })).toBeVisible();
     const copied = await page.evaluate(() => navigator.clipboard.readText());
-    expect(copied).toContain('def retry[T]');
+    expect(copied.trim()).toBe((await frame.locator('pre').innerText()).trim());
   });
 });
 

@@ -6,32 +6,34 @@ import { SITE } from '../site.config';
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
 const { footerStatement, footerSub, footerImage, socials } = settings.data;
-// One line per sentence, like the hero headline.
+// One line per sentence; the second line is set in grey.
 const statementLines = footerStatement.split(/(?<=[.!?])\s+/);
 ---
 <footer class="foot wrap">
-  <div class="foot-statement">
+  <div class="foot-main">
     <p class="big">{statementLines.map((line, i) => <>{i > 0 && ' '}<span class="big-line">{line}</span></>)}</p>
-    {footerImage && (
-      <figure class="foot-pico">
-        <Image src={footerImage} alt="Pico the penguin peering at a pile of papers through a magnifying glass" widths={[260, 520]} sizes="260px" />
-      </figure>
-    )}
+    <div class="foot-side">
+      {footerImage && (
+        <figure class="foot-pico">
+          <Image src={footerImage} alt="Pico the penguin peering at a pile of papers through a magnifying glass" widths={[130, 260]} sizes="130px" />
+        </figure>
+      )}
+      <p class="sub">{footerSub}</p>
+      <ul class="links">
+        {socials.map((s) => (
+          <li>
+            <a href={s.url} rel={s.url.startsWith('http') ? 'me noopener' : undefined}>{s.label}<span class="arr" aria-hidden="true">↗</span></a>
+            {(s.meta || s.note) && (
+              <div class="pop" role="tooltip">
+                {s.meta && <p class="pop-meta">{s.meta}</p>}
+                {s.note && <p class="pop-note">{s.note}</p>}
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   </div>
-  <p class="sub">{footerSub}</p>
-  <ul class="links">
-    {socials.map((s) => (
-      <li>
-        <a href={s.url} rel={s.url.startsWith('http') ? 'me noopener' : undefined}>{s.label}<span class="arr" aria-hidden="true">↗</span></a>
-        {(s.meta || s.note) && (
-          <div class="pop" role="tooltip">
-            {s.meta && <p class="pop-meta">{s.meta}</p>}
-            {s.note && <p class="pop-note">{s.note}</p>}
-          </div>
-        )}
-      </li>
-    ))}
-  </ul>
   <div class="sig">
     <span><b>{SITE.title}</b>Written and built by {SITE.author}</span>
     <span>© {new Date().getFullYear()}</span>

@@ -4,85 +4,58 @@ import { BASE, page } from './helpers';
 describe('home page', () => {
   const home = page('/');
 
-  it('orders sections Hero → Logos → Featured projects → Writing → About and has no Notes section', () => {
+  it('orders sections Hero → Projects → Writing, with no logos, About or Notes section', () => {
     const ids = home.querySelectorAll('main > section').map((s) => s.getAttribute('id') ?? s.classNames);
-    expect(ids).toEqual(['hero wrap', 'logos', 'projects', 'writing', 'about']);
-    expect(home.querySelector('#notes')).toBeNull();
+    expect(ids).toEqual(['hero wrap', 'projects', 'writing']);
   });
 
-  it('shows the hero headline, subtext and two CTAs, with no highlight', () => {
-    expect(home.querySelector('.hero .hl')?.text).toBe('I make computers do interesting things. Then I get suspicious.');
-    expect(home.querySelector('.hero .hl .mark')).toBeNull();
-    expect(home.querySelector('.hero .hero-sub')?.text).toBe(
-      'Writing about AI, software architecture, systems, and everything I learn while building them.',
-    );
-    const ctas = home.querySelectorAll('.hero .ctas a').map((a) => a.getAttribute('href'));
-    expect(ctas).toEqual([`${BASE}/projects/`, `${BASE}/writing/`]);
+  it('shows the lead-in, headline, subtext and two text links', () => {
+    expect(home.querySelector('.hero .hl-lead')?.text).toBe('I turn hard problems into');
+    expect(home.querySelector('.hero .hl-main')?.text).toBe('simple systems.');
+    expect(home.querySelectorAll('.hero h1')).toHaveLength(1);
+    expect(home.querySelector('.hero .hero-sub')?.text).toBe('Right now that means AI agents, and the evals that show they work.');
+    const ctas = home.querySelectorAll('.hero .ctas a.hero-link');
+    expect(ctas.map((a) => a.text.replace('→', '').trim())).toEqual(['See Mingraph', 'Read the writing']);
+    expect(ctas.map((a) => a.getAttribute('href'))).toEqual([expect.stringMatching(new RegExp(`^${BASE}/projects/[^/]+/$`)), `${BASE}/writing/`]);
   });
 
-  it('shows the team image with the handwritten note and an arrow', () => {
-    const figure = home.querySelector('.hero figure.hero-figure')!;
-    expect(figure.querySelector('img')?.getAttribute('alt')).toMatch(/Pico/);
-    expect(figure.querySelector('img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/hero-cutout\./);
-    expect(figure.querySelector('.hero-note-text')?.text).toBe('Meet the team: Pico leads, Claude codes, I take credit 😉');
-    expect(figure.querySelector('svg.hero-arrow')).not.toBeNull();
+  it('shows the hero image with alt text', () => {
+    const art = home.querySelector('.hero figure.hero-art')!;
+    const img = art.querySelector('img')!;
+    expect(img.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/hero_new_workflow\./);
+    expect(img.getAttribute('alt')).toMatch(/Pico/);
   });
 
-  it('shows 19 tool logos in two rows, each row duplicated once and hidden from screen readers', () => {
-    expect(home.querySelector('.logos .logos-label')?.text).toBe('Tools I build with. Pico keeps an eye on all of them.');
-    const rows = home.querySelectorAll('.logos .logos-row');
-    expect(rows.length).toBe(2);
-    for (const row of rows) {
-      const [list, copy] = row.querySelectorAll('ul');
-      expect(list.getAttribute('aria-hidden')).toBeUndefined();
-      expect(copy.getAttribute('aria-hidden')).toBe('true');
-      expect(copy.text).toBe(list.text);
-    }
-    const names = rows.flatMap((row) => row.querySelectorAll('ul:not([aria-hidden]) li').map((li) => li.text.trim()));
-    expect(names).toHaveLength(19);
-    expect(names).toContain('Claude Code');
-    expect(home.querySelector('.logos .logo-icon')?.getAttribute('style')).toContain(`${BASE}/logos/claude.svg`);
-  });
-
-  it('shows at most 3 featured projects, featured first, linking to project pages', () => {
+  it('features at most 3 projects with year and stack, a link to the page and the repo', () => {
     const section = home.querySelector('#projects')!;
-    expect(section.querySelector('h2')?.text).toBe('Featured projects');
-    const rows = section.querySelectorAll('.proj-row');
-    expect(rows.length).toBeLessThanOrEqual(3);
-    expect(rows[0].getAttribute('href')).toBe(`${BASE}/projects/order-pipeline-redesign/`);
+    const projects = section.querySelectorAll('article.home-proj');
+    expect(projects.length).toBeGreaterThan(0);
+    expect(projects.length).toBeLessThanOrEqual(3);
+    for (const p of projects) {
+      expect(p.querySelector('h3 a')?.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
+      expect(p.querySelector('.home-proj-meta')?.text).toMatch(/^\d{4} · /);
+      expect(p.querySelector('.home-proj-sum')?.text).toBeTruthy();
+    }
+    const mingraph = projects[0];
+    expect(mingraph.querySelectorAll('.home-links a').map((a) => a.text.replace(/[→↗]/g, '').trim())).toEqual(['Read the case study', 'GitHub']);
+    expect(mingraph.querySelector('img.home-proj-img')).not.toBeNull();
     expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/projects/`);
-    expect(section.querySelectorAll('[data-stage-panel]').length).toBe(rows.length);
   });
 
-  it('shows at most 3 writing cards and never a draft, even a featured one', () => {
+  it('lists at most 5 dated posts with one details panel per post', () => {
     const section = home.querySelector('#writing')!;
-    const cards = section.querySelectorAll('a.post');
-    expect(cards.length).toBeLessThanOrEqual(3);
-    const hrefs = cards.map((c) => c.getAttribute('href'));
-    expect(hrefs[0]).toBe(`${BASE}/writing/designing-for-failure/`);
-    expect(hrefs.join(' ')).not.toContain('unpublished-idea');
+    const items = section.querySelectorAll('a.viewer-item');
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.length).toBeLessThanOrEqual(5);
+    for (const item of items) {
+      expect(item.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
+      expect(item.querySelector('time')?.getAttribute('datetime')).toBeTruthy();
+      expect(item.querySelector('.viewer-meta')?.text).toMatch(/ · \d+ min$/);
+    }
+    const details = section.querySelectorAll('.viewer-detail');
+    expect(details).toHaveLength(items.length);
+    expect(details.map((d) => !d.hasAttribute('hidden'))).toEqual(items.map((_, i) => i === 0));
+    expect(items[0].classNames).toContain('sel');
     expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/writing/`);
-  });
-
-  it('uses the dot-grid fallback with the first tag when a post has no cover', () => {
-    const card = home.querySelectorAll('#writing a.post').find((c) => c.getAttribute('href')?.includes('boundaries-before-boxes'))!;
-    expect(card.querySelector('.thumb-fallback .hand')?.text).toBe('architecture');
-    expect(card.querySelector('.post-meta time')?.text).toBe('Aug 2, 2026');
-  });
-
-  it('shows skeptical Pico with his note above the now list', () => {
-    const side = home.querySelector('#about .about-side')!;
-    const pico = side.querySelector('figure.about-pico')!;
-    expect(pico.querySelector('img')?.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico.querySelector('.about-pico-note')?.text).toBe('I’m reading what he wrote. You tell me what it means.');
-    expect(side.childNodes.filter((n) => 'tagName' in n).map((n) => (n as { tagName: string }).tagName)).toEqual(['FIGURE', 'DL']);
-  });
-
-  it('shows the about intro, now list and a Learn more button to /about/', () => {
-    const about = home.querySelector('#about')!;
-    expect(about.querySelectorAll('.now dt').map((d) => d.text)).toEqual(['Building', 'Reading', 'Learning', 'Writing']);
-    const cta = about.querySelector('a.btn');
-    expect(cta?.text).toContain('Learn more about me');
-    expect(cta?.getAttribute('href')).toBe(`${BASE}/about/`);
   });
 });

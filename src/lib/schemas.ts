@@ -59,20 +59,23 @@ export const aboutSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
     title: z.string().min(1),
     intro: z.string().min(1),
-    now: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).default([]),
-    picoImage: optional(image()),
-    picoNote: optional(z.string()),
-    welcome: optional(z.string()),
     lead: optional(z.string()),
+    leadMore: optional(z.string()),
     welcomeImage: optional(image()),
     welcomeNote: optional(z.string()),
+    summary: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).default([]),
+    steps: z.array(z.object({ title: z.string().min(1), text: z.string().min(1) })).default([]),
+    signoff: optional(z.string()),
+    quirks: z.array(z.string().min(1)).default([]),
+    now: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).default([]),
+    contact: optional(z.string()),
   });
 
 export const settingsSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
+    heroLead: z.string().min(1),
     heroHeadline: z.string().min(1),
     heroSub: z.string().min(1),
-    heroNote: z.string().min(1),
     heroImage: optional(image()),
     footerStatement: z.string().min(1),
     footerSub: z.string().min(1),

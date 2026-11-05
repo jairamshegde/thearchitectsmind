@@ -18,7 +18,7 @@ export function built(route: string): boolean {
   return existsSync(fileFor(route));
 }
 
-/** Parsed HTML for a built route, e.g. page('/writing/designing-for-failure/'). */
+/** Parsed HTML for a built route, e.g. page('/writing/mingraph/phase-0-oop-finally-clicked/'). */
 export function page(route: string): HTMLElement {
   const file = fileFor(route);
   if (!existsSync(file)) throw new Error(`Route not built: ${route} (${file})`);

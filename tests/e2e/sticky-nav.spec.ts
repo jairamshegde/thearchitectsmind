@@ -15,11 +15,9 @@ for (const width of [1440, 375]) {
 
     test('jumping to a section does not hide it under the nav', async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.goto('./');
-      await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'About' }).click();
-      await expect(page).toHaveURL(/#about$/);
+      await page.goto('./#writing');
       const nav = await navBottom(page);
-      const heading = (await page.locator('#about h2').boundingBox())!;
+      const heading = (await page.locator('#writing h2').boundingBox())!;
       expect(heading.y).toBeGreaterThanOrEqual(nav.y + nav.height);
     });
   });
@@ -30,21 +28,13 @@ test.describe('article page', () => {
 
   test('TOC jumps land below the nav and the rail sits below it too', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('./writing/designing-for-failure/');
+    await page.goto('./writing/mingraph/phase-7-state-pattern-and-agent-loop/');
     await page.locator('nav.toc').hover();
-    await page.locator('nav.toc').getByText('Comparing strategies').click();
+    await page.locator('nav.toc').getByText('The run that got Tokyo wrong').click();
     const nav = await navBottom(page);
-    const heading = (await page.locator('#comparing-strategies').boundingBox())!;
+    const heading = (await page.locator('#the-run-that-got-tokyo-wrong').boundingBox())!;
     expect(heading.y).toBeGreaterThanOrEqual(nav.y + nav.height);
     const rail = (await page.locator('nav.toc').boundingBox())!;
     expect(rail.y).toBeGreaterThanOrEqual(nav.y + nav.height);
   });
-});
-
-test('the projects stage sticks below the nav, not under it', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('./projects/');
-  const nav = (await page.locator('header.site-header').boundingBox())!;
-  const top = await page.locator('.stage').evaluate((el) => parseFloat(getComputedStyle(el).top));
-  expect(top).toBeGreaterThanOrEqual(nav.height);
 });

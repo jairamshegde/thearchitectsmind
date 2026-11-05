@@ -74,18 +74,21 @@ describe('aboutSchema and settingsSchema', () => {
   it('parses the about entry', () => {
     const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I build things.', now: [{ label: 'Reading', value: 'DDIA' }] });
     expect(r.now).toHaveLength(1);
-    expect(r.picoImage).toBeUndefined();
+    expect(r.welcomeImage).toBeUndefined();
+    expect(r.summary).toEqual([]);
+    expect(r.steps).toEqual([]);
+    expect(r.quirks).toEqual([]);
   });
 
   it('treats a cleared Pico image or note as unset', () => {
-    const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I', picoImage: '', picoNote: null });
-    expect(r.picoImage).toBeUndefined();
-    expect(r.picoNote).toBeUndefined();
+    const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I', welcomeImage: '', welcomeNote: null });
+    expect(r.welcomeImage).toBeUndefined();
+    expect(r.welcomeNote).toBeUndefined();
   });
 
   it('parses site settings with mailto links and optional popover text', () => {
     const r = settingsSchema(image).parse({
-      heroHeadline: 'H', heroSub: 'Sub', heroNote: 'N', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
+      heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
       socials: [{ label: 'Email', url: 'mailto:me@example.com', meta: '', note: '' }],
     });
     expect(r.socials[0].meta).toBeUndefined();
