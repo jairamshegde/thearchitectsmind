@@ -15,11 +15,9 @@ for (const width of [1440, 375]) {
 
     test('jumping to a section does not hide it under the nav', async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.goto('./');
-      await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'About' }).click();
-      await expect(page).toHaveURL(/#about$/);
+      await page.goto('./#writing');
       const nav = await navBottom(page);
-      const heading = (await page.locator('#about h2').boundingBox())!;
+      const heading = (await page.locator('#writing h2').boundingBox())!;
       expect(heading.y).toBeGreaterThanOrEqual(nav.y + nav.height);
     });
   });

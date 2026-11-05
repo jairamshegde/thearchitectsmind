@@ -4,13 +4,13 @@ import { BASE, page } from './helpers';
 describe('base layout', () => {
   const home = page('/');
 
-  it('has nav links that point at home sections (Notes goes straight to /notes/)', () => {
+  it('has nav links that point at the index pages', () => {
     const links = home.querySelectorAll('nav.nav a.nl').map((a) => [a.text.trim(), a.getAttribute('href')]);
     expect(links).toEqual([
-      ['Writing', `${BASE}/#writing`],
+      ['Projects', `${BASE}/projects/`],
+      ['Writing', `${BASE}/writing/`],
       ['Notes', `${BASE}/notes/`],
-      ['Projects', `${BASE}/#projects`],
-      ['About', `${BASE}/#about`],
+      ['About', `${BASE}/about/`],
     ]);
   });
 
