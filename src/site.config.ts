@@ -8,7 +8,7 @@
  */
 export const SITE = {
   title: "The Architect's Mind",
-  author: 'Jairam',
+  author: 'Jairam Hegde',
   owner: 'jairamshegde',
   repo: 'thearchitectsmind',
   branch: 'main',
