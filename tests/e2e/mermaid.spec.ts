@@ -1,7 +1,22 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 
-test('renders every diagram in the post, including the computational graph', async ({ page }) => {
-  await page.goto('./writing/designing-for-failure/');
+// No published post has a diagram right now, so these tests inject Mermaid panels into a real post's
+// HTML (the same markup the markdown pipeline emits, see tests/unit/markdown.test.ts).
+const POST = './writing/mingraph/phase-7-state-pattern-and-agent-loop/';
+const POST_URL = /\/writing\/mingraph\/phase-7-state-pattern-and-agent-loop\/(index\.html)?$/;
+const panel = (src: string) => `<figure class="mermaid-panel" data-mermaid=""><pre class="mermaid-src">${src}</pre></figure>`;
+
+async function withPanels(page: Page, ...sources: string[]) {
+  await page.route(POST_URL, async (route) => {
+    const response = await route.fetch();
+    const html = (await response.text()).replace('<div class="prose">', `<div class="prose">${sources.map(panel).join('')}`);
+    await route.fulfill({ response, body: html });
+  });
+}
+
+test('renders every diagram in the post', async ({ page }) => {
+  await withPanels(page, 'graph LR\n  A[question] --> B[answer]', 'graph TD\n  x[x = 4] --> f[f = 196]');
+  await page.goto(POST);
   const panels = page.locator('figure.mermaid-panel');
   await expect(panels).toHaveCount(2);
   for (const i of [0, 1]) {
@@ -12,16 +27,8 @@ test('renders every diagram in the post, including the computational graph', asy
 });
 
 test('falls back to the source when a diagram has a syntax error', async ({ page }) => {
-  // Inject a broken diagram into the served HTML so published content never has to contain one.
-  await page.route(/\/writing\/designing-for-failure\/(index\.html)?$/, async (route) => {
-    const response = await route.fetch();
-    const html = (await response.text()).replace(
-      '<div class="prose">',
-      '<div class="prose"><figure class="mermaid-panel" data-mermaid=""><pre class="mermaid-src">graph LR\n  A --></pre></figure>',
-    );
-    await route.fulfill({ response, body: html });
-  });
-  await page.goto('./writing/designing-for-failure/');
+  await withPanels(page, 'graph LR\n  A --&gt;');
+  await page.goto(POST);
   const broken = page.locator('figure.mermaid-panel').first();
   await expect(broken).toHaveClass(/is-error/);
   await expect(broken.locator('.mermaid-note')).toContainText("couldn't be drawn");
@@ -29,8 +36,9 @@ test('falls back to the source when a diagram has a syntax error', async ({ page
 });
 
 test('re-renders diagrams when the theme changes', async ({ page }) => {
+  await withPanels(page, 'graph LR\n  A[question] --> B[answer]');
   await page.emulateMedia({ colorScheme: 'light' });
-  await page.goto('./writing/designing-for-failure/');
+  await page.goto(POST);
   const svg = page.locator('figure.mermaid-panel.is-rendered svg').first();
   await expect(svg).toBeVisible();
   const before = await svg.getAttribute('id');

@@ -28,11 +28,11 @@ test.describe('article page', () => {
 
   test('TOC jumps land below the nav and the rail sits below it too', async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    await page.goto('./writing/designing-for-failure/');
+    await page.goto('./writing/mingraph/phase-7-state-pattern-and-agent-loop/');
     await page.locator('nav.toc').hover();
-    await page.locator('nav.toc').getByText('Comparing strategies').click();
+    await page.locator('nav.toc').getByText('The run that got Tokyo wrong').click();
     const nav = await navBottom(page);
-    const heading = (await page.locator('#comparing-strategies').boundingBox())!;
+    const heading = (await page.locator('#the-run-that-got-tokyo-wrong').boundingBox())!;
     expect(heading.y).toBeGreaterThanOrEqual(nav.y + nav.height);
     const rail = (await page.locator('nav.toc').boundingBox())!;
     expect(rail.y).toBeGreaterThanOrEqual(nav.y + nav.height);
