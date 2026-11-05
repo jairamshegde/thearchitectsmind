@@ -4,8 +4,8 @@
   "heroSub": "I design and build GenAI systems, mostly agents and retrieval pipelines. Here I write about how they’re put together and where they break.",
   "heroNote": "Pico runs code review here. He has never approved a first draft.",
   "heroImage": "pico-skeptical.png",
-  "footerStatement": "Draw the boxes first. Then argue about the arrows.",
-  "footerSub": "Open to conversations about agents, retrieval and system design.",
+  "footerStatement": "Every hard problem has a simple shape. Finding it is the job.",
+  "footerSub": "Got a hard problem? Happy to talk it through.",
   "footerImage": "pico-finding.png",
   "socials": [
     {

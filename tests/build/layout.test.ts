@@ -21,8 +21,9 @@ describe('base layout', () => {
   });
 
   it('renders the footer from site settings', () => {
-    expect(home.querySelector('.foot .big')?.text).toBe('Draw the boxes first. Then argue about the arrows.');
-    const pico = home.querySelector('.foot .foot-statement figure.foot-pico img');
+    expect(home.querySelectorAll('.foot .big .big-line').map((l) => l.text)).toEqual(['Every hard problem has a simple shape.', 'Finding it is the job.']);
+    expect(home.querySelector('.foot .foot-side .sub')?.text).toBe('Got a hard problem? Happy to talk it through.');
+    const pico = home.querySelector('.foot .foot-side figure.foot-pico img');
     expect(pico?.getAttribute('alt')).toMatch(/Pico/);
     expect(pico?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-finding\./);
     const socials = home.querySelectorAll('.foot .links > li > a').map((a) => a.text.replace('↗', '').trim());

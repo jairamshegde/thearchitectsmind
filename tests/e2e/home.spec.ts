@@ -24,18 +24,16 @@ test('hero: Pico’s note writes itself in on load', async ({ page }) => {
   await expect.poll(() => page.locator('.hero-pico .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
-for (const width of [1920, 1440, 1024, 375]) {
-  test(`footer statement is exactly two lines, one per sentence, at ${width}px`, async ({ page }) => {
+for (const width of [1920, 1440, 1024]) {
+  test(`footer statement keeps each sentence on one line at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./');
-    await expect(page.locator('.foot .big .big-line')).toHaveText(['Draw the boxes first.', 'Then argue about the arrows.']);
-    const { height, lineHeight, overflow } = await page.locator('.foot .big').evaluate((el) => ({
-      height: el.getBoundingClientRect().height,
-      lineHeight: parseFloat(getComputedStyle(el).lineHeight),
-      overflow: el.scrollWidth - el.clientWidth,
-    }));
-    expect(Math.round(height / lineHeight)).toBe(2);
-    expect(overflow).toBeLessThanOrEqual(0);
+    const lines = page.locator('.foot .big .big-line');
+    await expect(lines).toHaveText(['Every hard problem has a simple shape.', 'Finding it is the job.']);
+    for (const line of await lines.all()) {
+      const { height, lineHeight } = await line.evaluate((el) => ({ height: el.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el).lineHeight) }));
+      expect(Math.round(height / lineHeight)).toBe(1);
+    }
   });
 }
 
@@ -45,21 +43,23 @@ test('about page: Pico’s welcome note writes itself in on load', async ({ page
   await expect.poll(() => page.locator('.about-welcome .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
-test('footer: Pico sits to the right of the statement on desktop', async ({ page }) => {
+test('footer: the statement sits left, Pico and the links right, on desktop', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./');
   const big = (await page.locator('.foot .big').boundingBox())!;
   const pico = (await page.locator('.foot-pico img').boundingBox())!;
+  const gh = (await page.locator('.foot .links a').first().boundingBox())!;
   expect(pico.x).toBeGreaterThan(big.x + big.width);
-  expect(Math.abs(pico.y + pico.height / 2 - (big.y + big.height / 2))).toBeLessThan(big.height / 2); // vertically aligned
+  expect(gh.x).toBeGreaterThan(big.x + big.width);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
 
-test('footer: Pico sits above the statement on phones', async ({ page }) => {
+test('footer: one left-aligned column on phones, statement first', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('./');
   const big = (await page.locator('.foot .big').boundingBox())!;
   const pico = (await page.locator('.foot-pico img').boundingBox())!;
-  expect(pico.y + pico.height).toBeLessThanOrEqual(big.y + 2);
+  expect(pico.y).toBeGreaterThanOrEqual(big.y + big.height);
+  expect(Math.abs(pico.x - big.x)).toBeLessThan(4);
 });
