@@ -34,6 +34,6 @@ describe('base layout', () => {
   it('sets the theme before first paint and loads the fonts', () => {
     const head = home.querySelector('head')!.toString();
     expect(head).toContain("localStorage.getItem('theme')");
-    expect(head).toContain('family=Bricolage+Grotesque');
+    expect(head).toContain('family=Funnel+Display');
   });
 });
