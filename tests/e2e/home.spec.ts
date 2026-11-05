@@ -84,3 +84,25 @@ test('footer: one left-aligned column on phones, statement first', async ({ page
   expect(pico.y).toBeGreaterThanOrEqual(big.y + big.height);
   expect(Math.abs(pico.x - big.x)).toBeLessThan(4);
 });
+
+test('writing: hovering or focusing a post shows its details', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./');
+  const items = page.locator('#writing .viewer-item');
+  const details = page.locator('#writing .viewer-detail');
+  await expect(details.nth(0)).toBeVisible();
+  await items.nth(2).hover();
+  await expect(items.nth(2)).toHaveClass(/sel/);
+  await expect(details.nth(2)).toBeVisible();
+  await expect(details.nth(0)).toBeHidden();
+  await items.nth(1).focus();
+  await expect(details.nth(1)).toBeVisible();
+  await expect(details.nth(2)).toBeHidden();
+});
+
+test('writing: phones show the plain list without the details panel', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 800 });
+  await page.goto('./');
+  await expect(page.locator('#writing .viewer-details')).toBeHidden();
+  await expect(page.locator('#writing .viewer-item').first()).toBeVisible();
+});

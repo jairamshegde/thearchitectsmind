@@ -30,29 +30,37 @@ describe('home page', () => {
     expect(pico.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-skeptical\./);
   });
 
-  it('lists at most 3 projects as rows linking to project pages', () => {
+  it('features at most 3 projects with year and stack, a link to the page and the repo', () => {
     const section = home.querySelector('#projects')!;
-    const rows = section.querySelectorAll('a.row');
-    expect(rows.length).toBeGreaterThan(0);
-    expect(rows.length).toBeLessThanOrEqual(3);
-    for (const row of rows) {
-      expect(row.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
-      expect(row.querySelector('.row-title')?.text).toBeTruthy();
-      expect(row.querySelector('.row-desc')?.text).toBeTruthy();
+    const projects = section.querySelectorAll('article.home-proj');
+    expect(projects.length).toBeGreaterThan(0);
+    expect(projects.length).toBeLessThanOrEqual(3);
+    for (const p of projects) {
+      expect(p.querySelector('h3 a')?.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
+      expect(p.querySelector('.home-proj-meta')?.text).toMatch(/^\d{4} · /);
+      expect(p.querySelector('.home-proj-sum')?.text).toBeTruthy();
     }
+    const mingraph = projects[0];
+    expect(mingraph.querySelectorAll('.home-links a').map((a) => a.text.replace(/[→↗]/g, '').trim())).toEqual(['Read the case study', 'GitHub']);
+    expect(mingraph.querySelector('img.home-proj-img')).not.toBeNull();
     expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/projects/`);
   });
 
-  it('lists at most 5 posts as dated rows and never a draft', () => {
+  it('lists at most 5 dated posts, never a draft, with one details panel per post', () => {
     const section = home.querySelector('#writing')!;
-    const rows = section.querySelectorAll('a.row');
-    expect(rows.length).toBeGreaterThan(0);
-    expect(rows.length).toBeLessThanOrEqual(5);
-    for (const row of rows) {
-      expect(row.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
-      expect(row.querySelector('time.row-meta')?.getAttribute('datetime')).toBeTruthy();
+    const items = section.querySelectorAll('a.viewer-item');
+    expect(items.length).toBeGreaterThan(0);
+    expect(items.length).toBeLessThanOrEqual(5);
+    for (const item of items) {
+      expect(item.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
+      expect(item.querySelector('time')?.getAttribute('datetime')).toBeTruthy();
+      expect(item.querySelector('.viewer-meta')?.text).toMatch(/ · \d+ min$/);
     }
-    expect(rows.map((r) => r.getAttribute('href')).join(' ')).not.toContain('unpublished-idea');
+    expect(items.map((r) => r.getAttribute('href')).join(' ')).not.toContain('unpublished-idea');
+    const details = section.querySelectorAll('.viewer-detail');
+    expect(details).toHaveLength(items.length);
+    expect(details.map((d) => !d.hasAttribute('hidden'))).toEqual(items.map((_, i) => i === 0));
+    expect(items[0].classNames).toContain('sel');
     expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/writing/`);
   });
 });
