@@ -9,20 +9,25 @@ describe('home page', () => {
     expect(ids).toEqual(['hero wrap', 'projects', 'writing']);
   });
 
-  it('shows the kicker, headline, subtext and two text links', () => {
-    expect(home.querySelector('.hero .hero-kicker')?.text).toBe('Jairam Hegde · GenAI engineer');
-    expect(home.querySelector('.hero .hl')?.text).toBe('I make computers do interesting things. Then I get suspicious.');
-    expect(home.querySelector('.hero .hero-sub')?.text).toMatch(/^I design and build GenAI systems/);
-    const ctas = home.querySelectorAll('.hero .ctas a.btn-text').map((a) => a.getAttribute('href'));
-    expect(ctas).toEqual([`${BASE}/projects/`, `${BASE}/writing/`]);
-    expect(home.querySelector('.hero .btn-primary')).toBeNull();
+  it('shows the lead-in, headline, subtext and two text links', () => {
+    expect(home.querySelector('.hero .hl-lead')?.text).toBe('I turn hard problems into');
+    expect(home.querySelector('.hero .hl-main')?.text).toBe('simple systems.');
+    expect(home.querySelectorAll('.hero h1')).toHaveLength(1);
+    expect(home.querySelector('.hero .hero-sub')?.text).toBe('Right now that means AI agents, and the evals that show they work.');
+    const ctas = home.querySelectorAll('.hero .ctas a.hero-link');
+    expect(ctas.map((a) => a.text.replace('→', '').trim())).toEqual(['See Mingraph', 'Read the writing']);
+    expect(ctas.map((a) => a.getAttribute('href'))).toEqual([expect.stringMatching(new RegExp(`^${BASE}/projects/[^/]+/$`)), `${BASE}/writing/`]);
   });
 
-  it('shows skeptical Pico beside the hero with his note', () => {
-    const pico = home.querySelector('.hero figure.hero-pico')!;
-    expect(pico.querySelector('img')?.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-skeptical\./);
-    expect(pico.querySelector('.about-pico-note')?.text).toBe('Pico runs code review here. He has never approved a first draft.');
+  it('draws the problem and the system, with Pico and his note', () => {
+    const art = home.querySelector('.hero .hero-art')!;
+    expect(art.querySelector('svg.art-wide')?.getAttribute('aria-label')).toMatch(/heap/);
+    expect(art.querySelectorAll('#hero-art rect.art-piece')).toHaveLength(14);
+    expect(art.querySelector('.art-note')?.text).toBe('big problem. small pieces.');
+    expect(art.querySelectorAll('svg.art-half use')).toHaveLength(2);
+    const pico = art.querySelector('img.hero-pico')!;
+    expect(pico.getAttribute('alt')).toMatch(/Pico/);
+    expect(pico.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-skeptical\./);
   });
 
   it('lists at most 3 projects as rows linking to project pages', () => {

@@ -13,15 +13,36 @@ test('hero headline and subtext sizes on wide screens', async ({ page }) => {
   await page.setViewportSize({ width: 1920, height: 1000 });
   await page.goto('./');
   const px = (sel: string) => page.locator(sel).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  expect(await px('.hero .hl')).toBeLessThanOrEqual(60);
-  expect(await px('.hero .hl')).toBeGreaterThanOrEqual(44);
-  expect(await px('.hero .hero-sub')).toBeLessThanOrEqual(19);
+  expect(await px('.hero .hl-main')).toBe(100);
+  expect(await px('.hero .hl-lead')).toBe(34);
+  expect(await px('.hero .hero-sub')).toBeLessThanOrEqual(20);
 });
 
-test('hero: Pico’s note writes itself in on load', async ({ page }) => {
+for (const width of [1440, 375]) {
+  test(`hero: the headline fits on one line and the page never scrolls sideways at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./');
+    const main = page.locator('.hero .hl-main');
+    const { height, lineHeight } = await main.evaluate((el) => ({ height: el.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el).lineHeight) }));
+    expect(Math.round(height / lineHeight)).toBe(1);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+}
+
+test('hero drawing: one wide picture on desktop, two stacked halves with Pico between on phones', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./');
-  await expect.poll(() => page.locator('.hero-pico .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
+  await expect(page.locator('.hero .art-wide')).toBeVisible();
+  await expect(page.locator('.hero .art-half').first()).toBeHidden();
+  await page.setViewportSize({ width: 375, height: 800 });
+  const [top, bottom] = await page.locator('.hero .art-half').all();
+  await expect(page.locator('.hero .art-wide')).toBeHidden();
+  const a = (await top.boundingBox())!;
+  const pico = (await page.locator('.hero-pico').boundingBox())!;
+  const b = (await bottom.boundingBox())!;
+  expect(pico.y).toBeGreaterThan(a.y + a.height - 20);
+  expect(b.y).toBeGreaterThan(pico.y + pico.height - 20);
 });
 
 for (const width of [1920, 1440, 1024]) {

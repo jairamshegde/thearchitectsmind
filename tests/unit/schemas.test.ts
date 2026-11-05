@@ -85,11 +85,10 @@ describe('aboutSchema and settingsSchema', () => {
 
   it('parses site settings with mailto links and optional popover text', () => {
     const r = settingsSchema(image).parse({
-      heroKicker: '', heroHeadline: 'H', heroSub: 'Sub', heroNote: 'N', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
+      heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', heroNote: 'N', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
       socials: [{ label: 'Email', url: 'mailto:me@example.com', meta: '', note: '' }],
     });
     expect(r.socials[0].meta).toBeUndefined();
-    expect(r.heroKicker).toBeUndefined();
     expect(r.heroImage).toBeUndefined();
     expect(r.footerImage).toBeUndefined();
   });

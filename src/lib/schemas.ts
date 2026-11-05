@@ -68,7 +68,7 @@ export const aboutSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
 
 export const settingsSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
-    heroKicker: optional(z.string()),
+    heroLead: z.string().min(1),
     heroHeadline: z.string().min(1),
     heroSub: z.string().min(1),
     heroNote: z.string().min(1),

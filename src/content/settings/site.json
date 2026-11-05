@@ -1,8 +1,8 @@
 {
-  "heroKicker": "Jairam Hegde · GenAI engineer",
-  "heroHeadline": "I make computers do interesting things. Then I get suspicious.",
-  "heroSub": "I design and build GenAI systems, mostly agents and retrieval pipelines. Here I write about how they’re put together and where they break.",
-  "heroNote": "Pico runs code review here. He has never approved a first draft.",
+  "heroLead": "I turn hard problems into",
+  "heroHeadline": "simple systems.",
+  "heroSub": "Right now that means AI agents, and the evals that show they work.",
+  "heroNote": "big problem. small pieces.",
   "heroImage": "pico-skeptical.png",
   "footerStatement": "Every hard problem has a simple shape. Finding it is the job.",
   "footerSub": "Got a hard problem? Happy to talk it through.",
