@@ -22,7 +22,7 @@ describe('home page', () => {
   it('shows the hero image with alt text', () => {
     const art = home.querySelector('.hero figure.hero-art')!;
     const img = art.querySelector('img')!;
-    expect(img.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/hero_new_workflow\./);
+    expect(img.getAttribute('src')).toMatch(/^\/_astro\/hero_new_workflow\./);
     expect(img.getAttribute('alt')).toMatch(/Pico/);
   });
 

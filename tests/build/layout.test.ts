@@ -25,7 +25,7 @@ describe('base layout', () => {
     expect(home.querySelector('.foot .foot-side .sub')?.text).toBe('Got a hard problem? Happy to talk it through.');
     const pico = home.querySelector('.foot .foot-side figure.foot-pico img');
     expect(pico?.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-finding\./);
+    expect(pico?.getAttribute('src')).toMatch(/^\/_astro\/pico-finding\./);
     const socials = home.querySelectorAll('.foot .links > li > a').map((a) => a.text.replace('↗', '').trim());
     expect(socials).toEqual(['GitHub']);
     expect(home.querySelector('.foot .pop .pop-note')?.text).toBe('Where the code lives.');

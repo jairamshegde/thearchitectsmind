@@ -70,9 +70,9 @@ export const cmsConfig: {
   collections: (FolderCollection | FileCollection)[];
 } = {
   backend: { name: 'github', repo: `${SITE.owner}/${SITE.repo}`, branch: SITE.branch, auth_methods: ['token'] },
-  site_url: `${SITE.url}${SITE.base}/`,
+  site_url: `${SITE.url}${SITE.base.replace(/\/$/, '')}/`,
   media_folder: 'public/uploads',
-  public_folder: `${SITE.base}/uploads`,
+  public_folder: `${SITE.base.replace(/\/$/, '')}/uploads`,
   output: { omit_empty_optional_fields: true },
   collections: [
     folder('writing', 'Writing', 'Post', [

@@ -9,7 +9,7 @@ describe('/about/', () => {
     expect(p.querySelector('.about-lead span')?.text).toBe('Lately those problems are AI agents, and whether they really work.');
     expect(p.querySelector('.about-meta a')?.getAttribute('href')).toBe('https://github.com/jairamshegde');
     const pico = p.querySelector('.about-head figure.about-pico')!;
-    expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/thearchitectsmind\/_astro\/pico-welcome\./);
+    expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/_astro\/pico-welcome\./);
     expect(pico.querySelector('.about-pico-note')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
     expect(p.querySelectorAll('main img')).toHaveLength(1);
   });
