@@ -43,7 +43,7 @@ describe('base layout', () => {
     expect(cta?.getAttribute('href')).toMatch(/^mailto:/);
     expect(band.querySelector('.band-quote')?.text).toBe('“Every hard problem has a simple shape. Finding it is the job.”');
     expect(band.querySelectorAll('.band-foot nav a').map((a) => a.text.trim())).toEqual(['GitHub', 'Notes']);
-    expect(band.querySelector('.band-foot span')?.text).toBe(`© ${new Date().getFullYear()} Jairam Hegde. Written and built by hand.`);
+    expect(band.querySelector('.band-foot span')?.text).toBe(`© ${new Date().getFullYear()} Jairam Hegde.`);
   });
 
   it('ends other pages with the short contact band and a way back up', () => {

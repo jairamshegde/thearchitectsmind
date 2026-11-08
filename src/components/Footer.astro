@@ -26,7 +26,7 @@ const firstSentence = footerStatement.split(/(?<=[.!?])\s+/)[0];
         : <a class="gh ul" href={github} rel="me noopener">GitHub</a>}
     </div>
     <div class="band-foot">
-      <span>© {new Date().getFullYear()} {SITE.author}. Written and built by hand.</span>
+      <span>© {new Date().getFullYear()} {SITE.author}.</span>
       {home
         ? <nav aria-label="Elsewhere"><a class="ul" href={github} rel="me noopener">GitHub</a><a class="ul" href={withBase('/notes/')}>Notes</a></nav>
         : <a class="ul" href="#top">Back to top</a>}
