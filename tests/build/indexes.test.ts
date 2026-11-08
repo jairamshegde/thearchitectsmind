@@ -92,14 +92,18 @@ describe('/notes/ pagination', () => {
 describe('/projects/', () => {
   const p = page('/projects/');
 
-  it('shows the newest project once, above the list, with summary, stack and a View Project link to the repo', () => {
-    const latest = p.querySelectorAll('.latest-proj');
-    expect(latest).toHaveLength(1);
-    const titleHref = latest[0].querySelector('h2 a')?.getAttribute('href');
-    const cardHrefs = p.querySelectorAll('.proj-card h3 a').map((a) => a.getAttribute('href'));
-    expect(cardHrefs).not.toContain(titleHref);
-    expect(latest[0].querySelector('.btn-primary')?.getAttribute('href')).toMatch(/^https:\/\/github\.com\//);
-    expect(latest[0].querySelector('.proj-summary')?.text).toBeTruthy();
-    expect(latest[0].querySelectorAll('.proj-tags li').length).toBeGreaterThan(0);
+  it('has the two-line page title', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Things I build.');
+  });
+
+  it('shows the newest project as the featured card, with the CMS summary', () => {
+    const cards = p.querySelectorAll('a.feat');
+    expect(cards).toHaveLength(1);
+    expect(cards[0].getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
+    expect(cards[0].querySelector('.feat-desc')?.text).toMatch(/^The core of LangChain and LangGraph/);
+    expect(cards[0].querySelector('.feat-cta')?.text.trim()).toBe('View case study');
+    const featured = cards[0].getAttribute('href');
+    expect(p.querySelectorAll('.proj-rows a').map((a) => a.getAttribute('href'))).not.toContain(featured);
+    expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]/);
   });
 });
