@@ -120,3 +120,11 @@ test('the progress bar stays empty on a note too short to scroll', async ({ page
   const scale = await page.locator('.progress > i').evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
   expect(scale).toBe(0);
 });
+
+for (const route of [POST, './notes/dataclass-slots/', './projects/mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-scratch-to-learn-object-oriented-design-and-design-patterns-in-python./']) {
+  test(`${route}: the title is at most 52px at 1440px`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(route);
+    expect(await page.locator('h1').first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeLessThanOrEqual(52);
+  });
+}
