@@ -40,6 +40,16 @@ describe('/about/', () => {
     expect(p.querySelectorAll('dl.about-now dt').map((d) => d.text)).toEqual(['Building', 'Writing', 'Reading', 'Exploring']);
   });
 
+  it('offers email, LinkedIn and GitHub as icon links under "Get in touch"', () => {
+    const section = p.querySelectorAll('.about-main section').find((s) => s.querySelector('h2')?.text === 'Get in touch')!;
+    const links = section.querySelectorAll('ul.socials a');
+    expect(links.map((a) => a.getAttribute('aria-label'))).toEqual(['Email', 'LinkedIn', 'GitHub']);
+    expect(links[0].getAttribute('href')).toMatch(/^mailto:/);
+    expect(links[1].getAttribute('href')).toMatch(/^https:\/\/www\.linkedin\.com\//);
+    expect(links[2].getAttribute('href')).toBe('https://github.com/jairamshegde');
+    for (const a of links) expect(a.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+  });
+
   it('links Mingraph in the quirks to its writing series, under the base path', () => {
     expect(p.querySelector('.about-quirks a')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
   });
