@@ -130,27 +130,7 @@ a.pg-step:hover, button.pg-step:hover { text-decoration: underline; text-underli
 .page-head .side-note { margin: 16px 0 24px; }
 
 /* The design system's .hero/.sec/.foot padding shorthands zero the .wrap side gutter; restore it */
-.hero.wrap, .sec.wrap, .foot.wrap { padding-left: var(--gutter); padding-right: var(--gutter); }
-
-/* ---------- Home hero: a quiet lead-in, the payoff set large, then the problem → system drawing ---------- */
-.hero { padding-top: clamp(28px, 6vh, 56px); padding-bottom: 0; text-align: center; }
-.hero .hl { max-width: none; font-weight: 600; }
-.hl-lead { display: block; font-size: clamp(20px, 2vw, 28px); font-weight: 500; line-height: 1.2; letter-spacing: -.02em; color: var(--graphite); }
-.hl-main { position: relative; display: inline-block; margin-top: 4px; font-size: clamp(40px, 5.4vw, 76px); line-height: 1.05; letter-spacing: -.04em; white-space: nowrap; }
-.hl-ul { position: absolute; left: -2%; bottom: -.12em; width: 104%; height: .22em; overflow: visible; }
-.hl-ul path { fill: none; stroke: var(--accent); stroke-width: 3.2; stroke-linecap: round; }
-.hero-sub { margin: clamp(28px, 4vh, 36px) auto 0; font-size: clamp(17px, 1.4vw, 20px); line-height: 1.5; color: var(--graphite); text-wrap: balance; }
-.hero .ctas { justify-content: center; gap: 12px 28px; margin-top: 24px; }
-.hero-link { padding-bottom: 2px; border-bottom: 2px solid var(--line-2); font-size: 15.5px; font-weight: 600; text-decoration: none; color: var(--ink); transition: border-color var(--dur-fast) ease; }
-.hero-link:first-child, .hero-link:hover { border-color: var(--accent); }
-.hero-link .arr { display: inline-block; transition: transform var(--dur-base) var(--ease-out); }
-.hero-link:hover .arr { transform: translateX(4px); }
-
-.hero-art { position: relative; margin: clamp(32px, 6vh, 56px) 0 0; }
-.hero-art img { display: block; width: 100%; height: auto; }
-@media (max-width: 720px) {
-  .hero-art { margin: 32px calc(-1 * var(--gutter)) 0; } /* edge to edge, so the small labels stay readable */
-}
+.sec.wrap { padding-left: var(--gutter); padding-right: var(--gutter); }
 
 /* ---------- Home: featured projects, then the latest posts with a details panel ---------- */
 .sec { padding: clamp(80px, 14vh, 160px) 0 0; }

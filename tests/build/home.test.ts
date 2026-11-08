@@ -4,26 +4,30 @@ import { BASE, page } from './helpers';
 describe('home page', () => {
   const home = page('/');
 
-  it('orders sections Hero → Projects → Writing, with no logos, About or Notes section', () => {
-    const ids = home.querySelectorAll('main > section').map((s) => s.getAttribute('id') ?? s.classNames);
-    expect(ids).toEqual(['hero wrap', 'projects', 'writing']);
+  it('orders sections Hero → Projects → Writing', () => {
+    const ids = home.querySelectorAll('main > section').map((s) => s.getAttribute('id'));
+    expect(ids).toEqual(['hero', 'projects', 'writing']);
   });
 
-  it('shows the lead-in, headline, subtext and two text links', () => {
-    expect(home.querySelector('.hero .hl-lead')?.text).toBe('I turn hard problems into');
-    expect(home.querySelector('.hero .hl-main')?.text).toBe('simple systems.');
-    expect(home.querySelectorAll('.hero h1')).toHaveLength(1);
-    expect(home.querySelector('.hero .hero-sub')?.text).toBe('Right now that means AI agents, and the evals that show they work.');
-    const ctas = home.querySelectorAll('.hero .ctas a.hero-link');
-    expect(ctas.map((a) => a.text.replace('→', '').trim())).toEqual(['See Mingraph', 'Read the writing']);
-    expect(ctas.map((a) => a.getAttribute('href'))).toEqual([expect.stringMatching(new RegExp(`^${BASE}/projects/[^/]+/$`)), `${BASE}/writing/`]);
+  it('shows the two-line title with an accent period, subtitle, bio and three links', () => {
+    const hero = home.querySelector('#hero')!;
+    expect(hero.querySelectorAll('h1')).toHaveLength(1);
+    const lines = hero.querySelectorAll('h1 .mask');
+    expect(lines.map((l) => l.text)).toEqual(['In search of', 'intuition.']);
+    expect(lines[1].querySelector('.accent-dot')?.text).toBe('.');
+    expect(hero.querySelector('.hero-sub')?.text).toBe('Building intuition for complex systems.');
+    expect(hero.querySelector('.hero-bio')?.text).toBe('I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.');
+    const links = hero.querySelectorAll('.hero-links a');
+    expect(links.map((a) => a.text.trim())).toEqual(['See the projects', 'Read the blog', 'GitHub']);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#projects', '#writing', 'https://github.com/jairamshegde']);
+    expect(links[1].getAttribute('data-tab-link')).toBe('blog');
   });
 
-  it('shows the hero image with alt text', () => {
-    const art = home.querySelector('.hero figure.hero-art')!;
-    const img = art.querySelector('img')!;
-    expect(img.getAttribute('src')).toMatch(/^\/_astro\/hero_new_workflow\./);
-    expect(img.getAttribute('alt')).toMatch(/Pico/);
+  it('draws the pixel field beside the title with a text alternative', () => {
+    const field = home.querySelector('#hero [data-pf]')!;
+    expect(field.getAttribute('role')).toBe('img');
+    expect(field.getAttribute('aria-label')).toMatch(/spark/);
+    expect(field.querySelector('[data-pf-sq]')?.getAttribute('aria-hidden')).toBe('true');
   });
 
   it('features at most 3 projects with year and stack, a link to the page and the repo', () => {

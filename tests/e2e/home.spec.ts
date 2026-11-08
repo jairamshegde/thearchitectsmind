@@ -1,86 +1,63 @@
 import { expect, test } from '@playwright/test';
 
-test('keeps a side gutter on phones (hero, sections, footer)', async ({ page }) => {
+test('keeps a side gutter on phones (hero, sections, contact band)', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('./');
-  for (const sel of ['.hero .hl', '#projects h2', '#writing h2', '.foot .sig']) {
+  for (const sel of ['#hero h1', '#projects h2', '#writing h2', '#contact .band-big']) {
     const box = await page.locator(sel).first().boundingBox();
     expect(box!.x, sel).toBeGreaterThanOrEqual(16);
   }
 });
 
-test('hero headline and subtext sizes on wide screens', async ({ page }) => {
-  await page.setViewportSize({ width: 1920, height: 1000 });
+test('hero title is at most 112px at 1440px', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./');
-  const px = (sel: string) => page.locator(sel).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-  expect(await px('.hero .hl-main')).toBe(76);
-  expect(await px('.hero .hl-lead')).toBe(28);
-  expect(await px('.hero .hero-sub')).toBeLessThanOrEqual(20);
+  const px = await page.locator('#hero h1').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(px).toBeLessThanOrEqual(112);
+  expect(px).toBeGreaterThan(90);
 });
 
-for (const width of [1440, 375]) {
-  test(`hero: the headline fits on one line and the page never scrolls sideways at ${width}px`, async ({ page }) => {
+for (const width of [1440, 1024, 390]) {
+  test(`hero: each title line stays on one line and nothing scrolls sideways at ${width}px`, async ({ page }) => {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./');
-    const main = page.locator('.hero .hl-main');
-    const { height, lineHeight } = await main.evaluate((el) => ({ height: el.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el).lineHeight) }));
-    expect(Math.round(height / lineHeight)).toBe(1);
+    for (const line of await page.locator('#hero h1 .mask').all()) {
+      const { height, lineHeight } = await line.evaluate((el) => ({ height: el.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el).fontSize) * 0.95 }));
+      expect(Math.round(height / lineHeight)).toBe(1);
+    }
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
   });
 }
 
-test('hero image fills the content width on desktop and runs edge to edge on phones', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
+test('hero: reduced motion shows the title in place immediately', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
-  const wide = (await page.locator('.hero-art img').boundingBox())!;
-  const sub = (await page.locator('.hero .ctas').boundingBox())!;
-  expect(wide.y).toBeGreaterThan(sub.y + sub.height);
-  expect(wide.width).toBeGreaterThan(1000);
-  await page.setViewportSize({ width: 375, height: 800 });
-  const phone = (await page.locator('.hero-art img').boundingBox())!;
-  expect(Math.round(phone.x)).toBe(0);
-  expect(Math.round(phone.width)).toBe(375);
+  const t = await page.locator('#hero h1 .mask > span').first().evaluate((el) => getComputedStyle(el).transform);
+  expect(t).toBe('none');
 });
 
-for (const width of [1920, 1440, 1024]) {
-  test(`footer statement keeps each sentence on one line at ${width}px`, async ({ page }) => {
-    await page.setViewportSize({ width, height: 900 });
-    await page.goto('./');
-    const lines = page.locator('.foot .big .big-line');
-    await expect(lines).toHaveText(['Every hard problem has a simple shape.', 'Finding it is the job.']);
-    for (const line of await lines.all()) {
-      const { height, lineHeight } = await line.evaluate((el) => ({ height: el.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el).lineHeight) }));
-      expect(Math.round(height / lineHeight)).toBe(1);
-    }
-  });
-}
+test('pixel field: only the accent square follows the pointer, and it returns to the centre', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./');
+  const field = page.locator('#hero [data-pf]');
+  const sq = field.locator('[data-pf-sq]');
+  const cellTransforms = () => field.locator('i').evaluateAll((els) => els.map((e) => getComputedStyle(e).transform).join());
+  const before = await cellTransforms();
+  const box = (await field.boundingBox())!;
+  // centre cell is (15, 11) with a 20px pitch; aim at the middle of cell (18, 9)
+  await page.mouse.move(box.x + 18 * 20 + 7, box.y + 9 * 20 + 7);
+  await expect.poll(() => sq.evaluate((el) => el.style.transform)).toBe('translate(60px, -40px)');
+  expect(await cellTransforms()).toBe(before);
+  await page.mouse.move(box.x - 50, box.y - 50);
+  await expect.poll(() => sq.evaluate((el) => el.style.transform)).toBe('');
+});
 
 test('about page: Pico’s welcome note writes itself in on load', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./about/');
   await expect.poll(() => page.locator('.about-head .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
-});
-
-test('footer: the statement sits left, Pico and the links right, on desktop', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('./');
-  const big = (await page.locator('.foot .big').boundingBox())!;
-  const pico = (await page.locator('.foot-pico img').boundingBox())!;
-  const gh = (await page.locator('.foot .links a').first().boundingBox())!;
-  expect(pico.x).toBeGreaterThan(big.x + big.width);
-  expect(gh.x).toBeGreaterThan(big.x + big.width);
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow).toBeLessThanOrEqual(0);
-});
-
-test('footer: one left-aligned column on phones, statement first', async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 800 });
-  await page.goto('./');
-  const big = (await page.locator('.foot .big').boundingBox())!;
-  const pico = (await page.locator('.foot-pico img').boundingBox())!;
-  expect(pico.y).toBeGreaterThanOrEqual(big.y + big.height);
-  expect(Math.abs(pico.x - big.x)).toBeLessThan(4);
 });
 
 test('writing: hovering or focusing a post shows its details', async ({ page }) => {

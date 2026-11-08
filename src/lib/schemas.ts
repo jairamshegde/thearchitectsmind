@@ -76,6 +76,7 @@ export const settingsSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
     heroLead: z.string().min(1),
     heroHeadline: z.string().min(1),
     heroSub: z.string().min(1),
+    heroBio: optional(z.string()),
     heroImage: optional(image()),
     footerStatement: z.string().min(1),
     footerSub: z.string().min(1),

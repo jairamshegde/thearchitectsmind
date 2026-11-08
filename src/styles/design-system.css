@@ -135,18 +135,6 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
 /* ---------------------------------------------------------------------
    4. Hero
    --------------------------------------------------------------------- */
-.hero { padding: clamp(20px, 4vh, 48px) 0 clamp(56px, 9vh, 100px); }
-.hero-top {
-  display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-  gap: clamp(24px, 4vw, 64px); align-items: end;
-}
-.hl {
-  margin: 0; max-width: 24ch;
-  font-weight: 700;
-  font-size: var(--fs-hero); line-height: 1.16; letter-spacing: -.03em; text-wrap: pretty;
-}
-/* Marker highlight behind a phrase */
-.hl .mark { background: linear-gradient(transparent 62%, var(--accent-soft) 62%); padding: 0 .06em; }
 /* Hand-drawn circle that draws on hover (wrap the phrase in .circled and add the SVG) */
 .circled { position: relative; }
 .circled svg { position: absolute; left: -6%; top: -18%; width: 112%; height: 136%; overflow: visible; pointer-events: none; }
@@ -256,7 +244,6 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
    13. Responsive and motion preferences
    --------------------------------------------------------------------- */
 @media (max-width: 900px) {
-  .hero-top { grid-template-columns: 1fr; }
   .writing-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 @media (max-width: 560px) {
