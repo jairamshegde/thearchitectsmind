@@ -3,17 +3,16 @@ import { pixelCells, type FieldConfig } from '../lib/pixel-field';
 
 interface Props {
   config: FieldConfig;
-  label?: string;
   class?: string;
 }
-const { config: c, label = 'Pixel art: scattered noise around a small spark with an empty centre', class: cls } = Astro.props;
+const { config: c, class: cls } = Astro.props;
 const pitch = c.cell + c.gap;
 const cells = pixelCells(c);
 ---
 <div
   class:list={['pf', cls]}
   role="img"
-  aria-label={label}
+  aria-label="Pixel art: scattered noise around a small spark with an empty centre"
   data-pf
   data-cols={c.cols}
   data-rows={c.rows}
