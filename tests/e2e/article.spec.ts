@@ -96,3 +96,11 @@ test('a phone shows the post title without sideways scrolling and hides the pixe
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+for (const [width, px] of [[1440, '17px'], [390, '16px']] as const) {
+  test(`body text is ${px} at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(POST);
+    expect(await page.locator('.prose > p').first().evaluate((el) => getComputedStyle(el).fontSize)).toBe(px);
+  });
+}

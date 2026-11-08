@@ -37,7 +37,7 @@
 }
 
 /* ---------- prose ---------- */
-.prose { font-size: 19px; line-height: 1.65; color: var(--body); }
+.prose { font-size: 17px; line-height: 1.7; color: var(--body); }
 .prose > :first-child { margin-top: 0; }
 .prose p, .prose ul, .prose ol { margin: 0 0 1.15em; }
 .prose ul, .prose ol { padding-left: 1.3em; }
@@ -48,9 +48,9 @@
 .prose a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; transition: text-decoration-thickness .3s var(--ease); }
 .prose a:hover { text-decoration-thickness: 2px; }
 .prose h2, .prose h3, .prose h4 { position: relative; color: var(--ink); scroll-margin-top: 24px; }
-.prose h2 { margin: 2.4em 0 .7em; font-size: 32px; line-height: 1.15; letter-spacing: -.02em; }
-.prose h3 { margin: 1.9em 0 .55em; font-size: 24px; line-height: 1.2; letter-spacing: -.015em; }
-.prose h4 { margin: 1.6em 0 .4em; font-size: 19px; }
+.prose h2 { margin: 2.4em 0 .7em; font-size: 30px; line-height: 1.15; letter-spacing: -.02em; }
+.prose h3 { margin: 1.9em 0 .55em; font-size: 22px; line-height: 1.2; letter-spacing: -.015em; }
+.prose h4 { margin: 1.6em 0 .4em; font-size: 17px; }
 .prose .anchor { position: absolute; left: -36px; top: 0; color: var(--muted); font-weight: 400; text-decoration: none; opacity: 0; transition: opacity .25s var(--ease); }
 .prose :is(h2, h3, h4):hover .anchor, .prose .anchor:focus-visible { opacity: 1; }
 .prose hr { height: 1px; margin: 2.5em 0; border: 0; background: var(--line); }
@@ -67,11 +67,11 @@
 /* TL;DR and AIDR boxes */
 .prose .box { margin: 0 0 1.6em; padding: 28px 30px; border: 1px solid var(--line); border-radius: 16px; }
 .prose .box-h { margin: 0 0 12px; color: var(--ink); font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
-.prose .box ul, .prose .box ol { margin: 0; font-size: 17px; }
+.prose .box ul, .prose .box ol { margin: 0; font-size: 16px; }
 .prose .box li + li { margin-top: .4em; }
 .prose .box > :last-child { margin-bottom: 0; }
 .prose .box-aidr { border-color: transparent; background: var(--soft); }
-.prose .box-aidr p:not(.box-h) { margin: 0; font-size: 16px; color: var(--muted); }
+.prose .box-aidr p:not(.box-h) { margin: 0; font-size: 15px; color: var(--muted); }
 
 /* Pico's one-line reactions: in the right margin on wide screens, under the paragraph otherwise */
 .pico-row > :first-child { margin-bottom: 1.15em; }
@@ -81,7 +81,7 @@
 .pico-av::before { left: 10px; }
 .pico-av::after { right: 10px; }
 .pico-av i { position: absolute; left: 50%; top: 21px; width: 8px; height: 5px; margin-left: -4px; border-radius: 0 0 4px 4px; background: var(--accent); }
-.pico-text { font-size: 17px; font-style: italic; font-weight: 500; line-height: 1.4; color: var(--accent-ink); }
+.pico-text { font-size: 16px; font-style: italic; font-weight: 500; line-height: 1.4; color: var(--accent-ink); }
 .pico-name { display: block; margin-bottom: 2px; font-size: 12px; font-style: normal; font-weight: 600; letter-spacing: .01em; color: var(--muted); }
 .pico-text code { font-style: normal; }
 @media (min-width: 1600px) {
@@ -113,7 +113,7 @@
 .code-lang { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .code-copy { min-height: 32px; padding: 0 12px; border: 1px solid #34343A; border-radius: 8px; background: none; color: #E9E9E4; font: inherit; cursor: pointer; transition: background-color .25s var(--ease); }
 .code-copy:hover { background: #26262B; }
-.code-frame pre.astro-code { margin: 0; padding: 20px 0; overflow-x: auto; background: var(--code-bg) !important; font-family: var(--mono); font-size: 15px; line-height: 1.6; }
+.code-frame pre.astro-code { margin: 0; padding: 20px 0; overflow-x: auto; background: var(--code-bg) !important; font-family: var(--mono); font-size: 14px; line-height: 1.6; }
 .code-frame code { display: block; min-width: max-content; }
 .astro-code .line { display: inline-block; width: 100%; padding: 0 18px; }
 .astro-code .line.highlighted { background: rgba(255, 138, 99, .1); box-shadow: inset 2px 0 var(--accent); }
@@ -204,8 +204,8 @@
 }
 
 @media (max-width: 720px) {
-  .prose { font-size: 18px; }
-  .prose h2 { font-size: 30px; }
+  .prose { font-size: 16px; }
+  .prose h2 { font-size: 26px; }
   .prose .anchor { display: none; }
   .article-head { padding: 40px 0 32px; }
 }
