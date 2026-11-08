@@ -55,7 +55,7 @@ test.describe('reading width', () => {
     test(`article column is wide, rail stays beside it, no overflow at ${width}px`, async ({ page }) => {
       await page.setViewportSize({ width, height: 900 });
       await page.goto(POST);
-      const article = (await page.locator('article.article').boundingBox())!;
+      const article = (await page.locator('.article-shell .article').boundingBox())!;
       const rail = (await page.locator('nav.toc').boundingBox())!;
       expect(article.width).toBeGreaterThanOrEqual(width === 1440 ? 820 : 700);
       expect(rail.x + rail.width).toBeLessThanOrEqual(article.x);
@@ -63,4 +63,23 @@ test.describe('reading width', () => {
       expect(overflow).toBeLessThanOrEqual(0);
     });
   }
+});
+
+test('reading progress fills as the article is read', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto(POST);
+  const bar = page.locator('.progress > i');
+  const scale = () => bar.evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
+  expect(await scale()).toBeLessThan(0.05);
+  await page.locator('[data-article-end]').evaluate((el) => el.scrollIntoView({ block: 'end' }));
+  await expect.poll(scale).toBeGreaterThan(0.95);
+});
+
+test('a phone shows the post title without sideways scrolling and hides the pixel field', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 800 });
+  await page.goto(POST);
+  await expect(page.locator('.post-head [data-pf]')).toBeHidden();
+  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(0);
 });

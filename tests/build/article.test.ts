@@ -8,20 +8,30 @@ describe('writing article: the last Mingraph part', () => {
   const POST = '/writing/mingraph/phase-7-state-pattern-and-agent-loop/';
   const p = page(POST);
 
-  it('links back to the writing index from the top of the article', () => {
-    const back = p.querySelector('.article-head a.article-crumb');
-    expect(back?.getAttribute('href')).toBe(`${BASE}/writing/`);
-    expect(back?.text.trim()).toBe('← All writing');
+  it('has no back-arrow crumb at the top', () => {
+    expect(p.querySelector('.article-crumb')).toBeNull();
   });
 
-  it('renders the header in order: cover, title, subheading, tags with date and read time', () => {
-    const head = p.querySelector('.article-head')!;
-    const order = head.children.map((c) => c.classNames.split(' ')[0]);
-    expect(order).toEqual(['article-crumb', 'article-cover', 'article-title', 'article-sub', 'article-info']);
-    expect(head.querySelector('h1.article-title')?.text).toBeTruthy();
-    expect(head.querySelectorAll('.article-tags li').length).toBeGreaterThan(0);
-    expect(head.querySelector('.post-meta time')?.getAttribute('datetime')).toBeTruthy();
-    expect(head.querySelector('.post-meta')?.text).toMatch(/\d+ min read/);
+  it('renders the post head in order: series line, title, dek, meta', () => {
+    const head = p.querySelector('header.post-head')!;
+    const order = head.querySelectorAll('.series-line, .post-title, .dek, .post-meta').map((el) => el.classNames.split(' ').find((c) => ['series-line', 'post-title', 'dek', 'post-meta'].includes(c)));
+    expect(order).toEqual(['series-line', 'post-title', 'dek', 'post-meta']);
+    const series = head.querySelector('.series-line')!;
+    expect(series.text.replace(/\s+/g, ' ').trim()).toBe('Mingraph series, part 8 of 8 · See all parts');
+    expect(series.querySelector('a')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
+    expect(head.querySelectorAll('h1.post-title .mask').length).toBe(2);
+    expect(head.querySelector('.dek')?.text).toBeTruthy();
+    expect(head.querySelectorAll('dl.post-meta dt').map((d) => d.text)).toEqual(['Published', 'Reading time', 'Part', 'Tags']);
+    expect(head.querySelectorAll('dl.post-meta dd')[1].text).toMatch(/^\d+ min$/);
+    expect(head.querySelectorAll('dl.post-meta dd')[2].text).toBe('8 of 8');
+    expect(head.querySelectorAll('dl.post-meta .tag').length).toBeGreaterThan(0);
+    expect(head.querySelector('[data-pf]')?.getAttribute('role')).toBe('img');
+  });
+
+  it('puts the cover after the head, and a reading progress bar at the top', () => {
+    const cover = p.querySelector('figure.post-cover img');
+    expect(cover).not.toBeNull();
+    expect(p.querySelector('.progress[aria-hidden="true"] > i')).not.toBeNull();
   });
 
   it('builds the TOC rail and the inline Contents panel from every H2, with clean heading text', () => {

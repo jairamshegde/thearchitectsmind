@@ -1,0 +1,31 @@
+/* Blog post head, cover and reading progress (redesign 2026-11). */
+.progress { position: fixed; top: 0; left: 0; right: 0; z-index: 30; height: calc(3px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); pointer-events: none; }
+.progress i { display: block; height: 3px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
+
+.post-head { padding: 64px 0 56px; }
+.series-line { margin: 0; font-size: 15px; color: var(--muted); }
+.series-line a { color: var(--ink); font-weight: 500; }
+.post-head-grid { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 56px; align-items: center; }
+.post-title { margin: 24px 0 0; max-width: 16ch; font-size: clamp(38px, 4.6vw, 66px); line-height: 1.02; letter-spacing: -.035em; text-wrap: initial; }
+.post-title .mask + .mask > span { --d: .12s; }
+.dek { margin: 24px 0 0; max-width: 34ch; font-family: var(--display); font-size: clamp(20px, 1.9vw, 26px); font-weight: 400; line-height: 1.3; letter-spacing: -.01em; color: var(--muted); }
+dl.post-meta { margin: 40px 0 0; padding-top: 20px; border-top: 2px solid var(--ink); display: flex; flex-wrap: wrap; align-items: flex-start; gap: 16px 40px; font-size: 15px; color: var(--ink); }
+.post-meta > div { display: flex; flex-direction: column; gap: 4px; }
+.post-meta dt { font-size: 13px; color: var(--muted); }
+.post-meta dd { margin: 0; font-weight: 500; }
+.post-meta .tags { gap: 6px; }
+.post-meta .tag { font-size: 13px; color: var(--ink); font-weight: 400; }
+
+.post-cover { margin: 0; aspect-ratio: 21 / 9; border-radius: 18px; overflow: hidden; background: var(--soft); }
+.post-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 1100px) {
+  .post-head .post-field.pf { display: none; }
+  .post-head-grid { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 720px) {
+  .post-head { padding: 40px 0 40px; }
+  .post-title { max-width: none; }
+  .post-meta { gap: 16px 28px; }
+  .post-cover { aspect-ratio: 4 / 3; border-radius: 14px; }
+}

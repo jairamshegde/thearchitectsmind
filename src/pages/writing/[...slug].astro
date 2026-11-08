@@ -2,7 +2,9 @@
 import { Image } from 'astro:assets';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
-import PostMeta from '../../components/PostMeta.astro';
+import PixelField from '../../components/PixelField.astro';
+import { POST_FIELD } from '../../lib/pixel-field';
+import { formatDate, splitTitle } from '../../lib/format';
 import { published } from '../../lib/collections';
 import { neighbours, postPath, postSlug, seriesParts } from '../../lib/content';
 import { withBase } from '../../lib/url';
@@ -36,18 +38,37 @@ interface Props {
 }
 const { post, prev, next, series } = Astro.props;
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
-const { title, subheading, description, date, tags, cover } = post.data;
+const { title, description, date, tags, cover } = post.data;
+const titleLines = splitTitle(title);
+const seriesName = series ? series.entry.data.title.charAt(0).toUpperCase() + series.entry.data.title.slice(1) : '';
 ---
-<ArticleLayout title={title} description={description} headings={headings} back={{ href: withBase('/writing/'), label: 'All writing' }}>
+<ArticleLayout title={title} description={description} headings={headings} headClass="post-head">
   <Fragment slot="header">
-    {cover && <Image class="article-cover post-cover" src={cover} alt="" widths={[860, 1500]} sizes="(max-width: 900px) 100vw, 860px" loading="eager" />}
-    <h1 class="article-title">{title}</h1>
-    {subheading && <p class="article-sub">{subheading}</p>}
-    <div class="article-info">
-      <ul class="article-tags">{tags.map((tag) => <li>{tag}</li>)}</ul>
-      <PostMeta date={date} minutes={remarkPluginFrontmatter.minutesRead} />
+    {series && (
+      <p class="series-line fade-up" style="--d:.3s">{seriesName} series, part {series.at} of {series.of} · <a class="ul-on" href={withBase(`/writing/${series.entry.id}/`)}>See all parts</a></p>
+    )}
+    <div class="post-head-grid">
+      <div>
+        <h1 class="post-title">
+          {titleLines.filter(Boolean).map((line) => <span class="mask"><span>{line}</span></span>)}
+        </h1>
+        <p class="dek fade-up" style="--d:.5s">{description}</p>
+      </div>
+      <PixelField config={POST_FIELD} class="post-field" />
     </div>
+    <dl class="post-meta fade-up" style="--d:.6s">
+      <div><dt>Published</dt><dd><time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time></dd></div>
+      <div><dt>Reading time</dt><dd>{remarkPluginFrontmatter.minutesRead} min</dd></div>
+      {series && <div><dt>Part</dt><dd>{series.at} of {series.of}</dd></div>}
+      <div><dt>Tags</dt><dd><ul class="tags">{tags.map((tag) => <li class="tag">{tag}</li>)}</ul></dd></div>
+    </dl>
   </Fragment>
+
+  {cover && (
+    <figure class="post-cover" slot="cover">
+      <Image src={cover} alt="" widths={[860, 1360, 2000]} sizes="(max-width: 1440px) calc(100vw - 80px), 1280px" loading="eager" />
+    </figure>
+  )}
 
   <Content />
 

@@ -1,6 +1,8 @@
 ---
-import '../styles/prose.css';
+// BaseLayout first, so its shared sheets come before the article sheets in the bundle.
 import BaseLayout from './BaseLayout.astro';
+import '../styles/prose.css';
+import '../styles/post.css';
 import Toc from '../components/Toc.astro';
 import type { Heading } from '../lib/toc';
 
@@ -10,22 +12,29 @@ interface Props {
   headings: Heading[];
   /** Index page this article belongs to, linked at the top. */
   back?: { href: string; label: string };
+  /** Extra class on the header, e.g. "post-head" for blog posts. */
+  headClass?: string;
 }
-const { title, description, headings, back } = Astro.props;
+const { title, description, headings, back, headClass } = Astro.props;
 ---
 <BaseLayout title={title} description={description} variant="post">
-  <div class="article-shell wrap">
-    <Toc headings={headings} variant="rail" />
-    <article class="article">
-      <header class="article-head">
-        {back && <a class="article-crumb" href={back.href}><span class="arr" aria-hidden="true">←</span> {back.label}</a>}
-        <slot name="header" />
-      </header>
-      <Toc headings={headings} variant="inline" />
-      <div class="prose"><slot /></div>
-      <slot name="after" />
-    </article>
-  </div>
+  <div class="progress" aria-hidden="true"><i data-progress></i></div>
+  <article class="post-page wrap" data-article>
+    <header class:list={['article-head', headClass]}>
+      {back && <a class="article-crumb" href={back.href}><span class="arr" aria-hidden="true">←</span> {back.label}</a>}
+      <slot name="header" />
+    </header>
+    <slot name="cover" />
+    <div class="article-shell">
+      <Toc headings={headings} variant="rail" />
+      <div class="article">
+        <Toc headings={headings} variant="inline" />
+        <div class="prose"><slot /></div>
+        <slot name="after" />
+        <span data-article-end></span>
+      </div>
+    </div>
+  </article>
 </BaseLayout>
 
 <script>
@@ -33,8 +42,10 @@ const { title, description, headings, back } = Astro.props;
   import { initCopyButtons } from '../scripts/copy-code';
   import { initMermaid } from '../scripts/mermaid';
   import { initRevealNotes } from '../scripts/reveal-note';
+  import { initProgress } from '../scripts/progress';
   initTocRail();
   initCopyButtons();
   initMermaid();
   initRevealNotes();
+  initProgress();
 </script>
