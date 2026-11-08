@@ -151,8 +151,8 @@ export const cmsConfig: {
             str('heroSub', 'Hero subtitle'),
             opt(text('heroBio', 'Hero bio (two or three sentences under the subtitle)')),
             image('heroImage', 'Hero image (not shown in the current design)'),
-            str('footerStatement', 'Footer statement'),
-            str('footerSub', 'Footer sub line'),
+            str('footerStatement', 'Footer heading (two sentences: the first in white, the second in grey below it)'),
+            str('footerSub', 'Footer side line (homepage only, beside the button)'),
             image('footerImage', 'Footer image (right of the statement)'),
             opt(str('email', 'Contact email (the "Let\u2019s talk it through" button)')),
             {

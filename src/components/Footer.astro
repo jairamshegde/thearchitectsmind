@@ -9,20 +9,20 @@ interface Props {
 const { variant = 'page' } = Astro.props;
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { footerStatement, email, socials } = settings.data;
+const { footerStatement, footerSub, email, socials } = settings.data;
 const mailto = `mailto:${email ?? '[YOUR EMAIL]'}`;
 const github = socials.find((s) => s.label === 'GitHub')?.url ?? `https://github.com/${SITE.owner}`;
 const home = variant === 'home';
-// Other pages lead with the statement's first sentence only.
-const firstSentence = footerStatement.split(/(?<=[.!?])\s+/)[0];
+// One line per sentence; the second is set in grey.
+const lines = footerStatement.split(/(?<=[.!?])\s+/);
 ---
 <footer id="contact" class:list={['band', { 'band-home': home }]}>
   <div class="wrap">
-    {home ? <p class="band-big">Got a hard<br /> problem?</p> : <p class="band-big">{firstSentence}</p>}
+    <p class="band-big">{lines.map((line, i) => <>{i > 0 && ' '}<span class="band-line">{line}</span></>)}</p>
     <div class="band-row">
       <a class="pill pill-accent cta" href={mailto}>Let’s talk it through</a>
       {home
-        ? <p class="band-quote">“{footerStatement}”</p>
+        ? <p class="band-quote">{footerSub}</p>
         : <a class="gh ul" href={github} rel="me noopener">GitHub</a>}
     </div>
     <div class="band-foot">
@@ -38,7 +38,9 @@ const firstSentence = footerStatement.split(/(?<=[.!?])\s+/)[0];
   .band { background: var(--band-bg); color: var(--band-ink); }
   .band .wrap { padding-top: 88px; padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)); }
   .band-home .wrap { padding-top: 136px; padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px)); }
-  .band-big { margin: 0; max-width: 22ch; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.025em; text-wrap: balance; }
+  .band-line { display: block; }
+  .band-line + .band-line { color: var(--band-muted); }
+  .band-big { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.025em; text-wrap: balance; }
   .band-home .band-big { font-size: clamp(40px, 5vw, 64px); line-height: 1; letter-spacing: -.03em; }
   .band-row { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 32px; }
   .band-home .band-row { margin-top: 56px; align-items: end; }
