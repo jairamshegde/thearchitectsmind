@@ -79,6 +79,10 @@ describe('writing article: the last Mingraph part', () => {
 describe('writing article: the first Mingraph part', () => {
   const p = page('/writing/mingraph/phase-0-oop-finally-clicked/');
 
+  it('keeps a space between the two title lines in the heading text', () => {
+    expect(p.querySelector('h1.post-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Learning OOP through the design questions I already ask at work');
+  });
+
   it('fills one bar and points the next card at part 2', () => {
     const end = p.querySelector('section.series-end')!;
     expect(end.querySelectorAll('ol.series-bars li.done')).toHaveLength(1);

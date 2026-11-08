@@ -15,6 +15,7 @@ describe('home page', () => {
     const lines = hero.querySelectorAll('h1 .mask');
     expect(lines.map((l) => l.text)).toEqual(['In search of', 'intuition.']);
     expect(lines[1].querySelector('.accent-dot')?.text).toBe('.');
+    expect(hero.querySelector('h1')?.text.replace(/\s+/g, ' ').trim()).toBe('In search of intuition.');
     expect(hero.querySelector('.hero-sub')?.text).toBe('Building intuition for complex systems.');
     expect(hero.querySelector('.hero-bio')?.text).toBe('I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.');
     const links = hero.querySelectorAll('.hero-links a');

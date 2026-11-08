@@ -51,7 +51,7 @@ const seriesName = series ? series.entry.data.title.charAt(0).toUpperCase() + se
     <div class="post-head-grid">
       <div>
         <h1 class="post-title">
-          {titleLines.filter(Boolean).map((line) => <span class="mask"><span>{line}</span></span>)}
+          {titleLines.filter(Boolean).map((line, i) => <>{i > 0 && ' '}<span class="mask"><span>{line}</span></span></>)}
         </h1>
         <p class="dek fade-up" style="--d:.5s">{description}</p>
       </div>
