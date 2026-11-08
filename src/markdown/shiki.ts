@@ -1,17 +1,17 @@
-// Custom Shiki theme mapped to the design system's --ide-* and --syn-* tokens.
+// Muted Shiki theme: near-greys with the accent reserved for keywords.
 export const architectTheme = {
-  name: 'architect-ide',
+  name: 'architect-ink',
   type: 'dark' as const,
-  colors: { 'editor.background': '#0E1420', 'editor.foreground': '#D7DEE8' },
+  colors: { 'editor.background': '#17171A', 'editor.foreground': '#E9E9E4' },
   tokenColors: [
-    { scope: ['comment', 'punctuation.definition.comment', 'string.quoted.docstring'], settings: { foreground: '#6B7A92', fontStyle: 'italic' } },
-    { scope: ['keyword', 'storage', 'storage.type', 'storage.modifier', 'keyword.control', 'keyword.operator.logical', 'keyword.operator.new', 'constant.language', 'variable.language'], settings: { foreground: '#C084FC' } },
-    { scope: ['entity.name.function', 'support.function', 'meta.function-call.generic', 'variable.function', 'entity.name.function.decorator', 'meta.decorator'], settings: { foreground: '#60A5FA' } },
-    { scope: ['string', 'constant.numeric', 'constant.character', 'constant.other'], settings: { foreground: '#FB923C' } },
-    { scope: ['entity.name.type', 'entity.name.class', 'support.type', 'support.class', 'entity.other.inherited-class'], settings: { foreground: '#4ADE80' } },
-    { scope: ['variable.parameter', 'variable.parameter.function.language.python'], settings: { foreground: '#FBBF24' } },
-    { scope: ['entity.name.tag', 'support.type.property-name', 'meta.object-literal.key'], settings: { foreground: '#60A5FA' } },
-    { scope: ['punctuation', 'keyword.operator'], settings: { foreground: '#AAB6C6' } },
+    { scope: ['comment', 'punctuation.definition.comment', 'string.quoted.docstring'], settings: { foreground: '#8A8A84', fontStyle: 'italic' } },
+    { scope: ['keyword', 'storage', 'storage.type', 'storage.modifier', 'keyword.control', 'keyword.operator.logical', 'keyword.operator.new', 'constant.language', 'variable.language'], settings: { foreground: '#FF8A63' } },
+    { scope: ['entity.name.function', 'support.function', 'meta.function-call.generic', 'variable.function', 'entity.name.function.decorator', 'meta.decorator'], settings: { foreground: '#F4F4F1' } },
+    { scope: ['string', 'constant.numeric', 'constant.character', 'constant.other'], settings: { foreground: '#C9C2A8' } },
+    { scope: ['entity.name.type', 'entity.name.class', 'support.type', 'support.class', 'entity.other.inherited-class'], settings: { foreground: '#D9D4C7' } },
+    { scope: ['variable.parameter', 'variable.parameter.function.language.python'], settings: { foreground: '#BDBDB6' } },
+    { scope: ['entity.name.tag', 'support.type.property-name', 'meta.object-literal.key'], settings: { foreground: '#D9D4C7' } },
+    { scope: ['punctuation', 'keyword.operator'], settings: { foreground: '#9C9C96' } },
   ],
 };
 

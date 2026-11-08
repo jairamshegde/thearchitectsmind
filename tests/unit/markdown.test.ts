@@ -79,16 +79,16 @@ describe('rehypeCodeFrame', () => {
   });
   const run = (tree: Root) => { rehypeCodeFrame()(tree); return String(unified().use(rehypeStringify).stringify(tree)); };
 
-  it('wraps Shiki output in a frame titled from title="…"', () => {
+  it('wraps Shiki output in a frame with a language label and a Copy button', () => {
     const out = run(shikiPre('title="retry.py" {6-8}'));
-    expect(out).toMatch(/^<figure class="code-frame" data-lang="python"><figcaption class="code-head">/);
-    expect(out).toContain('<span class="code-title">retry.py</span>');
+    expect(out).toMatch(/^<figure class="code-frame" data-lang="python"><figcaption class="code-head"><span class="code-lang">retry.py<\/span>/);
+    expect(out).not.toContain('code-dots');
     expect(out).toContain('<button class="code-copy" type="button" data-copy hidden>Copy</button>');
     expect(out).toContain('<pre class="astro-code architect-ide"');
   });
 
   it('falls back to the language as the title', () => {
-    expect(run(shikiPre('', 'bash'))).toContain('<span class="code-title">bash</span>');
+    expect(run(shikiPre('', 'bash'))).toContain('<span class="code-lang">bash</span>');
   });
 
   it('ignores <pre> elements that are not Shiki output', () => {

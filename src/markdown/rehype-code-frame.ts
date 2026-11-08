@@ -5,7 +5,7 @@ const el = (tagName: string, properties: Element['properties'], children: Elemen
   type: 'element', tagName, properties, children,
 });
 
-/** Wrap each Shiki <pre> in the IDE-style frame: dots, title (or language), copy button. */
+/** Wrap each Shiki <pre> in a frame with a header: the language (or title="…") and a Copy button. */
 export function rehypeCodeFrame() {
   return (tree: Root) => {
     visit(tree, 'element', (node, index, parent) => {
@@ -17,8 +17,7 @@ export function rehypeCodeFrame() {
       delete node.properties['data-meta'];
       parent.children[index] = el('figure', { className: ['code-frame'], dataLang: lang }, [
         el('figcaption', { className: ['code-head'] }, [
-          el('span', { className: ['code-dots'] }, [el('i', {}), el('i', {}), el('i', {})]),
-          el('span', { className: ['code-title'] }, [{ type: 'text', value: title }]),
+          el('span', { className: ['code-lang'] }, [{ type: 'text', value: title }]),
           el('button', { className: ['code-copy'], type: 'button', dataCopy: true, hidden: true }, [{ type: 'text', value: 'Copy' }]),
         ]),
         node,

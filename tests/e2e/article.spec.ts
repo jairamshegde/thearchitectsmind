@@ -33,6 +33,7 @@ test.describe('desktop', () => {
     await expect(frame.getByRole('button', { name: 'Copied' })).toBeVisible();
     const copied = await page.evaluate(() => navigator.clipboard.readText());
     expect(copied.trim()).toBe((await frame.locator('pre').innerText()).trim());
+    await expect(frame.getByRole('button', { name: 'Copy', exact: true })).toBeVisible({ timeout: 3000 });
   });
 });
 

@@ -52,11 +52,13 @@ describe('writing article: the last Mingraph part', () => {
     }
   });
 
-  it('frames code blocks on the dark editor background and wraps tables', () => {
+  it('frames code blocks on the dark code background with keywords in the accent, and wraps tables', () => {
     const frames = p.querySelectorAll('.prose figure.code-frame');
     expect(frames.length).toBeGreaterThan(0);
-    expect(frames[0].querySelector('.code-title')?.text).toBe('python');
-    expect(frames[0].querySelector('pre')?.getAttribute('style')?.toLowerCase()).toContain('#0e1420');
+    expect(frames[0].querySelector('.code-lang')?.text).toBe('python');
+    expect(frames[0].querySelector('pre')?.getAttribute('style')?.toLowerCase()).toContain('#17171a');
+    const keyword = p.querySelectorAll('.prose pre span').find((s) => ['class', 'def', 'return', 'import'].includes(s.text.trim()));
+    expect(keyword?.getAttribute('style')?.toLowerCase()).toContain('#ff8a63');
     expect(p.querySelector('.table-wrap > table')).not.toBeNull();
   });
 

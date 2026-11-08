@@ -107,11 +107,10 @@
 .markdown-alert-title { display: flex; align-items: center; gap: 8px; margin: 0 0 8px !important; font-size: 14px; font-weight: 600; color: var(--ink); }
 .markdown-alert-title svg { fill: var(--accent); }
 
-/* ---------- code frames (restyled in full with the code header) ---------- */
+/* ---------- code frames: language on the left, Copy on the right ---------- */
 .code-frame { margin: 1.2em 0 1.6em; overflow: hidden; border-radius: 14px; background: var(--code-bg); color: var(--code-ink); }
-.code-head { display: flex; align-items: center; gap: 12px; min-height: 44px; padding: 6px 12px 6px 18px; border-bottom: 1px solid #2A2A2E; font-family: var(--mono); font-size: 12px; color: #9C9C96; }
-.code-dots { display: none; }
-.code-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.code-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 6px 12px 6px 18px; border-bottom: 1px solid #2A2A2E; font-family: var(--mono); font-size: 12px; color: #9C9C96; }
+.code-lang { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .code-copy { min-height: 32px; padding: 0 12px; border: 1px solid #34343A; border-radius: 8px; background: none; color: #E9E9E4; font: inherit; cursor: pointer; transition: background-color .25s var(--ease); }
 .code-copy:hover { background: #26262B; }
 .code-frame pre.astro-code { margin: 0; padding: 20px 0; overflow-x: auto; background: var(--code-bg) !important; font-family: var(--mono); font-size: 15px; line-height: 1.6; }
