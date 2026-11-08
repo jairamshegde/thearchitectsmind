@@ -34,6 +34,13 @@ describe('base layout', () => {
   it('sets the theme before first paint and loads the fonts', () => {
     const head = home.querySelector('head')!.toString();
     expect(head).toContain("localStorage.getItem('theme')");
-    expect(head).toContain('family=Funnel+Display');
+    const fonts = home.querySelector('link[href*="fonts.googleapis.com/css2"]')?.getAttribute('href') ?? '';
+    for (const f of ['Funnel+Display', 'Inter+Tight', 'JetBrains+Mono']) expect(fonts).toContain(f);
+    expect(fonts).not.toContain('Shantell');
+    expect(fonts).not.toContain('IBM+Plex');
+  });
+
+  it('lets the page draw under phone safe areas', () => {
+    expect(home.querySelector('meta[name="viewport"]')?.getAttribute('content')).toContain('viewport-fit=cover');
   });
 });
