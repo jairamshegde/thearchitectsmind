@@ -20,7 +20,10 @@ describe('base layout', () => {
     expect(brand?.text.trim()).toBe('Jairam Hegde');
     expect(home.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')).toBe('Switch to dark theme');
     const contact = home.querySelector('nav.nav a.contact-pill');
-    expect(contact?.getAttribute('href')).toBe('#contact');
+    expect(contact?.getAttribute('href')).toBe(`${BASE}/about/#get-in-touch`);
+    for (const route of ['/notes/', '/writing/mingraph/phase-0-oop-finally-clicked/']) {
+      expect(page(route).querySelector('nav.nav a.contact-pill')?.getAttribute('href'), route).toBe(`${BASE}/about/#get-in-touch`);
+    }
     expect(contact?.text.trim()).toBe('Contact');
     expect(contact?.querySelector('i')).toBeNull();
   });

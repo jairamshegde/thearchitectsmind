@@ -48,7 +48,7 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
         </dl>
       )}
       <div class="about-actions">
-        <a class="pill pill-ink" href="#contact">Get in touch</a>
+        <a class="pill pill-ink" href="#get-in-touch">Get in touch</a>
         {github && <a class="ul-on" href={github.url} rel="me noopener">GitHub</a>}
       </div>
     </aside>
@@ -88,7 +88,7 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
       )}
 
       {(contact || socialLinks.length > 0) && (
-        <section>
+        <section id="get-in-touch">
           <div class="sec-top"><h2>Get in touch</h2></div>
           {contact && <div class="about-copy"><p>{contact}</p></div>}
           <ul class="socials">
