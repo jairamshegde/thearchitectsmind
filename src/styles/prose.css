@@ -87,7 +87,7 @@
 @media (min-width: 1600px) {
   .prose > .pico-row { display: grid; grid-template-columns: minmax(0, var(--post-w)) minmax(0, 1fr); column-gap: 48px; align-items: start; max-width: none; }
   .pico-row > .pico { grid-column: 2; margin: 4px 0 1.2em; padding: 0; background: none; }
-  .pico-row > .pico + .pico { grid-row: 2; }
+  .pico-row > :first-child { grid-column: 1; grid-row: 1 / span 20; }
 }
 
 /* Figures */

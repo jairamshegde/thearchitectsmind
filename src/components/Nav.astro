@@ -49,6 +49,12 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
     .nav .wide { display: none; }
     .bar { padding-top: 14px; padding-bottom: 14px; }
   }
+  @media (max-width: 360px) {
+    .bar { gap: 10px; }
+    .brand { font-size: 17px; }
+    .nav { gap: 10px; }
+    .contact-pill { padding: 0 14px; }
+  }
 </style>
 
 <script>

@@ -22,3 +22,48 @@ test('with reduced motion, nothing animates on the homepage or a post', async ({
     expect(running, route).toBe(0);
   }
 });
+
+test.describe('review fixes', () => {
+  const clipped = (el: Element) => [...el.querySelectorAll('.mask')].some((m) => m.scrollWidth > m.clientWidth + 1);
+
+  test('a longer hero lead wraps instead of being cut off on phones', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto('./');
+    const h1 = page.locator('#hero h1');
+    await h1.locator('.mask').first().locator('span').evaluate((el) => (el.textContent = 'In search of better'));
+    expect(await h1.evaluate(clipped)).toBe(false);
+  });
+
+  test('a post title with a long code word wraps instead of being cut off on phones', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 800 });
+    await page.goto('./writing/mingraph/phase-0-oop-finally-clicked/');
+    const h1 = page.locator('h1.post-title');
+    await h1.locator('.mask').first().locator('span').evaluate((el) => (el.textContent = 'Building ConversationSummaryBufferMemory'));
+    expect(await h1.evaluate(clipped)).toBe(false);
+  });
+
+  test('the header fits a 320px phone', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 });
+    await page.goto('./');
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+
+  test('three Pico notes in a row stack in the margin without overlapping', async ({ page }) => {
+    await page.setViewportSize({ width: 1700, height: 1000 });
+    await page.goto('./writing/mingraph/phase-0-oop-finally-clicked/');
+    const row = page.locator('.pico-row').first();
+    await row.evaluate((el) => { const a = el.querySelector('aside.pico')!; el.append(a.cloneNode(true), a.cloneNode(true)); });
+    const boxes = await row.locator('aside.pico').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => ({ top: r.top, bottom: r.bottom })));
+    expect(boxes).toHaveLength(3);
+    for (let i = 1; i < boxes.length; i++) expect(boxes[i].top).toBeGreaterThanOrEqual(boxes[i - 1].bottom);
+  });
+
+  test('Cmd/Ctrl-click on the header Notes link leaves the homepage tabs alone', async ({ page, context }) => {
+    await page.goto('./');
+    const opened = context.waitForEvent('page');
+    await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Notes', exact: true }).click({ modifiers: ['ControlOrMeta'] });
+    await opened;
+    await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'false');
+  });
+});

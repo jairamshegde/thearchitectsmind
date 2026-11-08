@@ -34,7 +34,8 @@ export function initTabs(): void {
     });
   });
 
-  const open = (name: Tab) => (e: Event) => {
+  const open = (name: Tab) => (e: MouseEvent) => {
+    if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return; // new tab or window
     e.preventDefault();
     select(name);
     band.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });

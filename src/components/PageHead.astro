@@ -19,7 +19,7 @@ const { lead, title, intro } = Astro.props;
 
 <style>
   .page-head-x { padding-top: 64px; padding-bottom: 56px; }
-  .page-title { font-size: clamp(48px, 7vw, 96px); line-height: .95; letter-spacing: -.045em; }
+  .page-title { font-size: clamp(48px, 7vw, 96px); line-height: .95; letter-spacing: -.045em; overflow-wrap: anywhere; }
   .lead { color: var(--title-muted); }
   .accent-dot { color: var(--accent); }
   .page-intro { margin: 28px 0 0; max-width: 560px; font-size: 18px; line-height: 1.5; color: var(--muted); }
