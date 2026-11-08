@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { byDateDesc, groupByYear, isCaseStudy, isVisible, neighbours, pickHome, postPath, seriesParts, topTags } from '../../src/lib/content';
+import { byDateDesc, groupByMonth, groupByYear, isCaseStudy, isVisible, neighbours, pickHome, postPath, seriesParts, topTags } from '../../src/lib/content';
 
 const e = (date: string, extra: { draft?: boolean; featured?: boolean; id?: string } = {}) => ({
   id: extra.id ?? date,
@@ -35,6 +35,14 @@ describe('pickHome', () => {
   it('returns fewer items when there are not enough, and [] for none', () => {
     expect(pickHome([e('2026-01-01')], 3)).toHaveLength(1);
     expect(pickHome([], 3)).toEqual([]);
+  });
+});
+
+describe('groupByMonth', () => {
+  it('groups newest month first with a "Mon YYYY" label, using UTC dates', () => {
+    const groups = groupByMonth([e('2026-09-30'), e('2026-10-01'), e('2026-10-11'), e('2025-10-05')]);
+    expect(groups.map((g) => g.label)).toEqual(['Oct 2026', 'Sep 2026', 'Oct 2025']);
+    expect(groups[0].items.map((x) => x.id)).toEqual(['2026-10-11', '2026-10-01']);
   });
 });
 

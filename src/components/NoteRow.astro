@@ -11,8 +11,24 @@ const { title, date, tags } = note.data;
 ---
 <li>
   <a class="note-row" href={withBase(`/notes/${note.id}/`)}>
-    <time class="note-date" datetime={date.toISOString()}>{formatDayMonth(date)}</time>
+    <time class="note-date" datetime={date.toISOString().slice(0, 10)}>{formatDayMonth(date)}</time>
     <span class="note-title">{title}</span>
     <span class="note-tags">{tags.join(' · ')}</span>
   </a>
 </li>
+
+<style>
+  .note-row { position: relative; display: grid; grid-template-columns: 72px minmax(0, 1fr) minmax(0, 180px); gap: 20px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  li:first-child .note-row { padding-top: 4px; }
+  .note-row::before { content: ''; position: absolute; inset: 0 -16px; border-radius: 10px; background: var(--soft); opacity: 0; transform: scaleY(.85); transition: opacity .35s var(--ease), transform .45s var(--ease); }
+  .note-row:hover::before { opacity: 1; transform: none; }
+  .note-row > * { position: relative; }
+  .note-date, .note-tags { font-size: 13px; font-weight: 500; color: var(--muted); }
+  .note-tags { text-align: right; }
+  .note-title { font-size: 20px; font-weight: 500; line-height: 1.3; letter-spacing: -.01em; transition: transform .45s var(--ease); }
+  .note-row:hover .note-title { transform: translateX(6px); }
+  @media (max-width: 720px) {
+    .note-row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'date tags' 'title title'; gap: 6px 16px; }
+    .note-date { grid-area: date; } .note-tags { grid-area: tags; } .note-title { grid-area: title; font-size: 18px; }
+  }
+</style>

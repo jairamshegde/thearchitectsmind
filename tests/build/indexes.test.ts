@@ -44,9 +44,14 @@ describe('/writing/', () => {
 
 describe('/notes/', () => {
   const p = page('/notes/');
-  it('groups notes by year, newest first, without drafts', () => {
-    const years = p.querySelectorAll('.year-group h2').map((h) => Number(h.text));
-    expect(years).toEqual([...years].sort((a, b) => b - a));
+  it('has the two-line page title', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Short notes.');
+  });
+
+  it('groups notes by month, newest first, without drafts', () => {
+    const months = p.querySelectorAll('.month-group h2').map((h) => Date.parse(`1 ${h.text}`));
+    expect(months.length).toBeGreaterThan(0);
+    expect(months).toEqual([...months].sort((a, b) => b - a));
     const rows = p.querySelectorAll('a.note-row');
     const hrefs = rows.map((a) => a.getAttribute('href'));
     const starter = [`${BASE}/notes/dataclass-slots/`, `${BASE}/notes/reading-a-flame-graph/`];
