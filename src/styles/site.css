@@ -123,7 +123,6 @@ a.pg-step:hover, button.pg-step:hover { text-decoration: underline; text-underli
 
 /* Footer hover popovers: no hover on touch/narrow screens, and they would overflow the viewport */
 @media (hover: none), (max-width: 560px) {
-  .links .pop { display: none; }
 }
 
 /* 404 */
@@ -283,25 +282,3 @@ a.pg-step:hover, button.pg-step:hover { text-decoration: underline; text-underli
   .about-now { grid-template-columns: 92px minmax(0, 1fr); }
 }
 
-/* ---------- Footer: the statement on the left; Pico, the sub line and links on the right ---------- */
-/* The rule sits on .foot-main, not .foot, so it spans the content width like the .sig rule below */
-.foot { margin-top: clamp(24px, 4vh, 40px); padding-top: 0; text-align: left; }
-.foot-main { padding-top: clamp(64px, 10vh, 96px); border-top: 1px solid var(--line); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 320px); gap: 32px 48px; align-items: end; }
-.foot .big { font-size: clamp(26px, 2.8vw, 40px); line-height: 1.2; letter-spacing: -.025em; }
-.foot .big-line { display: block; }
-.foot .big-line + .big-line { color: var(--graphite); }
-.foot-side { display: grid; justify-items: end; text-align: right; }
-.foot-pico { margin: 0 0 10px; width: 112px; }
-.foot-pico img { display: block; width: 100%; height: auto; }
-.foot .sub { margin: 0; font-size: 15.5px; line-height: 1.5; }
-.foot .links { justify-content: flex-end; margin-top: 14px; }
-.foot .links > li > a::after { transform: scaleX(1); }
-/* The popover opens leftwards from the link, so it stays inside the page at the right edge */
-.foot .pop { left: auto; right: 0; transform: translateY(8px); }
-.foot .links > li:hover .pop, .foot .links > li:focus-within .pop { transform: none; }
-.foot .sig { margin-top: clamp(48px, 8vh, 72px); border-top: 1px solid var(--line); }
-@media (max-width: 720px) {
-  .foot-main { grid-template-columns: minmax(0, 1fr); }
-  .foot-side { justify-items: start; text-align: left; }
-  .foot .links { justify-content: flex-start; }
-}

@@ -223,30 +223,6 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
 /* ---------------------------------------------------------------------
    10. Footer
    --------------------------------------------------------------------- */
-.foot { padding: clamp(80px, 13vh, 140px) 0 0; text-align: center; }
-.big { margin: 0; font-weight: 600; font-size: var(--fs-display); line-height: 1.1; letter-spacing: -.025em; }
-.foot .sub { font-size: 17px; color: var(--graphite); margin: 26px 0 0; }
-.links { display: flex; justify-content: center; gap: clamp(22px, 5vw, 52px); margin: 32px 0 0; list-style: none; padding: 0; }
-.links > li { position: relative; }
-.links > li > a { position: relative; text-decoration: none; font-size: 16px; font-weight: 600; padding: 4px 0; }
-.links > li > a .arr { display: inline-block; margin-left: 6px; transition: transform .3s ease; }
-.links > li > a:hover .arr { transform: translate(3px, -3px); }
-.links > li > a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; border-radius: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
-.links > li > a:hover::after, .links > li > a:focus-visible::after { transform: scaleX(1); }
-.sig { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding: 22px 0 28px; font-size: 14px; color: var(--graphite); text-align: left; }
-.sig b { display: block; font-weight: 700; font-size: 17px; color: var(--ink); letter-spacing: -.02em; }
-
-/* Hover preview card above a link (put .pop inside the <li>) */
-.pop {
-  position: absolute; bottom: calc(100% + 16px); left: 50%; z-index: 6; width: 280px; padding: 14px;
-  background: var(--card); border-radius: 16px; box-shadow: var(--shadow-pop); text-align: left;
-  opacity: 0; pointer-events: none; transform: translate(-50%, 8px);
-  transition: opacity .2s ease, transform var(--dur-fast) ease;
-}
-.pop::after { content: ""; position: absolute; left: 0; right: 0; bottom: -18px; height: 18px; } /* hover bridge */
-.links > li:hover .pop, .links > li:focus-within .pop { opacity: 1; pointer-events: auto; transform: translate(-50%, 0); }
-.pop .pop-meta { margin: 0; font-size: 13px; color: var(--pencil); }
-.pop .pop-note { margin: 10px 0 0; font-family: var(--font-hand); font-size: 15px; line-height: 1.35; }
 
 /* ---------------------------------------------------------------------
    11. Handwritten details (use sparingly)
@@ -284,7 +260,6 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
   .writing-grid { grid-template-columns: 1fr; gap: 24px; }
 }
 @media (max-width: 560px) {
-  .links { flex-wrap: wrap; gap: 18px 28px; }
   .sig { flex-direction: column; align-items: flex-start; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -13,7 +13,7 @@ interface Props {
 }
 const { title, description, headings, back } = Astro.props;
 ---
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} variant="post">
   <div class="article-shell wrap">
     <Toc headings={headings} variant="rail" />
     <article class="article">

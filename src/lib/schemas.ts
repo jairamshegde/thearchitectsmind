@@ -80,6 +80,7 @@ export const settingsSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
     footerStatement: z.string().min(1),
     footerSub: z.string().min(1),
     footerImage: optional(image()),
+    email: optional(z.email()),
     socials: z.array(
       z.object({
         label: z.string().min(1),

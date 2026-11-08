@@ -94,5 +94,12 @@ describe('aboutSchema and settingsSchema', () => {
     expect(r.socials[0].meta).toBeUndefined();
     expect(r.heroImage).toBeUndefined();
     expect(r.footerImage).toBeUndefined();
+    expect(r.email).toBeUndefined();
+  });
+
+  it('accepts an optional contact email and rejects one that is not an address', () => {
+    const base = { heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', footerStatement: 'F', footerSub: 'S', socials: [] };
+    expect(settingsSchema(image).parse({ ...base, email: 'me@example.com' }).email).toBe('me@example.com');
+    expect(() => settingsSchema(image).parse({ ...base, email: 'not-an-email' })).toThrow();
   });
 });

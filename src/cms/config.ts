@@ -153,6 +153,7 @@ export const cmsConfig: {
             str('footerStatement', 'Footer statement'),
             str('footerSub', 'Footer sub line'),
             image('footerImage', 'Footer image (right of the statement)'),
+            opt(str('email', 'Contact email (the "Let\u2019s talk it through" button)')),
             {
               name: 'socials', label: 'Social links', widget: 'list',
               fields: [

@@ -35,15 +35,25 @@ describe('base layout', () => {
     expect(current('/about/')).toEqual(['about']);
   });
 
-  it('renders the footer from site settings', () => {
-    expect(home.querySelectorAll('.foot .big .big-line').map((l) => l.text)).toEqual(['Every hard problem has a simple shape.', 'Finding it is the job.']);
-    expect(home.querySelector('.foot .foot-side .sub')?.text).toBe('Got a hard problem? Happy to talk it through.');
-    const pico = home.querySelector('.foot .foot-side figure.foot-pico img');
-    expect(pico?.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico?.getAttribute('src')).toMatch(/^\/_astro\/pico-finding\./);
-    const socials = home.querySelectorAll('.foot .links > li > a').map((a) => a.text.replace('↗', '').trim());
-    expect(socials).toEqual(['GitHub']);
-    expect(home.querySelector('.foot .pop .pop-note')?.text).toBe('Where the code lives.');
+  it('ends the homepage with the contact band', () => {
+    const band = home.querySelector('footer#contact.band')!;
+    expect(band.querySelector('.band-big')?.text.replace(/\s+/g, ' ')).toBe('Got a hard problem?');
+    const cta = band.querySelector('a.cta');
+    expect(cta?.text.trim()).toBe('Let’s talk it through');
+    expect(cta?.getAttribute('href')).toMatch(/^mailto:/);
+    expect(band.querySelector('.band-quote')?.text).toBe('“Every hard problem has a simple shape. Finding it is the job.”');
+    expect(band.querySelectorAll('.band-foot nav a').map((a) => a.text.trim())).toEqual(['GitHub', 'Notes']);
+    expect(band.querySelector('.band-foot span')?.text).toBe(`© ${new Date().getFullYear()} Jairam Hegde. Written and built by hand.`);
+  });
+
+  it('ends other pages with the short contact band and a way back up', () => {
+    for (const route of ['/writing/mingraph/phase-0-oop-finally-clicked/', '/notes/']) {
+      const band = page(route).querySelector('footer#contact.band')!;
+      expect(band.querySelector('.band-big')?.text, route).toBe('Every hard problem has a simple shape.');
+      expect(band.querySelector('a.cta')?.getAttribute('href'), route).toMatch(/^mailto:/);
+      expect(band.querySelector('.band-row a.gh')?.text.trim(), route).toBe('GitHub');
+      expect(band.querySelector('.band-foot a[href="#top"]')?.text.trim(), route).toBe('Back to top');
+    }
   });
 
   it('sets the theme before first paint and loads the fonts', () => {
