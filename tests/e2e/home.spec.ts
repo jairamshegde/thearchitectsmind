@@ -161,3 +161,18 @@ test('about page: one column on phones, Pico above the name, nothing scrolls sid
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });
+
+for (const width of [1440, 1024, 390]) {
+  test(`about page: the social icons sit in one row and are at least 56px at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('./about/');
+    const boxes = await page.locator('ul.socials a').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => ({ x: r.left, y: r.top, w: r.width })));
+    expect(boxes).toHaveLength(3);
+    for (const b of boxes) {
+      expect(Math.round(b.y)).toBe(Math.round(boxes[0].y));
+      expect(b.w).toBeGreaterThanOrEqual(56);
+    }
+    expect(boxes[1].x).toBeGreaterThan(boxes[0].x);
+    expect(boxes[2].x).toBeGreaterThan(boxes[1].x);
+  });
+}

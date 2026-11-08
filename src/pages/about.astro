@@ -95,7 +95,7 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
             {socialLinks.map((s) => (
               <li>
                 <a href={s.href} aria-label={s.label} title={s.label} rel={s.href.startsWith('http') ? 'me noopener' : undefined}>
-                  <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" set:html={icons[s.label]} />
+                  <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" set:html={icons[s.label]} />
                 </a>
               </li>
             ))}
@@ -135,8 +135,9 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
   .about-quirks { padding-left: 1.2em; margin-bottom: 0; }
   .about-quirks li + li { margin-top: .4em; }
   .about-quirks li::marker { color: var(--accent); }
-  .socials { list-style: none; margin: 24px 0 0; padding: 0; display: flex; gap: 12px; }
-  .socials a { display: inline-flex; align-items: center; justify-content: center; width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .35s var(--ease); }
+  .socials { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 16px; }
+  .socials li { display: block; margin: 0; padding: 0; }
+  .socials a { display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .35s var(--ease); }
   .socials a:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); transform: translateY(-2px); }
   .about-now { margin: 28px 0 0; border-top: 1px solid var(--line); }
   .about-now div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 17px; }
