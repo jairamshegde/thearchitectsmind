@@ -28,7 +28,9 @@ describe('home page', () => {
     const field = home.querySelector('#hero [data-pf]')!;
     expect(field.getAttribute('role')).toBe('img');
     expect(field.getAttribute('aria-label')).toMatch(/spark/);
-    expect(field.querySelector('[data-pf-sq]')?.getAttribute('aria-hidden')).toBe('true');
+    expect(field.querySelector('[data-pf-sq]')).toBeNull();
+    expect(home.querySelector('#hero [data-hero-sq]')?.getAttribute('aria-hidden')).toBe('true');
+    expect(home.querySelector('#hero [data-hero-dot]')?.text).toBe('.');
   });
 
   it('features the latest project as one card with year, short title, tags and a case study pill', () => {

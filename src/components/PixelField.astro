@@ -6,7 +6,7 @@ interface Props {
   label?: string;
   class?: string;
 }
-const { config: c, label = 'Pixel art: scattered noise around a small spark that follows your pointer', class: cls } = Astro.props;
+const { config: c, label = 'Pixel art: scattered noise around a small spark with an empty centre', class: cls } = Astro.props;
 const pitch = c.cell + c.gap;
 const cells = pixelCells(c);
 ---
@@ -20,16 +20,21 @@ const cells = pixelCells(c);
   data-cx={c.cx}
   data-cy={c.cy}
   data-pitch={pitch}
-  style={`--cols:${c.cols};--rows:${c.rows};--cell:${c.cell}px;--gap:${c.gap}px;--sq-x:${c.cx * pitch}px;--sq-y:${c.cy * pitch}px`}
+  data-cell={c.cell}
+  style={`--cols:${c.cols};--rows:${c.rows};--cell:${c.cell}px;--gap:${c.gap}px`}
 >
   {cells.map((p) => (
     <i
       class:list={[p.kind === 'spark' ? 'pf-s' : 'pf-n', { tw: p.twinkle }]}
-      style={`grid-area:${p.row + 1}/${p.col + 1};--o:${p.opacity};--d:${p.delay}s`}
+      style={`grid-area:${p.row + 1}/${p.col + 1};--o:${p.opacity};--d:${p.delay}s;--dl:${(Math.hypot(p.col - c.cx, p.row - c.cy) * 0.03).toFixed(2)}s`}
     ></i>
   ))}
-  <span class="pf-sq" aria-hidden="true" data-pf-sq></span>
 </div>
+
+<style is:global>
+  /* --k dims the whole field (the hero lights it up); registered so it can transition */
+  @property --k { syntax: '<number>'; inherits: true; initial-value: 1; }
+</style>
 
 <style>
   .pf {
@@ -43,25 +48,9 @@ const cells = pixelCells(c);
   .pf .pf-n { background: var(--px); }
   .pf .pf-s { background: var(--px-spark); }
   .pf i.tw { animation: pxIn .7s var(--ease) var(--d) forwards, tw 3.2s ease-in-out calc(var(--d) + .7s) infinite; }
-  .pf-sq {
-    position: absolute; left: var(--sq-x); top: var(--sq-y);
-    width: var(--cell); height: var(--cell); border-radius: 2px;
-    background: var(--accent); pointer-events: none; will-change: transform;
-    opacity: 0;
-    /* opacity only: a transform keyframe with fill-mode forwards would pin the square in place */
-    animation: sqIn .6s var(--ease) 1.05s forwards;
-    transition: transform .6s var(--ease);
-  }
-  @keyframes pxIn { from { opacity: 0; transform: scale(.4); } to { opacity: var(--o); transform: none; } }
-  @keyframes sqIn { to { opacity: 1; } }
-  @keyframes tw { 0%, 100% { opacity: var(--o); } 50% { opacity: .08; } }
+  @keyframes pxIn { from { opacity: 0; transform: scale(.4); } to { opacity: calc(var(--o) * var(--k)); transform: none; } }
+  @keyframes tw { 0%, 100% { opacity: calc(var(--o) * var(--k)); } 50% { opacity: .08; } }
   @media (prefers-reduced-motion: reduce) {
-    .pf i { opacity: var(--o); }
-    .pf-sq { opacity: 1; }
+    .pf i { opacity: calc(var(--o) * var(--k)); }
   }
 </style>
-
-<script>
-  import { initPixelFields } from '../scripts/pixel-field';
-  initPixelFields();
-</script>

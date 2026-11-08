@@ -37,21 +37,74 @@ test('hero: reduced motion shows the title in place immediately', async ({ page 
   expect(t).toBe('none');
 });
 
-test('pixel field: only the accent square follows the pointer, and it returns to the centre', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('./');
-  const field = page.locator('#hero [data-pf]');
-  const sq = field.locator('[data-pf-sq]');
-  const cellTransforms = () => field.locator('i').evaluateAll((els) => els.map((e) => getComputedStyle(e).transform).join());
-  const before = await cellTransforms();
-  const box = (await field.boundingBox())!;
-  // centre cell is (15, 11) with a 20px pitch; aim at the middle of cell (18, 9)
-  await page.mouse.move(box.x + 18 * 20 + 7, box.y + 9 * 20 + 7);
-  await expect.poll(() => sq.evaluate((el) => el.style.transform)).toBe('translate(60px, -40px)');
-  expect(await cellTransforms()).toBe(before);
-  await page.mouse.move(box.x - 50, box.y - 50);
-  await expect.poll(() => sq.evaluate((el) => el.style.transform)).toBe('');
+test.describe('hero: the full stop is the missing piece', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
+  const brightest = (page: import('@playwright/test').Page) =>
+    page.locator('#hero [data-pf] i.pf-s').evaluateAll((els) => Math.max(...els.map((e) => Number(getComputedStyle(e).opacity))));
+
+  test('at rest the full stop sits after "intuition" and the spark is dim', async ({ page }) => {
+    await page.goto('./');
+    await page.waitForTimeout(2200); // load reveal
+    await expect(page.locator('[data-hero-dot]')).toBeVisible();
+    expect(await page.locator('[data-hero-sq]').evaluate((el) => getComputedStyle(el).opacity)).toBe('0');
+    expect(await brightest(page)).toBeLessThan(0.4);
+  });
+
+  test('on hover the full stop flies into the spark, which lights up, and the text stays', async ({ page }) => {
+    await page.goto('./');
+    await page.waitForTimeout(2200);
+    const hero = (await page.locator('#hero').boundingBox())!;
+    await page.mouse.move(hero.x + 300, hero.y + 300);
+    await page.mouse.move(hero.x + 310, hero.y + 305);
+    await expect(page.locator('#hero')).toHaveClass(/lit/, { timeout: 3000 });
+    const field = (await page.locator('#hero [data-pf]').boundingBox())!;
+    await expect.poll(async () => {
+      const sq = (await page.locator('[data-hero-sq]').boundingBox())!;
+      return [Math.round(sq.x - field.x), Math.round(sq.y - field.y)];
+    }).toEqual([15 * 20, 11 * 20]);
+    await expect.poll(() => brightest(page)).toBeGreaterThan(0.8);
+    await expect(page.locator('[data-hero-dot]')).toBeHidden();
+    expect(await page.locator('#hero h1').evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+  });
+
+  test('over the pattern the square follows the cursor, leaves a fading trail, and flies home on leave', async ({ page }) => {
+    await page.goto('./');
+    await page.waitForTimeout(2200);
+    const hero = (await page.locator('#hero').boundingBox())!;
+    await page.mouse.move(hero.x + 300, hero.y + 300);
+    await page.mouse.move(hero.x + 310, hero.y + 305);
+    await expect(page.locator('#hero')).toHaveClass(/lit/, { timeout: 3000 });
+    const field = (await page.locator('#hero [data-pf]').boundingBox())!;
+    await page.mouse.move(field.x + 18 * 20 + 7, field.y + 9 * 20 + 7);
+    await expect.poll(async () => {
+      const sq = (await page.locator('[data-hero-sq]').boundingBox())!;
+      return [Math.round(sq.x - field.x), Math.round(sq.y - field.y)];
+    }).toEqual([18 * 20, 9 * 20]);
+    expect(await page.locator('#hero .pf-ghost').count()).toBeGreaterThan(0);
+    await page.mouse.move(5, hero.y + hero.height + 200);
+    await expect(page.locator('#hero')).not.toHaveClass(/lit/);
+    await expect(page.locator('[data-hero-dot]')).toBeVisible({ timeout: 3000 });
+    expect(await page.locator('[data-hero-sq]').evaluate((el) => getComputedStyle(el).opacity)).toBe('0');
+  });
+
+  test('a cursor resting on the hero at load does nothing until it moves', async ({ page }) => {
+    await page.mouse.move(400, 400);
+    await page.goto('./');
+    await page.waitForTimeout(1200);
+    await expect(page.locator('#hero')).not.toHaveClass(/lit/);
+  });
+
+  test('with reduced motion the spark is lit, the full stop stays put, and hover does nothing', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.goto('./');
+    await expect(page.locator('#hero')).toHaveClass(/lit/);
+    const hero = (await page.locator('#hero').boundingBox())!;
+    await page.mouse.move(hero.x + 300, hero.y + 300);
+    await page.mouse.move(hero.x + 310, hero.y + 305);
+    await page.waitForTimeout(800);
+    await expect(page.locator('[data-hero-dot]')).toBeVisible();
+    expect(await brightest(page)).toBeGreaterThan(0.8);
+  });
 });
 
 test('band: Notes tab swaps the list and the link without leaving the page', async ({ page }) => {
