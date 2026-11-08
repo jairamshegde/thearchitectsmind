@@ -123,10 +123,7 @@
 .astro-code .line.diff.add::before { content: "+"; color: #8FD3A0; }
 .astro-code .line.diff.remove::before { content: "-"; color: #FF8A63; }
 
-/* ---------- previous / next (non-series posts) ---------- */
-.series-mark { margin: 64px 0 0; font-size: 15px; color: var(--muted); }
-.series-mark a { color: var(--ink); font-weight: 600; }
-.series-mark + .prev-next { margin-top: 12px; }
+/* ---------- previous / next (posts outside a series) ---------- */
 .prev-next { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 64px; padding-top: 24px; border-top: 1px solid var(--line); }
 .prev-next:empty { display: none; }
 .pn { display: flex; flex-direction: column; gap: 4px; font-weight: 600; letter-spacing: -.01em; }

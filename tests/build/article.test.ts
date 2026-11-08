@@ -62,9 +62,31 @@ describe('writing article: the last Mingraph part', () => {
     expect(p.querySelector('.table-wrap > table')).not.toBeNull();
   });
 
-  it('links to the previous part and has no next link (it is the last part)', () => {
-    expect(p.querySelector('.prev-next .pn-prev')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/phase-6-di-and-rag/`);
-    expect(p.querySelector('.prev-next .pn-next')).toBeNull();
+  it('ends the series with all bars filled and a way back to the series', () => {
+    const end = p.querySelector('section.series-end')!;
+    expect(end.querySelector('.series-of')?.text.replace(/\s+/g, ' ').trim()).toBe('Part 8 of 8 in the Mingraph series');
+    expect(end.querySelector('.series-of a')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
+    expect(end.querySelectorAll('ol.series-bars li')).toHaveLength(8);
+    expect(end.querySelectorAll('ol.series-bars li.done')).toHaveLength(8);
+    const card = end.querySelector('a.next-card')!;
+    expect(card.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
+    expect(card.querySelector('.next-title')?.text).toBe('Back to the series');
+    expect(end.toString()).not.toMatch(/[→↗←]/);
+    expect(p.querySelector('.prev-next')).toBeNull();
+  });
+});
+
+describe('writing article: the first Mingraph part', () => {
+  const p = page('/writing/mingraph/phase-0-oop-finally-clicked/');
+
+  it('fills one bar and points the next card at part 2', () => {
+    const end = p.querySelector('section.series-end')!;
+    expect(end.querySelectorAll('ol.series-bars li.done')).toHaveLength(1);
+    const card = end.querySelector('a.next-card')!;
+    expect(card.getAttribute('href')).toBe(`${BASE}/writing/mingraph/phase-1-abstraction-and-polymorphism/`);
+    expect(card.querySelector('.next-kicker')?.text).toMatch(/^Next, part 2 \u00b7 \d+ min$/);
+    expect(card.querySelector('.next-title')?.text).toBeTruthy();
+    expect(card.querySelector('.next-go')?.text).toBe('Read next');
   });
 });
 

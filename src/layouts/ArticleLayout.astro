@@ -33,6 +33,7 @@ const { title, description, headings, back, headClass } = Astro.props;
         <span data-article-end></span>
       </div>
     </div>
+    <slot name="end" />
   </article>
 </BaseLayout>
 
