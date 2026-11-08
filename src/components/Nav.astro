@@ -13,7 +13,7 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
 ---
 <header class="site-header" data-site-header>
   <div class="wrap bar">
-    <a class="brand" href={withBase('/')}><b>Jairam Hegde</b><small>The Architect’s Mind</small></a>
+    <a class="brand" href={withBase('/')}>Jairam Hegde</a>
     <nav class="nav" aria-label="Main">
       {links.map((l) => (
         <a
@@ -24,7 +24,7 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
         >{l.label}</a>
       ))}
       <ThemeToggle />
-      <a class="pill pill-ink contact-pill" href="#contact"><i aria-hidden="true"></i>Contact</a>
+      <a class="pill pill-ink contact-pill" href="#contact">Contact</a>
     </nav>
   </div>
 </header>
@@ -40,15 +40,10 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
   }
   .site-header.scrolled { border-bottom-color: var(--line); }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 20px; padding-bottom: 20px; }
-  .brand { display: flex; align-items: baseline; gap: 12px; min-width: 0; }
-  .brand b { font-weight: 700; font-size: 19px; letter-spacing: -.02em; white-space: nowrap; }
-  .brand small { font-size: 13px; color: var(--muted); white-space: nowrap; }
+  .brand { font-weight: 700; font-size: 19px; letter-spacing: -.02em; white-space: nowrap; }
   .nav { display: flex; align-items: center; gap: 28px; font-size: 16px; font-weight: 500; }
   .nav .on { background-size: 100% 1px; }
-  .contact-pill i { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 2.6s var(--ease) infinite; }
-  @keyframes pulse { 50% { opacity: .35; } }
 
-  @media (max-width: 900px) { .brand small { display: none; } }
   @media (max-width: 720px) {
     .nav { gap: 16px; font-size: 15px; }
     .nav .wide { display: none; }

@@ -14,15 +14,15 @@ describe('base layout', () => {
     ]);
   });
 
-  it('has a name and site title linking home, a theme toggle and a contact pill', () => {
+  it('has the name linking home, a theme toggle and a contact pill without a dot', () => {
     const brand = home.querySelector('a.brand');
     expect(brand?.getAttribute('href')).toBe(`${BASE}/`);
-    expect(brand?.querySelector('b')?.text).toBe('Jairam Hegde');
-    expect(brand?.querySelector('small')?.text).toBe('The Architect’s Mind');
+    expect(brand?.text.trim()).toBe('Jairam Hegde');
     expect(home.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')).toBe('Switch to dark theme');
     const contact = home.querySelector('nav.nav a.contact-pill');
     expect(contact?.getAttribute('href')).toBe('#contact');
     expect(contact?.text.trim()).toBe('Contact');
+    expect(contact?.querySelector('i')).toBeNull();
   });
 
   it('marks the current section in the nav', () => {
