@@ -9,21 +9,21 @@ function themeVariables() {
   const css = getComputedStyle(document.documentElement);
   const v = (name: string) => css.getPropertyValue(name).trim();
   return {
-    fontFamily: v('--font-sans'),
+    fontFamily: v('--sans'),
     fontSize: '14px',
-    background: v('--card'),
-    mainBkg: v('--card'),
-    primaryColor: v('--card'),
+    background: v('--bg'),
+    mainBkg: v('--bg'),
+    primaryColor: v('--bg'),
     primaryTextColor: v('--ink'),
     textColor: v('--ink'),
     primaryBorderColor: v('--ink'),
     nodeBorder: v('--ink'),
     lineColor: v('--ink'),
-    secondaryColor: v('--page'),
-    tertiaryColor: v('--page'),
-    clusterBkg: v('--page'),
-    clusterBorder: v('--line-2'),
-    edgeLabelBackground: v('--card'),
+    secondaryColor: v('--soft'),
+    tertiaryColor: v('--soft'),
+    clusterBkg: v('--soft'),
+    clusterBorder: v('--line'),
+    edgeLabelBackground: v('--bg'),
   };
 }
 

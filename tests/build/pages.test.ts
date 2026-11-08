@@ -48,7 +48,7 @@ describe('/about/', () => {
 describe('404', () => {
   const p = page('/404.html');
   it('has a friendly message and links home and to writing', () => {
-    expect(p.querySelector('h1')?.text).toBe('This page took a different path.');
-    expect(p.querySelectorAll('.page-head a').map((a) => a.getAttribute('href'))).toEqual([`${BASE}/`, `${BASE}/writing/`]);
+    expect(p.querySelector('h1')?.text.replace(/\s+/g, ' ').trim()).toBe('404. This page took a different path.');
+    expect(p.querySelectorAll('main a').map((a) => a.getAttribute('href'))).toEqual([`${BASE}/`, `${BASE}/writing/`]);
   });
 });

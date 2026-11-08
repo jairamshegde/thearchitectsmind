@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BASE, page } from './helpers';
+import { page } from './helpers';
 
 // Mingraph is the only project: a case study with a Problem card and Lessons, but no role or timeline.
 const MINGRAPH = 'mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-scratch-to-learn-object-oriented-design-and-design-patterns-in-python.';
@@ -16,9 +16,8 @@ describe('case study', () => {
     expect(meta.Links.querySelector('a')?.getAttribute('href')).toBe('https://github.com/jairamshegde/mingraph');
   });
 
-  it('renders only the Problem card, then Lessons, with the back link at the top', () => {
+  it('renders only the Problem card, then Lessons', () => {
     expect(p.querySelectorAll('.cs-card .cs-card-title').map((t) => t.text)).toEqual(['Problem']);
     expect(p.querySelector('aside.lessons')).not.toBeNull();
-    expect(p.querySelector('.article-head a.article-crumb')?.getAttribute('href')).toBe(`${BASE}/projects/`);
   });
 });

@@ -16,7 +16,7 @@ const { note } = Astro.props;
 const { Content, headings } = await render(note);
 const { title, description, date, tags } = note.data;
 ---
-<ArticleLayout title={title} description={description} headings={headings} back={{ href: withBase('/notes/'), label: 'All notes' }}>
+<ArticleLayout title={title} description={description} headings={headings}>
   <Fragment slot="header">
     <p class="article-meta"><time datetime={date.toISOString()}>{formatDate(date)}</time> · {tags.join(' · ')}</p>
     <h1 class="article-title">{title}</h1>

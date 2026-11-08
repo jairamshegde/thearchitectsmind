@@ -107,3 +107,16 @@ describe('/projects/', () => {
     expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]/);
   });
 });
+
+describe('/writing/mingraph/ (series index)', () => {
+  const p = page('/writing/mingraph/');
+
+  it('titles the page with the series name and lists every part in order with read time', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('The Mingraph series.');
+    const rows = p.querySelectorAll('ol.rows a.row');
+    expect(rows).toHaveLength(8);
+    expect(rows.map((r) => r.querySelector('.row-label')?.text)).toEqual(['Part 1', 'Part 2', 'Part 3', 'Part 4', 'Part 5', 'Part 6', 'Part 7', 'Part 8']);
+    expect(rows[0].getAttribute('href')).toBe(`${BASE}/writing/mingraph/phase-0-oop-finally-clicked/`);
+    for (const r of rows) expect(r.querySelector('.row-time')?.text).toMatch(/^\d+ min$/);
+  });
+});

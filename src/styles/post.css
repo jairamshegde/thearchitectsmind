@@ -46,3 +46,4 @@ dl.post-meta { margin: 40px 0 0; padding-top: 20px; border-top: 2px solid var(--
   .post-meta { gap: 16px 28px; }
   .post-cover { aspect-ratio: 4 / 3; border-radius: 14px; }
 }
+.post-cover.cs-cover { margin-top: 48px; }

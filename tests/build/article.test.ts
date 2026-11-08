@@ -114,7 +114,6 @@ describe('notes', () => {
     expect(p.querySelector('h1.article-title')?.text).toBe('Dataclasses with slots=True');
     expect(p.querySelector('nav.toc')).toBeNull();
     expect(p.querySelector('.article-meta')?.text).toBe('Sep 12, 2026 · python');
-    expect(p.querySelector('.article-head a.article-crumb')?.getAttribute('href')).toBe(`${BASE}/notes/`);
   });
 
   it('shows the TOC for a note with three headings', () => {

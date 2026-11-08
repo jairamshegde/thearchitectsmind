@@ -179,8 +179,6 @@
 .md-split-right .md-note-arrow { transform: scaleX(-1); }
 @media (max-width: 1099px) { .md-note-arrow { width: 40px; } }
 .md-note-arrow path { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.reveal-ready .md-note-text { opacity: 0; }
-.reveal-ready.is-revealed .md-note-text { opacity: 1; transition: opacity .45s var(--ease) .1s; }
 /* Thought bubble ("left: thought: …") */
 .md-thought { position: absolute; z-index: 1; left: 52%; bottom: calc(100% + 14px); }
 .md-split-right .md-thought { left: auto; right: 52%; }
@@ -190,8 +188,6 @@
 .md-thought::after { width: 7px; height: 7px; left: 8px; top: calc(100% + 19px); }
 .md-split-right .md-thought::before { left: auto; right: 16px; }
 .md-split-right .md-thought::after { left: auto; right: 8px; }
-.reveal-ready .md-thought { opacity: 0; }
-.reveal-ready.is-revealed .md-thought { opacity: 1; transition: opacity .45s var(--ease) .15s; }
 /* Plain note ("left: text: …"): above the image on its outer side, no arrow */
 .md-note-plain { bottom: calc(100% + 10px); right: 0; }
 .md-split-left .md-note-plain { right: auto; left: 0; }

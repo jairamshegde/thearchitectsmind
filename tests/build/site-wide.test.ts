@@ -56,4 +56,21 @@ describe('every built page', () => {
       expect(html.querySelector('title')?.text, file).toContain("The Architect's Mind");
     }
   });
+
+  it('has no arrow characters in links or buttons', () => {
+    const bad: string[] = [];
+    for (const { file, html } of pages) {
+      for (const el of html.querySelectorAll('a, button')) if (/[→↗←]/.test(el.text)) bad.push(`${file}: ${el.text.trim().slice(0, 40)}`);
+    }
+    expect(bad).toEqual([]);
+  });
+
+  it('has no numbered section labels like (01) or (NOW)', () => {
+    const bad = pages.filter(({ html }) => /\((0\d|NOW)\)/.test(html.querySelector('main')?.text ?? '')).map(({ file }) => file);
+    expect(bad).toEqual([]);
+  });
+
+  it('has no back-arrow crumbs', () => {
+    expect(pages.filter(({ html }) => html.querySelector('.article-crumb')).map(({ file }) => file)).toEqual([]);
+  });
 });

@@ -10,18 +10,15 @@ interface Props {
   title: string;
   description?: string;
   headings: Heading[];
-  /** Index page this article belongs to, linked at the top. */
-  back?: { href: string; label: string };
   /** Extra class on the header, e.g. "post-head" for blog posts. */
   headClass?: string;
 }
-const { title, description, headings, back, headClass } = Astro.props;
+const { title, description, headings, headClass } = Astro.props;
 ---
 <BaseLayout title={title} description={description} variant="post">
   <div class="progress" aria-hidden="true"><i data-progress></i></div>
   <article class="post-page wrap" data-article>
     <header class:list={['article-head', headClass]}>
-      {back && <a class="article-crumb" href={back.href}><span class="arr" aria-hidden="true">←</span> {back.label}</a>}
       <slot name="header" />
     </header>
     <slot name="cover" />
@@ -41,11 +38,9 @@ const { title, description, headings, back, headClass } = Astro.props;
   import { initTocRail } from '../scripts/toc-rail';
   import { initCopyButtons } from '../scripts/copy-code';
   import { initMermaid } from '../scripts/mermaid';
-  import { initRevealNotes } from '../scripts/reveal-note';
   import { initProgress } from '../scripts/progress';
   initTocRail();
   initCopyButtons();
   initMermaid();
-  initRevealNotes();
   initProgress();
 </script>
