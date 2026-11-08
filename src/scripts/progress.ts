@@ -8,7 +8,7 @@ export function initProgress(): void {
     queued = false;
     const r = article.getBoundingClientRect();
     const total = r.height - window.innerHeight;
-    const p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 1;
+    const p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0; // nothing to scroll, nothing to show
     bar.style.transform = `scaleX(${p})`;
   };
   const queue = () => {
