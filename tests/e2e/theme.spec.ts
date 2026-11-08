@@ -42,3 +42,11 @@ test('still toggles when localStorage is blocked', async ({ page }) => {
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
   expect(errors).toEqual([]);
 });
+
+test('orange buttons have no border in dark mode', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await page.goto('./');
+  for (const sel of ['#contact a.cta', 'a.contact-pill']) {
+    expect(await page.locator(sel).evaluate((el) => getComputedStyle(el).borderTopWidth), sel).toBe('0px');
+  }
+});
