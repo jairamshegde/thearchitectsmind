@@ -1,4 +1,4 @@
-/* Blog post head, cover and reading progress (redesign 2026-11). */
+/* Blog post head, cover and reading progress. */
 .progress { position: fixed; top: 0; left: 0; right: 0; z-index: 30; height: calc(3px + env(safe-area-inset-top, 0px)); padding-top: env(safe-area-inset-top, 0px); pointer-events: none; }
 .progress i { display: block; height: 3px; background: var(--accent); transform-origin: 0 50%; transform: scaleX(0); }
 
