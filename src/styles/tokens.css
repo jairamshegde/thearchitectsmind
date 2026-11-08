@@ -98,3 +98,9 @@ h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; margin: 0; text-
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .mask > span, .fade-up { transform: none; opacity: 1; }
 }
+
+/* ---------- section header row: heading, a link on the right, a 2px rule ---------- */
+.sec-top { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 16px; padding-bottom: 28px; border-bottom: 2px solid var(--ink); }
+.sec-top h2 { font-size: clamp(36px, 4vw, 52px); line-height: 1; letter-spacing: -.03em; }
+.sec-top > a { font-size: 16px; font-weight: 500; }
+.empty { margin: 32px 0 0; color: var(--muted); }

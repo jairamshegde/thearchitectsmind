@@ -30,20 +30,25 @@ describe('home page', () => {
     expect(field.querySelector('[data-pf-sq]')?.getAttribute('aria-hidden')).toBe('true');
   });
 
-  it('features at most 3 projects with year and stack, a link to the page and the repo', () => {
+  it('features the latest project as one card with year, short title, tags and a case study pill', () => {
     const section = home.querySelector('#projects')!;
-    const projects = section.querySelectorAll('article.home-proj');
-    expect(projects.length).toBeGreaterThan(0);
-    expect(projects.length).toBeLessThanOrEqual(3);
-    for (const p of projects) {
-      expect(p.querySelector('h3 a')?.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
-      expect(p.querySelector('.home-proj-meta')?.text).toMatch(/^\d{4} · /);
-      expect(p.querySelector('.home-proj-sum')?.text).toBeTruthy();
-    }
-    const mingraph = projects[0];
-    expect(mingraph.querySelectorAll('.home-links a').map((a) => a.text.replace(/[→↗]/g, '').trim())).toEqual(['Read the case study', 'GitHub']);
-    expect(mingraph.querySelector('img.home-proj-img')).not.toBeNull();
-    expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    expect(section.querySelector('.sec-top h2')?.text).toBe('Projects');
+    const all = section.querySelector('.sec-top a');
+    expect(all?.text.trim()).toBe('All projects');
+    expect(all?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    const cards = section.querySelectorAll('a.feat');
+    expect(cards).toHaveLength(1);
+    const card = cards[0];
+    expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
+    expect(card.querySelector('.feat-media img')).not.toBeNull();
+    expect(card.querySelector('.feat-meta')?.text).toMatch(/^\d{4}, open source$/);
+    expect(card.querySelector('h3')?.text).toBe('Mingraph');
+    expect(card.querySelector('.feat-desc')?.text).toBeTruthy();
+    const tags = card.querySelectorAll('.tags .tag');
+    expect(tags.length).toBeGreaterThan(0);
+    expect(tags.length).toBeLessThanOrEqual(4);
+    expect(card.querySelector('.feat-cta')?.text.trim()).toBe('View case study');
+    expect(section.toString()).not.toMatch(/[→↗←]/);
   });
 
   it('lists at most 5 dated posts with one details panel per post', () => {
