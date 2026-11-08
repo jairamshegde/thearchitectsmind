@@ -131,11 +131,6 @@ h1, h2, h3, h4, h5, h6, .logo, .big, .proj-row .name, .note-title, .series-title
 /* ---------------------------------------------------------------------
    3. Navigation
    --------------------------------------------------------------------- */
-.nav { display: flex; justify-content: space-between; align-items: center; padding: 24px 0; }
-.logo { font-weight: 700; font-size: 22px; letter-spacing: -.02em; text-decoration: none; }
-.nav ul { display: flex; gap: clamp(18px, 3vw, 36px); list-style: none; margin: 0; padding: 0; }
-.nav a.nl { font-size: 15px; font-weight: 500; text-decoration: none; color: var(--graphite); }
-.nav a.nl:hover { color: var(--ink); }
 
 /* ---------------------------------------------------------------------
    4. Hero

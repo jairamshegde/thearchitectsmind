@@ -5,19 +5,34 @@ describe('base layout', () => {
   const home = page('/');
 
   it('has nav links that point at the index pages', () => {
-    const links = home.querySelectorAll('nav.nav a.nl').map((a) => [a.text.trim(), a.getAttribute('href')]);
+    const links = home.querySelectorAll('nav.nav a[data-nav]').map((a) => [a.text.trim(), a.getAttribute('href')]);
     expect(links).toEqual([
       ['Projects', `${BASE}/projects/`],
-      ['Writing', `${BASE}/writing/`],
+      ['Blog', `${BASE}/writing/`],
       ['Notes', `${BASE}/notes/`],
       ['About', `${BASE}/about/`],
     ]);
   });
 
-  it('has a wordmark linking home and a theme toggle', () => {
-    expect(home.querySelector('a.logo')?.getAttribute('href')).toBe(`${BASE}/`);
-    expect(home.querySelector('a.logo')?.text).toBe("The Architect's Mind");
-    expect(home.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')).toBe('Toggle dark mode');
+  it('has a name and site title linking home, a theme toggle and a contact pill', () => {
+    const brand = home.querySelector('a.brand');
+    expect(brand?.getAttribute('href')).toBe(`${BASE}/`);
+    expect(brand?.querySelector('b')?.text).toBe('Jairam Hegde');
+    expect(brand?.querySelector('small')?.text).toBe('The Architect’s Mind');
+    expect(home.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')).toBe('Switch to dark theme');
+    const contact = home.querySelector('nav.nav a.contact-pill');
+    expect(contact?.getAttribute('href')).toBe('#contact');
+    expect(contact?.text.trim()).toBe('Contact');
+  });
+
+  it('marks the current section in the nav', () => {
+    const current = (route: string) => page(route).querySelectorAll('nav.nav a[aria-current="page"]').map((a) => a.getAttribute('data-nav'));
+    expect(current('/')).toEqual([]);
+    expect(current('/writing/')).toEqual(['blog']);
+    expect(current('/writing/mingraph/phase-0-oop-finally-clicked/')).toEqual(['blog']);
+    expect(current('/notes/')).toEqual(['notes']);
+    expect(current('/projects/')).toEqual(['projects']);
+    expect(current('/about/')).toEqual(['about']);
   });
 
   it('renders the footer from site settings', () => {

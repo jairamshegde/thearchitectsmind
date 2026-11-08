@@ -21,7 +21,11 @@ export function setTheme(theme: Theme): void {
 
 export function initThemeToggle(): void {
   const buttons = document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]');
-  const sync = () => buttons.forEach((b) => b.setAttribute('aria-pressed', String(currentTheme() === 'dark')));
+  const sync = () => buttons.forEach((b) => {
+    const dark = currentTheme() === 'dark';
+    b.setAttribute('aria-pressed', String(dark));
+    b.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+  });
   buttons.forEach((b) => b.addEventListener('click', () => {
     setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
     sync();

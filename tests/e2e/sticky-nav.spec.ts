@@ -38,3 +38,13 @@ test.describe('article page', () => {
     expect(rail.y).toBeGreaterThanOrEqual(nav.y + nav.height);
   });
 });
+
+test('the header gains a bottom border once the page scrolls', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./writing/mingraph/phase-0-oop-finally-clicked/');
+  const header = page.locator('header.site-header');
+  await expect(header).not.toHaveClass(/scrolled/);
+  await page.mouse.wheel(0, 40);
+  await expect(header).toHaveClass(/scrolled/);
+  expect(await header.evaluate((el) => getComputedStyle(el).position)).toBe('sticky');
+});
