@@ -12,7 +12,7 @@ const [featured, ...others] = pickHome(await published('projects'), 3);
 const posts: BandPost[] = await Promise.all(
   pickHome(await published('writing'), 5).map(async (post) => ({
     href: withBase(postPath(post)),
-    label: post.data.tags[0],
+    date: post.data.date,
     title: post.data.title,
     minutes: (await render(post)).remarkPluginFrontmatter.minutesRead as number,
   })),

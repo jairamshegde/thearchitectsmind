@@ -1,7 +1,7 @@
 ---
 import { formatDate } from '../lib/format';
 
-export type BandPost = { href: string; label: string; title: string; minutes: number };
+export type BandPost = { href: string; date: Date; title: string; minutes: number };
 export type BandNote = { href: string; topic: string; date: Date; title: string };
 
 interface Props {
@@ -30,7 +30,7 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
           {posts.map((p) => (
             <li>
               <a class="row" href={p.href}>
-                <span class="row-label">{p.label}</span>
+                <time class="row-date" datetime={p.date.toISOString().slice(0, 10)}>{formatDate(p.date)}</time>
                 <span class="row-title">{p.title}</span>
                 <span class="row-time"><span class="go">Read</span>{p.minutes} min</span>
               </a>
@@ -85,7 +85,7 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
   .note-card::before { inset: 0; border-radius: 14px; }
   .row > *, .note-card > * { position: relative; z-index: 1; }
   .row:hover::before, .note-card:hover::before { opacity: 1; transform: none; }
-  .row-label, .row-time, .card-meta { font-size: 12px; font-weight: 500; color: var(--muted); }
+  .row-date, .row-time, .card-meta { font-size: 12px; font-weight: 500; color: var(--muted); }
   .row-title { font-size: 22px; font-weight: 500; line-height: 1.3; letter-spacing: -.012em; transition: transform .45s var(--ease); }
   .row:hover .row-title { transform: translateX(6px); }
   .row-time { text-align: right; white-space: nowrap; }
@@ -108,7 +108,7 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
     .panel { margin-top: 32px; }
     .row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'label time' 'title title'; gap: 8px 16px; padding: 20px 0; }
     .row::before { inset: 0 -10px; }
-    .row-label { grid-area: label; }
+    .row-date { grid-area: label; }
     .row-time { grid-area: time; }
     .row-title { grid-area: title; font-size: 20px; }
     .cards { grid-template-columns: minmax(0, 1fr); }

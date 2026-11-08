@@ -3,7 +3,7 @@ import { parse } from 'node-html-parser';
 import { describe, expect, it } from 'vitest';
 import WritingBand from '../../src/components/WritingBand.astro';
 
-const post = (n: number) => ({ href: `/writing/p${n}/`, label: 'python', title: `Post ${n}`, minutes: n });
+const post = (n: number) => ({ href: `/writing/p${n}/`, date: new Date(Date.UTC(2026, 9, n)), title: `Post ${n}`, minutes: n });
 const note = (n: number) => ({ href: `/notes/n${n}/`, topic: 'tools', date: new Date(Date.UTC(2026, 9, n)), title: `Note ${n}` });
 
 async function band(props: Record<string, unknown>) {
@@ -31,11 +31,13 @@ describe('WritingBand', () => {
     expect(html.querySelector('#panel-blog')?.text).toContain('First post coming soon.');
   });
 
-  it('shows the label, title and read time on each row and the topic, date and title on each card', async () => {
+  it('shows the date, title and read time on each row and the topic, date and title on each card', async () => {
     const html = await band({ posts: [post(3)], notes: [note(4)] });
     const row = html.querySelector('#panel-blog a.row')!;
     expect(row.getAttribute('href')).toBe('/writing/p3/');
-    expect(row.querySelector('.row-label')?.text).toBe('python');
+    expect(row.querySelector('.row-label')).toBeNull();
+    expect(row.querySelector('time.row-date')?.getAttribute('datetime')).toBe('2026-10-03');
+    expect(row.querySelector('time.row-date')?.text).toBe('Oct 3, 2026');
     expect(row.querySelector('.row-title')?.text).toBe('Post 3');
     expect(row.querySelector('.row-time')?.text).toContain('3 min');
     const card = html.querySelector('#panel-notes a.note-card')!;
