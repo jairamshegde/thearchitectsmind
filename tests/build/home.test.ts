@@ -51,20 +51,22 @@ describe('home page', () => {
     expect(section.toString()).not.toMatch(/[→↗←]/);
   });
 
-  it('lists at most 5 dated posts with one details panel per post', () => {
-    const section = home.querySelector('#writing')!;
-    const items = section.querySelectorAll('a.viewer-item');
-    expect(items.length).toBeGreaterThan(0);
-    expect(items.length).toBeLessThanOrEqual(5);
-    for (const item of items) {
-      expect(item.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
-      expect(item.querySelector('time')?.getAttribute('datetime')).toBeTruthy();
-      expect(item.querySelector('.viewer-meta')?.text).toMatch(/ · \d+ min$/);
+  it('lists the latest posts and notes in the Blog and Notes band', () => {
+    const section = home.querySelector('section#writing')!;
+    const rows = section.querySelectorAll('#panel-blog a.row');
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.length).toBeLessThanOrEqual(5);
+    for (const row of rows) {
+      expect(row.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
+      expect(row.querySelector('.row-time')?.text).toMatch(/\d+ min/);
     }
-    const details = section.querySelectorAll('.viewer-detail');
-    expect(details).toHaveLength(items.length);
-    expect(details.map((d) => !d.hasAttribute('hidden'))).toEqual(items.map((_, i) => i === 0));
-    expect(items[0].classNames).toContain('sel');
-    expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/writing/`);
+    const cards = section.querySelectorAll('#panel-notes a.note-card');
+    expect(cards.length).toBeGreaterThan(0);
+    expect(cards.length).toBeLessThanOrEqual(4);
+    for (const card of cards) expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/notes/[^/]+/$`));
+    const all = section.querySelector('a[data-all]');
+    expect(all?.text.trim()).toBe('All posts');
+    expect(all?.getAttribute('href')).toBe(`${BASE}/writing/`);
+    expect(section.toString()).not.toMatch(/[→↗←]/);
   });
 });

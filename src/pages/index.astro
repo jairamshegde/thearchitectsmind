@@ -1,21 +1,28 @@
 ---
-import { Image } from 'astro:assets';
 import { render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import FeaturedProject from '../components/FeaturedProject.astro';
+import WritingBand, { type BandNote, type BandPost } from '../components/WritingBand.astro';
 import { published } from '../lib/collections';
 import { pickHome, postPath } from '../lib/content';
-import { formatDate } from '../lib/format';
 import { withBase } from '../lib/url';
 
 const [featured, ...others] = pickHome(await published('projects'), 3);
-const posts = await Promise.all(
+const posts: BandPost[] = await Promise.all(
   pickHome(await published('writing'), 5).map(async (post) => ({
-    post,
+    href: withBase(postPath(post)),
+    label: post.data.tags[0],
+    title: post.data.title,
     minutes: (await render(post)).remarkPluginFrontmatter.minutesRead as number,
   })),
 );
+const notes: BandNote[] = (await published('notes')).slice(0, 4).map((n) => ({
+  href: withBase(`/notes/${n.id}/`),
+  topic: n.data.tags[0],
+  date: n.data.date,
+  title: n.data.title,
+}));
 ---
 <BaseLayout variant="home">
   <Hero />
@@ -33,61 +40,9 @@ const posts = await Promise.all(
     )}
   </section>
 
-  <section class="sec wrap" id="writing">
-    <div class="sec-head">
-      <h2>Writing</h2>
-      <a class="more" href={withBase('/writing/')}>All writing <span class="arr" aria-hidden="true">→</span></a>
-    </div>
-    {posts.length > 0 ? (
-      <div class="viewer" data-viewer>
-        <ul class="viewer-list">
-          {posts.map(({ post, minutes }, i) => (
-            <li>
-              <a class:list={['viewer-item', { sel: i === 0 }]} href={withBase(postPath(post))} data-index={i}>
-                <span class="viewer-title">{post.data.title}</span>
-                <span class="viewer-meta"><time datetime={post.data.date.toISOString()}>{formatDate(post.data.date)}</time> · {minutes} min</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-        {/* The selected post's details; the list's hover and focus pick which one shows */}
-        <div class="viewer-details" aria-hidden="true">
-          {posts.map(({ post, minutes }, i) => (
-            <div class="viewer-detail" hidden={i !== 0}>
-              {post.data.cover ? (
-                <Image src={post.data.cover} alt="" widths={[520, 1040]} sizes="520px" />
-              ) : (
-                <span class="viewer-fallback"><span class="hand">{post.data.tags[0]}</span></span>
-              )}
-              <p class="viewer-meta">{formatDate(post.data.date)} · {minutes} min read</p>
-              <h3>{post.data.title}</h3>
-              <p class="viewer-desc">{post.data.description}</p>
-              <a class="home-link accent" href={withBase(postPath(post))} tabindex="-1">Read the post <span class="arr">→</span></a>
-            </div>
-          ))}
-        </div>
-      </div>
-    ) : (
-      <p class="empty">First post coming soon.</p>
-    )}
-  </section>
+  <WritingBand posts={posts} notes={notes} blogHref={withBase('/writing/')} notesHref={withBase('/notes/')} />
 </BaseLayout>
 
-<script>
-  // Hovering or focusing a post in the list shows its details in the side panel.
-  for (const viewer of document.querySelectorAll<HTMLElement>('[data-viewer]')) {
-    const items = [...viewer.querySelectorAll<HTMLElement>('.viewer-item')];
-    const details = [...viewer.querySelectorAll<HTMLElement>('.viewer-detail')];
-    const select = (i: number) => {
-      items.forEach((item, j) => item.classList.toggle('sel', j === i));
-      details.forEach((detail, j) => (detail.hidden = j !== i));
-    };
-    items.forEach((item, i) => {
-      item.addEventListener('pointerenter', () => select(i));
-      item.addEventListener('focus', () => select(i));
-    });
-  }
-</script>
 
 <style>
   .home-sec { padding-bottom: 140px; }

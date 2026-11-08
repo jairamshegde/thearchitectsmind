@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('keeps a side gutter on phones (hero, sections, contact band)', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('./');
-  for (const sel of ['#hero h1', '#projects h2', '#writing h2', '#contact .band-big']) {
+  for (const sel of ['#hero h1', '#projects h2', '#writing [role="tablist"]', '#contact .band-big']) {
     const box = await page.locator(sel).first().boundingBox();
     expect(box!.x, sel).toBeGreaterThanOrEqual(16);
   }
@@ -60,26 +60,41 @@ test('about page: Pico’s welcome note writes itself in on load', async ({ page
   await expect.poll(() => page.locator('.about-head .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
 });
 
-test('writing: hovering or focusing a post shows its details', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
+test('band: Notes tab swaps the list and the link without leaving the page', async ({ page }) => {
   await page.goto('./');
-  const items = page.locator('#writing .viewer-item');
-  const details = page.locator('#writing .viewer-detail');
-  await expect(details.nth(0)).toBeVisible();
-  await items.nth(2).hover();
-  await expect(items.nth(2)).toHaveClass(/sel/);
-  await expect(details.nth(2)).toBeVisible();
-  await expect(details.nth(0)).toBeHidden();
-  await items.nth(1).focus();
-  await expect(details.nth(1)).toBeVisible();
-  await expect(details.nth(2)).toBeHidden();
+  const all = page.locator('#writing a[data-all]');
+  await page.getByRole('tab', { name: 'Notes' }).click();
+  await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#panel-notes')).toBeVisible();
+  await expect(page.locator('#panel-blog')).toBeHidden();
+  await expect(all).toHaveText('All notes');
+  await expect(all).toHaveAttribute('href', /\/notes\/$/);
+  expect(new URL(page.url()).pathname).toBe('/');
 });
 
-test('writing: phones show the plain list without the details panel', async ({ page }) => {
-  await page.setViewportSize({ width: 375, height: 800 });
+test('band: arrow keys move between tabs', async ({ page }) => {
   await page.goto('./');
-  await expect(page.locator('#writing .viewer-details')).toBeHidden();
-  await expect(page.locator('#writing .viewer-item').first()).toBeVisible();
+  await page.getByRole('tab', { name: 'Blog' }).focus();
+  await page.keyboard.press('ArrowRight');
+  await expect(page.getByRole('tab', { name: 'Notes' })).toBeFocused();
+  await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'true');
+});
+
+test('band: Notes in the header selects the Notes tab and scrolls to the band on the homepage', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./');
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Notes', exact: true }).click();
+  await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.locator('#writing [role="tablist"]')).toBeInViewport();
+  expect(new URL(page.url()).pathname).toBe('/');
+});
+
+test('band: "Read the blog" in the hero selects Blog after Notes was picked', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./');
+  await page.getByRole('tab', { name: 'Notes' }).click();
+  await page.locator('#hero').getByRole('link', { name: 'Read the blog' }).click();
+  await expect(page.getByRole('tab', { name: 'Blog' })).toHaveAttribute('aria-selected', 'true');
 });
 
 test('about page: one column on phones, Pico above the name, nothing scrolls sideways', async ({ page }) => {

@@ -42,7 +42,7 @@ test('re-renders diagrams when the theme changes', async ({ page }) => {
   const svg = page.locator('figure.mermaid-panel.is-rendered svg').first();
   await expect(svg).toBeVisible();
   const before = await svg.getAttribute('id');
-  await page.getByRole('button', { name: 'Toggle dark mode' }).click();
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click();
   await expect.poll(() => svg.getAttribute('id')).not.toBe(before);
 });
 

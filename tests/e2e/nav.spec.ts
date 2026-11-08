@@ -6,8 +6,8 @@ test('About in the nav goes to the about page', async ({ page }) => {
   await expect(page).toHaveURL(/\/about\/$/);
 });
 
-test('Notes in the nav goes straight to the notes index', async ({ page }) => {
-  await page.goto('./');
+test('Notes in the nav goes straight to the notes index from other pages', async ({ page }) => {
+  await page.goto('./about/');
   await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Notes' }).click();
   await expect(page).toHaveURL(/\/notes\/$/);
 });
