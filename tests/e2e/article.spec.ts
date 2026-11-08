@@ -104,3 +104,19 @@ for (const [width, px] of [[1440, '17px'], [390, '16px']] as const) {
     expect(await page.locator('.prose > p').first().evaluate((el) => getComputedStyle(el).fontSize)).toBe(px);
   });
 }
+
+for (const route of [POST, './notes/dataclass-slots/', './projects/mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-scratch-to-learn-object-oriented-design-and-design-patterns-in-python./']) {
+  test(`${route}: the title can use the full width at 1440px`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(route);
+    const css = await page.locator('h1').first().evaluate((el) => getComputedStyle(el).maxWidth);
+    expect(css).toBe('none');
+  });
+}
+
+test('the progress bar stays empty on a note too short to scroll', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 2000 });
+  await page.goto('./notes/dataclass-slots/');
+  const scale = await page.locator('.progress > i').evaluate((el) => new DOMMatrix(getComputedStyle(el).transform).a);
+  expect(scale).toBe(0);
+});

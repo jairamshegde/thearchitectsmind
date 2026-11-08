@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HOME_FIELD, POST_FIELD, mulberry32, pixelCells, type FieldConfig } from '../../src/lib/pixel-field';
+import { HOME_FIELD, mulberry32, pixelCells, type FieldConfig } from '../../src/lib/pixel-field';
 
 const at = (cells: ReturnType<typeof pixelCells>, col: number, row: number) => cells.find((c) => c.col === col && c.row === row);
 
@@ -14,7 +14,6 @@ describe('mulberry32', () => {
 
 for (const [name, cfg, base, step, lo, hi] of [
   ['home', HOME_FIELD, 0.75, 0.07, 0.25, 0.8],
-  ['post', POST_FIELD, 0.8, 0.09, 0.3, 0.9],
 ] as [string, FieldConfig, number, number, number, number][]) {
   describe(`pixelCells (${name})`, () => {
     const cells = pixelCells(cfg);

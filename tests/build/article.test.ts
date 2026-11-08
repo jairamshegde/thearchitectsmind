@@ -8,8 +8,10 @@ describe('writing article: the last Mingraph part', () => {
   const POST = '/writing/mingraph/phase-7-state-pattern-and-agent-loop/';
   const p = page(POST);
 
-  it('has no back-arrow crumb at the top', () => {
-    expect(p.querySelector('.article-crumb')).toBeNull();
+  it('links back to the blog at the top, without an arrow', () => {
+    const back = p.querySelector('header.post-head a.back-link');
+    expect(back?.getAttribute('href')).toBe(`${BASE}/writing/`);
+    expect(back?.text.trim()).toBe('Back to blog');
   });
 
   it('renders the post head in order: series line, title, dek, meta', () => {
@@ -19,13 +21,13 @@ describe('writing article: the last Mingraph part', () => {
     const series = head.querySelector('.series-line')!;
     expect(series.text.replace(/\s+/g, ' ').trim()).toBe('Mingraph series, part 8 of 8 · See all parts');
     expect(series.querySelector('a')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
-    expect(head.querySelectorAll('h1.post-title .mask').length).toBe(2);
+    expect(head.querySelectorAll('h1.post-title .mask').length).toBe(1);
     expect(head.querySelector('.dek')?.text).toBeTruthy();
     expect(head.querySelectorAll('dl.post-meta dt').map((d) => d.text)).toEqual(['Published', 'Reading time', 'Part', 'Tags']);
     expect(head.querySelectorAll('dl.post-meta dd')[1].text).toMatch(/^\d+ min$/);
     expect(head.querySelectorAll('dl.post-meta dd')[2].text).toBe('8 of 8');
     expect(head.querySelectorAll('dl.post-meta .tag').length).toBeGreaterThan(0);
-    expect(head.querySelector('[data-pf]')?.getAttribute('role')).toBe('img');
+    expect(p.querySelector('[data-pf]')).toBeNull();
   });
 
   it('puts the cover after the head, and a reading progress bar at the top', () => {
@@ -113,6 +115,8 @@ describe('notes', () => {
     const p = page('/notes/dataclass-slots/');
     expect(p.querySelector('h1.article-title')?.text).toBe('Dataclasses with slots=True');
     expect(p.querySelector('nav.toc')).toBeNull();
+    expect(p.querySelector('.article-head a.back-link')?.getAttribute('href')).toBe(`${BASE}/notes/`);
+    expect(p.querySelector('.article-head a.back-link')?.text.trim()).toBe('Back to notes');
     expect(p.querySelector('.article-meta')?.text).toBe('Sep 12, 2026 · python');
   });
 

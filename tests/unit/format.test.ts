@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatDate, formatDayMonth, splitTitle } from '../../src/lib/format';
+import { formatDate, formatDayMonth } from '../../src/lib/format';
 import { renderMarkdown } from '../../src/lib/markdown-text';
 
 // `npm test` runs with TZ=America/Los_Angeles. A date parsed from "2026-09-20" is UTC midnight,
@@ -24,13 +24,3 @@ describe('renderMarkdown', () => {
   });
 });
 
-describe('splitTitle', () => {
-  it('breaks a title into two lines at the word nearest the middle', () => {
-    expect(splitTitle('a b c d')).toEqual(['a b', 'c d']);
-    expect(splitTitle('Learning OOP through the design questions I already ask at work')).toEqual(['Learning OOP through the design', 'questions I already ask at work']);
-  });
-
-  it('keeps a single word on the first line', () => {
-    expect(splitTitle('Hello')).toEqual(['Hello', '']);
-  });
-});

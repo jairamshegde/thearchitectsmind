@@ -22,11 +22,6 @@ export const HOME_FIELD: FieldConfig = {
   sparkBase: 0.75, sparkStep: 0.07, noiseMin: 0.25, noiseMax: 0.8,
 };
 
-export const POST_FIELD: FieldConfig = {
-  cols: 19, rows: 15, cell: 12, gap: 5, cx: 11, cy: 7, arm: 5, clear: 3, falloff: 10, seed: 11,
-  sparkBase: 0.8, sparkStep: 0.09, noiseMin: 0.3, noiseMax: 0.9,
-};
-
 export type Cell = { col: number; row: number; kind: 'spark' | 'noise'; opacity: number; delay: number; twinkle: boolean };
 
 export function mulberry32(seed: number): () => number {
