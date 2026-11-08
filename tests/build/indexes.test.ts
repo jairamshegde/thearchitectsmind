@@ -7,33 +7,38 @@ const starterOrder = (hrefs: (string | undefined)[], starter: string[]) => hrefs
 
 describe('/writing/', () => {
   const p = page('/writing/');
-  // Posts come and go through the CMS, so check the order of whatever is published, not a fixed list.
-  it('lists published posts newest first', () => {
-    expect(p.querySelector('h1')?.text).toBe('Writing');
-    const cards = p.querySelectorAll('a.latest, a.post');
-    expect(cards.length).toBeGreaterThan(0);
-    for (const card of cards) expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
+  const cards = p.querySelectorAll('a.latest-card, a.wcard');
+
+  it('has the two-line page title and an intro', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Long-form writing.');
+    expect(p.querySelector('.page-intro')?.text).toBeTruthy();
+  });
+
+  it('lists published posts newest first, the latest one large and once', () => {
+    expect(p.querySelectorAll('a.latest-card')).toHaveLength(1);
+    expect(cards.length).toBeGreaterThan(1);
+    const hrefs = cards.map((c) => c.getAttribute('href'));
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+    for (const href of hrefs) expect(href).toMatch(new RegExp(`^${BASE}/writing/`));
     const dates = cards.map((c) => Date.parse(c.querySelector('time')!.getAttribute('datetime')!));
     expect(dates).toEqual([...dates].sort((a, b) => b - a));
   });
 
-  it('shows the newest post once, above the grid, with date and read time', () => {
-    const latest = p.querySelectorAll('a.latest');
-    expect(latest).toHaveLength(1);
-    const gridHrefs = p.querySelectorAll('.writing-grid a.post').map((a) => a.getAttribute('href'));
-    expect(gridHrefs).not.toContain(latest[0].getAttribute('href'));
-    for (const card of p.querySelectorAll('a.latest, a.post')) {
-      expect(card.querySelector('.post-meta time')?.getAttribute('datetime')).toBeTruthy();
-      expect(card.querySelector('.post-meta')?.text).toMatch(/\d+ min read/);
+  it('shows date and read time on every card, and no series names', () => {
+    for (const card of cards) {
+      expect(card.querySelector('.card-meta')?.text).toMatch(/^\w{3} \d{1,2}, \d{4} \u00b7 \d+ min$/);
+      expect(card.querySelector('.card-meta')?.text).not.toMatch(/part|series/i);
     }
+    expect(p.querySelector('a.latest-card .pill')?.text.trim()).toBe('Read the post');
+    expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]/);
   });
 
-  it('offers "All" plus at most 10 tag filters, each matching a grid card', () => {
+  it('offers "All" plus at most 10 tag filters, each matching a card', () => {
     const buttons = p.querySelectorAll('.tag-filter button');
     expect(buttons[0].text).toBe('All');
     expect(buttons.length).toBeLessThanOrEqual(11);
-    const gridTags = p.querySelectorAll('.writing-grid a.post').flatMap((a) => JSON.parse(a.getAttribute('data-tags')!));
-    for (const b of buttons.slice(1)) expect(gridTags).toContain(b.getAttribute('data-tag'));
+    const cardTags = p.querySelectorAll('a.wcard').flatMap((a) => JSON.parse(a.getAttribute('data-tags')!));
+    for (const b of buttons.slice(1)) expect(cardTags).toContain(b.getAttribute('data-tag'));
   });
 });
 
