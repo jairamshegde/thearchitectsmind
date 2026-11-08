@@ -24,3 +24,11 @@ test.describe('on a phone', () => {
     await expect(page.locator('[data-theme-toggle]')).toBeVisible();
   });
 });
+
+test('Contact in the header opens the About page at Get in touch', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./notes/');
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Contact', exact: true }).click();
+  await expect(page).toHaveURL(/\/about\/#get-in-touch$/);
+  await expect(page.locator('#get-in-touch h2')).toBeInViewport();
+});

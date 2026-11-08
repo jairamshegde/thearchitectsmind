@@ -41,7 +41,9 @@ describe('/about/', () => {
   });
 
   it('offers email, LinkedIn and GitHub as icon links under "Get in touch"', () => {
-    const section = p.querySelectorAll('.about-main section').find((s) => s.querySelector('h2')?.text === 'Get in touch')!;
+    const section = p.querySelector('.about-main section#get-in-touch')!;
+    expect(section.querySelector('h2')?.text).toBe('Get in touch');
+    expect(p.querySelector('aside.about-side a.pill')?.getAttribute('href')).toBe('#get-in-touch');
     const links = section.querySelectorAll('ul.socials a');
     expect(links.map((a) => a.getAttribute('aria-label'))).toEqual(['Email', 'LinkedIn', 'GitHub']);
     expect(links[0].getAttribute('href')).toMatch(/^mailto:/);
