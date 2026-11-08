@@ -1,4 +1,4 @@
-/** Marks the rail link for the section currently at the top of the viewport. */
+/** Marks the "On this page" link for the section currently at the top of the viewport. */
 export function initTocRail(): void {
   const nav = document.querySelector<HTMLElement>('[data-toc]');
   if (!nav) return;
@@ -14,7 +14,11 @@ export function initTocRail(): void {
     queued = false;
     let active = 0;
     pairs.forEach((p, i) => { if (p.target.getBoundingClientRect().top - OFFSET <= 0) active = i; });
-    pairs.forEach((p, i) => (i === active ? p.link.setAttribute('aria-current', 'location') : p.link.removeAttribute('aria-current')));
+    pairs.forEach((p, i) => {
+      p.link.classList.toggle('is-active', i === active);
+      if (i === active) p.link.setAttribute('aria-current', 'true');
+      else p.link.removeAttribute('aria-current');
+    });
   };
   addEventListener('scroll', () => { if (!queued) { queued = true; requestAnimationFrame(update); } }, { passive: true });
   update();

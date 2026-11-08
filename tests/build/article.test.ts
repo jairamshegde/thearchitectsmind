@@ -34,14 +34,15 @@ describe('writing article: the last Mingraph part', () => {
     expect(p.querySelector('.progress[aria-hidden="true"] > i')).not.toBeNull();
   });
 
-  it('builds the TOC rail and the inline Contents panel from every H2, with clean heading text', () => {
+  it('builds the "On this page" list from the H2s only', () => {
     const h2s = p.querySelectorAll('.prose h2');
-    const rail = p.querySelectorAll('nav.toc[aria-label="Contents"] a[data-toc-link]');
-    expect(rail.length).toBe(h2s.length);
-    expect(rail[0].getAttribute('href')).toBe(`#${h2s[0].id}`);
-    expect(rail[0].querySelector('.toc-text')?.text).toBe(h2s[0].text.replace('#', '').trim());
-    expect(rail[0].getAttribute('style')).toMatch(/--dash: \d+px/);
-    expect(p.querySelectorAll('details.toc-inline a').length).toBe(h2s.length);
+    const toc = p.querySelector('nav.toc[aria-label="On this page"]')!;
+    expect(toc.querySelector('.toc-label')?.text).toBe('On this page');
+    const links = toc.querySelectorAll('ol > li > a[data-toc-link]');
+    expect(links.length).toBe(h2s.length);
+    expect(links[0].getAttribute('href')).toBe(`#${h2s[0].id}`);
+    expect(links[0].text.trim()).toBe(h2s[0].text.replace('#', '').trim());
+    expect(p.querySelector('details.toc-inline')).toBeNull();
   });
 
   it('gives headings ids and hover anchors', () => {
@@ -70,7 +71,6 @@ describe('notes', () => {
     const p = page('/notes/dataclass-slots/');
     expect(p.querySelector('h1.article-title')?.text).toBe('Dataclasses with slots=True');
     expect(p.querySelector('nav.toc')).toBeNull();
-    expect(p.querySelector('details.toc-inline')).toBeNull();
     expect(p.querySelector('.article-meta')?.text).toBe('Sep 12, 2026 · python');
     expect(p.querySelector('.article-head a.article-crumb')?.getAttribute('href')).toBe(`${BASE}/notes/`);
   });

@@ -26,9 +26,8 @@ const { title, description, headings, back, headClass } = Astro.props;
     </header>
     <slot name="cover" />
     <div class="article-shell">
-      <Toc headings={headings} variant="rail" />
+      <Toc headings={headings} />
       <div class="article">
-        <Toc headings={headings} variant="inline" />
         <div class="prose"><slot /></div>
         <slot name="after" />
         <span data-article-end></span>
