@@ -58,9 +58,37 @@
 .prose img { display: block; max-width: 100%; height: auto; border-radius: 14px; }
 
 /* Pull quote: the key one-line realisations */
-.prose blockquote:not(.markdown-alert) { margin: 1.8em 0; padding: 0; border: 0; }
+.prose blockquote:not(.markdown-alert) { margin: 1.8em 0; padding: 0; border: 0; quotes: '“' '”'; }
+.prose blockquote:not(.markdown-alert) > p:first-child::before { content: open-quote; }
+.prose blockquote:not(.markdown-alert) > p:last-child::after { content: close-quote; }
 .prose blockquote:not(.markdown-alert) > p { margin: 0; color: var(--ink); font-family: var(--display); font-size: clamp(24px, 2.6vw, 32px); font-weight: 500; line-height: 1.22; letter-spacing: -.02em; text-indent: -.42em; }
 .prose blockquote:not(.markdown-alert) > p + p { margin-top: .6em; text-indent: 0; }
+
+/* TL;DR and AIDR boxes */
+.prose .box { margin: 0 0 1.6em; padding: 28px 30px; border: 1px solid var(--line); border-radius: 16px; }
+.prose .box-h { margin: 0 0 12px; color: var(--ink); font-family: var(--display); font-size: 18px; font-weight: 600; letter-spacing: -.01em; }
+.prose .box ul, .prose .box ol { margin: 0; font-size: 17px; }
+.prose .box li + li { margin-top: .4em; }
+.prose .box > :last-child { margin-bottom: 0; }
+.prose .box-aidr { border-color: transparent; background: var(--soft); }
+.prose .box-aidr p:not(.box-h) { margin: 0; font-size: 16px; color: var(--muted); }
+
+/* Pico's one-line reactions: in the right margin on wide screens, under the paragraph otherwise */
+.pico-row > :first-child { margin-bottom: 1.15em; }
+.pico { display: flex; gap: 12px; align-items: flex-start; margin: -.2em 0 1.4em; padding: 14px 16px; border-radius: 14px; background: var(--soft); }
+.pico-av { position: relative; flex: none; width: 36px; height: 36px; overflow: hidden; border-radius: 50%; background: var(--ink); }
+.pico-av::before, .pico-av::after { content: ""; position: absolute; top: 13px; width: 6px; height: 6px; border-radius: 50%; background: var(--bg); }
+.pico-av::before { left: 10px; }
+.pico-av::after { right: 10px; }
+.pico-av i { position: absolute; left: 50%; top: 21px; width: 8px; height: 5px; margin-left: -4px; border-radius: 0 0 4px 4px; background: var(--accent); }
+.pico-text { font-size: 17px; font-style: italic; font-weight: 500; line-height: 1.4; color: var(--accent-ink); }
+.pico-name { display: block; margin-bottom: 2px; font-size: 12px; font-style: normal; font-weight: 600; letter-spacing: .01em; color: var(--muted); }
+.pico-text code { font-style: normal; }
+@media (min-width: 1600px) {
+  .prose > .pico-row { display: grid; grid-template-columns: minmax(0, var(--post-w)) minmax(0, 1fr); column-gap: 48px; align-items: start; max-width: none; }
+  .pico-row > .pico { grid-column: 2; margin: 4px 0 1.2em; padding: 0; background: none; }
+  .pico-row > .pico + .pico { grid-row: 2; }
+}
 
 /* Figures */
 .md-figure { margin: 2em 0; }

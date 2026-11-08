@@ -66,6 +66,20 @@ describe('writing article: the last Mingraph part', () => {
   });
 });
 
+describe('writing article: Pico and the summary boxes', () => {
+  const p = page('/writing/mingraph/phase-0-oop-finally-clicked/');
+
+  it('turns every Pico line into a margin note beside its paragraph', () => {
+    expect(p.querySelectorAll('.prose .pico-row > aside.pico')).toHaveLength(3);
+    expect(p.querySelectorAll('.prose p').filter((el) => el.text.startsWith('Pico:'))).toEqual([]);
+  });
+
+  it('turns the TL;DR and AIDR quotes into boxes', () => {
+    expect(p.querySelector('.prose section.box-tldr .box-h')?.text).toBe('TL;DR, for humans');
+    expect(p.querySelector('.prose section.box-aidr .box-h')?.text).toBe('AIDR, AI don\u2019t read');
+  });
+});
+
 describe('notes', () => {
   it('shows no TOC (rail or inline) for a short note with one heading', () => {
     const p = page('/notes/dataclass-slots/');
