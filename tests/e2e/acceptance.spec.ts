@@ -67,3 +67,16 @@ test.describe('review fixes', () => {
     await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'false');
   });
 });
+
+for (const route of ['./projects/', './notes/', './writing/']) {
+  test(`${route}: the page title sits on one line at 1440px, with the subtitle below`, async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(route);
+    const h1 = page.locator('h1.page-title');
+    const { height, size } = await h1.evaluate((el) => ({ height: el.getBoundingClientRect().height, size: parseFloat(getComputedStyle(el).fontSize) }));
+    expect(height).toBeLessThan(size * 1.5);
+    const title = (await h1.boundingBox())!;
+    const intro = (await page.locator('.page-intro').boundingBox())!;
+    expect(intro.y).toBeGreaterThan(title.y + title.height);
+  });
+}
