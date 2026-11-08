@@ -7,41 +7,51 @@ const starterOrder = (hrefs: (string | undefined)[], starter: string[]) => hrefs
 
 describe('/writing/', () => {
   const p = page('/writing/');
-  // Posts come and go through the CMS, so check the order of whatever is published, not a fixed list.
-  it('lists published posts newest first', () => {
-    expect(p.querySelector('h1')?.text).toBe('Writing');
-    const cards = p.querySelectorAll('a.latest, a.post');
-    expect(cards.length).toBeGreaterThan(0);
-    for (const card of cards) expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
+  const cards = p.querySelectorAll('a.latest-card, a.wcard');
+
+  it('has the two-line page title and an intro', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Long-form writing.');
+    expect(p.querySelector('.page-intro')?.text).toBeTruthy();
+  });
+
+  it('lists published posts newest first, the latest one large and once', () => {
+    expect(p.querySelectorAll('a.latest-card')).toHaveLength(1);
+    expect(cards.length).toBeGreaterThan(1);
+    const hrefs = cards.map((c) => c.getAttribute('href'));
+    expect(new Set(hrefs).size).toBe(hrefs.length);
+    for (const href of hrefs) expect(href).toMatch(new RegExp(`^${BASE}/writing/`));
     const dates = cards.map((c) => Date.parse(c.querySelector('time')!.getAttribute('datetime')!));
     expect(dates).toEqual([...dates].sort((a, b) => b - a));
   });
 
-  it('shows the newest post once, above the grid, with date and read time', () => {
-    const latest = p.querySelectorAll('a.latest');
-    expect(latest).toHaveLength(1);
-    const gridHrefs = p.querySelectorAll('.writing-grid a.post').map((a) => a.getAttribute('href'));
-    expect(gridHrefs).not.toContain(latest[0].getAttribute('href'));
-    for (const card of p.querySelectorAll('a.latest, a.post')) {
-      expect(card.querySelector('.post-meta time')?.getAttribute('datetime')).toBeTruthy();
-      expect(card.querySelector('.post-meta')?.text).toMatch(/\d+ min read/);
+  it('shows date and read time on every card, and no series names', () => {
+    for (const card of cards) {
+      expect(card.querySelector('.card-meta')?.text).toMatch(/^\w{3} \d{1,2}, \d{4} \u00b7 \d+ min$/);
+      expect(card.querySelector('.card-meta')?.text).not.toMatch(/part|series/i);
     }
+    expect(p.querySelector('a.latest-card .pill')?.text.trim()).toBe('Read the post');
+    expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]/);
   });
 
-  it('offers "All" plus at most 10 tag filters, each matching a grid card', () => {
+  it('offers "All" plus at most 10 tag filters, each matching a card', () => {
     const buttons = p.querySelectorAll('.tag-filter button');
     expect(buttons[0].text).toBe('All');
     expect(buttons.length).toBeLessThanOrEqual(11);
-    const gridTags = p.querySelectorAll('.writing-grid a.post').flatMap((a) => JSON.parse(a.getAttribute('data-tags')!));
-    for (const b of buttons.slice(1)) expect(gridTags).toContain(b.getAttribute('data-tag'));
+    const cardTags = p.querySelectorAll('a.wcard').flatMap((a) => JSON.parse(a.getAttribute('data-tags')!));
+    for (const b of buttons.slice(1)) expect(cardTags).toContain(b.getAttribute('data-tag'));
   });
 });
 
 describe('/notes/', () => {
   const p = page('/notes/');
-  it('groups notes by year, newest first, without drafts', () => {
-    const years = p.querySelectorAll('.year-group h2').map((h) => Number(h.text));
-    expect(years).toEqual([...years].sort((a, b) => b - a));
+  it('has the two-line page title', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Short notes.');
+  });
+
+  it('groups notes by month, newest first, without drafts', () => {
+    const months = p.querySelectorAll('.month-group h2').map((h) => Date.parse(`1 ${h.text}`));
+    expect(months.length).toBeGreaterThan(0);
+    expect(months).toEqual([...months].sort((a, b) => b - a));
     const rows = p.querySelectorAll('a.note-row');
     const hrefs = rows.map((a) => a.getAttribute('href'));
     const starter = [`${BASE}/notes/dataclass-slots/`, `${BASE}/notes/reading-a-flame-graph/`];
@@ -82,14 +92,31 @@ describe('/notes/ pagination', () => {
 describe('/projects/', () => {
   const p = page('/projects/');
 
-  it('shows the newest project once, above the list, with summary, stack and a View Project link to the repo', () => {
-    const latest = p.querySelectorAll('.latest-proj');
-    expect(latest).toHaveLength(1);
-    const titleHref = latest[0].querySelector('h2 a')?.getAttribute('href');
-    const cardHrefs = p.querySelectorAll('.proj-card h3 a').map((a) => a.getAttribute('href'));
-    expect(cardHrefs).not.toContain(titleHref);
-    expect(latest[0].querySelector('.btn-primary')?.getAttribute('href')).toMatch(/^https:\/\/github\.com\//);
-    expect(latest[0].querySelector('.proj-summary')?.text).toBeTruthy();
-    expect(latest[0].querySelectorAll('.proj-tags li').length).toBeGreaterThan(0);
+  it('has the two-line page title', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Things I build.');
+  });
+
+  it('shows the newest project as the featured card, with the CMS summary', () => {
+    const cards = p.querySelectorAll('a.feat');
+    expect(cards).toHaveLength(1);
+    expect(cards[0].getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
+    expect(cards[0].querySelector('.feat-desc')?.text).toMatch(/^The core of LangChain and LangGraph/);
+    expect(cards[0].querySelector('.feat-cta')?.text.trim()).toBe('View case study');
+    const featured = cards[0].getAttribute('href');
+    expect(p.querySelectorAll('.proj-rows a').map((a) => a.getAttribute('href'))).not.toContain(featured);
+    expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]/);
+  });
+});
+
+describe('/writing/mingraph/ (series index)', () => {
+  const p = page('/writing/mingraph/');
+
+  it('titles the page with the series name and lists every part in order with read time', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('The Mingraph series.');
+    const rows = p.querySelectorAll('ol.rows a.row');
+    expect(rows).toHaveLength(8);
+    expect(rows.map((r) => r.querySelector('.row-label')?.text)).toEqual(['Part 1', 'Part 2', 'Part 3', 'Part 4', 'Part 5', 'Part 6', 'Part 7', 'Part 8']);
+    expect(rows[0].getAttribute('href')).toBe(`${BASE}/writing/mingraph/phase-0-oop-finally-clicked/`);
+    for (const r of rows) expect(r.querySelector('.row-time')?.text).toMatch(/^\d+ min$/);
   });
 });

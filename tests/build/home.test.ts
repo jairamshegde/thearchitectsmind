@@ -4,58 +4,72 @@ import { BASE, page } from './helpers';
 describe('home page', () => {
   const home = page('/');
 
-  it('orders sections Hero → Projects → Writing, with no logos, About or Notes section', () => {
-    const ids = home.querySelectorAll('main > section').map((s) => s.getAttribute('id') ?? s.classNames);
-    expect(ids).toEqual(['hero wrap', 'projects', 'writing']);
+  it('orders sections Hero → Projects → Writing', () => {
+    const ids = home.querySelectorAll('main > section').map((s) => s.getAttribute('id'));
+    expect(ids).toEqual(['hero', 'projects', 'writing']);
   });
 
-  it('shows the lead-in, headline, subtext and two text links', () => {
-    expect(home.querySelector('.hero .hl-lead')?.text).toBe('I turn hard problems into');
-    expect(home.querySelector('.hero .hl-main')?.text).toBe('simple systems.');
-    expect(home.querySelectorAll('.hero h1')).toHaveLength(1);
-    expect(home.querySelector('.hero .hero-sub')?.text).toBe('Right now that means AI agents, and the evals that show they work.');
-    const ctas = home.querySelectorAll('.hero .ctas a.hero-link');
-    expect(ctas.map((a) => a.text.replace('→', '').trim())).toEqual(['See Mingraph', 'Read the writing']);
-    expect(ctas.map((a) => a.getAttribute('href'))).toEqual([expect.stringMatching(new RegExp(`^${BASE}/projects/[^/]+/$`)), `${BASE}/writing/`]);
+  it('shows the two-line title with an accent period, subtitle, bio and three links', () => {
+    const hero = home.querySelector('#hero')!;
+    expect(hero.querySelectorAll('h1')).toHaveLength(1);
+    const lines = hero.querySelectorAll('h1 .mask');
+    expect(lines.map((l) => l.text)).toEqual(['In search of', 'intuition.']);
+    expect(lines[1].querySelector('.accent-dot')?.text).toBe('.');
+    expect(hero.querySelector('h1')?.text.replace(/\s+/g, ' ').trim()).toBe('In search of intuition.');
+    expect(hero.querySelector('.hero-sub')?.text).toBe('Building intuition for complex systems.');
+    expect(hero.querySelector('.hero-bio')?.text).toBe('I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.');
+    const links = hero.querySelectorAll('.hero-links a');
+    expect(links.map((a) => a.text.trim())).toEqual(['See the projects', 'Read the blog', 'GitHub']);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#projects', '#writing', 'https://github.com/jairamshegde']);
+    expect(links[1].getAttribute('data-tab-link')).toBe('blog');
   });
 
-  it('shows the hero image with alt text', () => {
-    const art = home.querySelector('.hero figure.hero-art')!;
-    const img = art.querySelector('img')!;
-    expect(img.getAttribute('src')).toMatch(/^\/_astro\/hero_new_workflow\./);
-    expect(img.getAttribute('alt')).toMatch(/Pico/);
+  it('draws the pixel field beside the title with a text alternative', () => {
+    const field = home.querySelector('#hero [data-pf]')!;
+    expect(field.getAttribute('role')).toBe('img');
+    expect(field.getAttribute('aria-label')).toMatch(/spark/);
+    expect(field.querySelector('[data-pf-sq]')).toBeNull();
+    expect(home.querySelector('#hero [data-hero-sq]')?.getAttribute('aria-hidden')).toBe('true');
+    expect(home.querySelector('#hero [data-hero-dot]')?.text).toBe('.');
   });
 
-  it('features at most 3 projects with year and stack, a link to the page and the repo', () => {
+  it('features the latest project as one card with year, short title, tags and a case study pill', () => {
     const section = home.querySelector('#projects')!;
-    const projects = section.querySelectorAll('article.home-proj');
-    expect(projects.length).toBeGreaterThan(0);
-    expect(projects.length).toBeLessThanOrEqual(3);
-    for (const p of projects) {
-      expect(p.querySelector('h3 a')?.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
-      expect(p.querySelector('.home-proj-meta')?.text).toMatch(/^\d{4} · /);
-      expect(p.querySelector('.home-proj-sum')?.text).toBeTruthy();
-    }
-    const mingraph = projects[0];
-    expect(mingraph.querySelectorAll('.home-links a').map((a) => a.text.replace(/[→↗]/g, '').trim())).toEqual(['Read the case study', 'GitHub']);
-    expect(mingraph.querySelector('img.home-proj-img')).not.toBeNull();
-    expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    expect(section.querySelector('.sec-top h2')?.text).toBe('Projects');
+    const all = section.querySelector('.sec-top a');
+    expect(all?.text.trim()).toBe('All projects');
+    expect(all?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    const cards = section.querySelectorAll('a.feat');
+    expect(cards).toHaveLength(1);
+    const card = cards[0];
+    expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
+    expect(card.querySelector('.feat-media img')).not.toBeNull();
+    expect(card.querySelector('.feat-meta')?.text).toMatch(/^\d{4}, open source$/);
+    expect(card.querySelector('h3')?.text).toBe('Mingraph');
+    expect(card.querySelector('.feat-desc')?.text).toBeTruthy();
+    const tags = card.querySelectorAll('.tags .tag');
+    expect(tags.length).toBeGreaterThan(0);
+    expect(tags.length).toBeLessThanOrEqual(4);
+    expect(card.querySelector('.feat-cta')?.text.trim()).toBe('View case study');
+    expect(section.toString()).not.toMatch(/[→↗←]/);
   });
 
-  it('lists at most 5 dated posts with one details panel per post', () => {
-    const section = home.querySelector('#writing')!;
-    const items = section.querySelectorAll('a.viewer-item');
-    expect(items.length).toBeGreaterThan(0);
-    expect(items.length).toBeLessThanOrEqual(5);
-    for (const item of items) {
-      expect(item.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
-      expect(item.querySelector('time')?.getAttribute('datetime')).toBeTruthy();
-      expect(item.querySelector('.viewer-meta')?.text).toMatch(/ · \d+ min$/);
+  it('lists the latest posts and notes in the Blog and Notes band', () => {
+    const section = home.querySelector('section#writing')!;
+    const rows = section.querySelectorAll('#panel-blog a.row');
+    expect(rows.length).toBeGreaterThan(0);
+    expect(rows.length).toBeLessThanOrEqual(5);
+    for (const row of rows) {
+      expect(row.getAttribute('href')).toMatch(new RegExp(`^${BASE}/writing/`));
+      expect(row.querySelector('.row-time')?.text).toMatch(/\d+ min/);
     }
-    const details = section.querySelectorAll('.viewer-detail');
-    expect(details).toHaveLength(items.length);
-    expect(details.map((d) => !d.hasAttribute('hidden'))).toEqual(items.map((_, i) => i === 0));
-    expect(items[0].classNames).toContain('sel');
-    expect(section.querySelector('.more')?.getAttribute('href')).toBe(`${BASE}/writing/`);
+    const cards = section.querySelectorAll('#panel-notes a.note-card');
+    expect(cards.length).toBeGreaterThan(0);
+    expect(cards.length).toBeLessThanOrEqual(4);
+    for (const card of cards) expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/notes/[^/]+/$`));
+    const all = section.querySelector('a[data-all]');
+    expect(all?.text.trim()).toBe('All posts');
+    expect(all?.getAttribute('href')).toBe(`${BASE}/writing/`);
+    expect(section.toString()).not.toMatch(/[→↗←]/);
   });
 });

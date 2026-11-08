@@ -14,12 +14,12 @@ const pages = Array.from({ length: last }, (_, i) => i + 1);
 ---
 {last > 1 && (
   <nav class="pagination" aria-label={label}>
-    {current > 1 ? <a class="pg-step" rel="prev" href={href(current - 1)}><span aria-hidden="true">←</span> Newer</a> : <span class="pg-step" aria-hidden="true" />}
+    {current > 1 ? <a class="pg-step" rel="prev" href={href(current - 1)}>Newer</a> : <span class="pg-step" aria-hidden="true" />}
     <ol>
       {pages.map((n) => (
         <li>{n === current ? <span class="pg-num" aria-current="page">{n}</span> : <a class="pg-num" href={href(n)} aria-label={`Page ${n}`}>{n}</a>}</li>
       ))}
     </ol>
-    {current < last ? <a class="pg-step" rel="next" href={href(current + 1)}>Older <span aria-hidden="true">→</span></a> : <span class="pg-step" aria-hidden="true" />}
+    {current < last ? <a class="pg-step" rel="next" href={href(current + 1)}>Older</a> : <span class="pg-step" aria-hidden="true" />}
   </nav>
 )}

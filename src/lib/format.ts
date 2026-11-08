@@ -4,3 +4,4 @@ const dayMonth = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeri
 
 export const formatDate = (d: Date): string => long.format(d);
 export const formatDayMonth = (d: Date): string => dayMonth.format(d);
+

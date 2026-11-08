@@ -1,23 +1,63 @@
 ---
-import { SITE } from '../site.config';
 import { withBase } from '../lib/url';
 import ThemeToggle from './ThemeToggle.astro';
 
 const links = [
-  { label: 'Projects', href: withBase('/projects/') },
-  { label: 'Writing', href: withBase('/writing/') },
-  { label: 'Notes', href: withBase('/notes/') },
-  { label: 'About', href: withBase('/about/') },
+  { key: 'projects', label: 'Projects', path: '/projects/', wide: true },
+  { key: 'blog', label: 'Blog', path: '/writing/', wide: false },
+  { key: 'notes', label: 'Notes', path: '/notes/', wide: true },
+  { key: 'about', label: 'About', path: '/about/', wide: true },
 ];
+const here = Astro.url.pathname;
+const isCurrent = (path: string) => here.startsWith(withBase(path));
 ---
-<header class="site-header">
-  <div class="wrap">
+<header class="site-header" data-site-header>
+  <div class="wrap bar">
+    <a class="brand" href={withBase('/')}>Jairam Hegde</a>
     <nav class="nav" aria-label="Main">
-      <a class="logo" href={withBase('/')}>{SITE.title}</a>
-      <ul>
-        {links.map((l) => <li><a class="nl" href={l.href}>{l.label}</a></li>)}
-        <li><ThemeToggle /></li>
-      </ul>
+      {links.map((l) => (
+        <a
+          class:list={['ul', { on: isCurrent(l.path), wide: l.wide }]}
+          href={withBase(l.path)}
+          data-nav={l.key}
+          aria-current={isCurrent(l.path) ? 'page' : undefined}
+        >{l.label}</a>
+      ))}
+      <ThemeToggle />
+      <a class="pill pill-ink contact-pill" href="#contact">Contact</a>
     </nav>
   </div>
 </header>
+
+<style>
+  .site-header {
+    position: sticky; top: 0; z-index: 20;
+    padding-top: env(safe-area-inset-top, 0px);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color .3s var(--ease);
+  }
+  .site-header.scrolled { border-bottom-color: var(--line); }
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 20px; padding-bottom: 20px; }
+  .brand { font-weight: 700; font-size: 19px; letter-spacing: -.02em; white-space: nowrap; }
+  .nav { display: flex; align-items: center; gap: 28px; font-size: 16px; font-weight: 500; }
+  .nav .on { background-size: 100% 1px; }
+
+  @media (max-width: 720px) {
+    .nav { gap: 16px; font-size: 15px; }
+    .nav .wide { display: none; }
+    .bar { padding-top: 14px; padding-bottom: 14px; }
+  }
+  @media (max-width: 360px) {
+    .bar { gap: 10px; }
+    .brand { font-size: 17px; }
+    .nav { gap: 8px; }
+    .contact-pill { padding: 0 12px; }
+  }
+</style>
+
+<script>
+  import { initHeader } from '../scripts/header';
+  initHeader();
+</script>

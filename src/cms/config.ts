@@ -146,13 +146,15 @@ export const cmsConfig: {
           file: 'src/content/settings/site.json',
           ...besideEntry,
           fields: [
-            str('heroLead', 'Hero lead-in (small grey line above the headline)'),
-            str('heroHeadline', 'Hero headline (set large, with an orange underline)'),
-            text('heroSub', 'Hero subtext'),
-            image('heroImage', 'Hero image (wide, transparent PNG under the headline)'),
-            str('footerStatement', 'Footer statement'),
-            str('footerSub', 'Footer sub line'),
+            str('heroLead', 'Hero title, first line (set in grey)'),
+            str('heroHeadline', 'Hero title, second line (an orange period is added after it)'),
+            str('heroSub', 'Hero subtitle'),
+            opt(text('heroBio', 'Hero bio (two or three sentences under the subtitle)')),
+            image('heroImage', 'Hero image (not shown in the current design)'),
+            str('footerStatement', 'Footer heading (two sentences: the first in white, the second in grey below it)'),
+            str('footerSub', 'Footer side line (homepage only, beside the button)'),
             image('footerImage', 'Footer image (right of the statement)'),
+            opt(str('email', 'Contact email (the "Let\u2019s talk it through" button)')),
             {
               name: 'socials', label: 'Social links', widget: 'list',
               fields: [

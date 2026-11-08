@@ -5,35 +5,68 @@ describe('base layout', () => {
   const home = page('/');
 
   it('has nav links that point at the index pages', () => {
-    const links = home.querySelectorAll('nav.nav a.nl').map((a) => [a.text.trim(), a.getAttribute('href')]);
+    const links = home.querySelectorAll('nav.nav a[data-nav]').map((a) => [a.text.trim(), a.getAttribute('href')]);
     expect(links).toEqual([
       ['Projects', `${BASE}/projects/`],
-      ['Writing', `${BASE}/writing/`],
+      ['Blog', `${BASE}/writing/`],
       ['Notes', `${BASE}/notes/`],
       ['About', `${BASE}/about/`],
     ]);
   });
 
-  it('has a wordmark linking home and a theme toggle', () => {
-    expect(home.querySelector('a.logo')?.getAttribute('href')).toBe(`${BASE}/`);
-    expect(home.querySelector('a.logo')?.text).toBe("The Architect's Mind");
-    expect(home.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')).toBe('Toggle dark mode');
+  it('has the name linking home, a theme toggle and a contact pill without a dot', () => {
+    const brand = home.querySelector('a.brand');
+    expect(brand?.getAttribute('href')).toBe(`${BASE}/`);
+    expect(brand?.text.trim()).toBe('Jairam Hegde');
+    expect(home.querySelector('[data-theme-toggle]')?.getAttribute('aria-label')).toBe('Switch to dark theme');
+    const contact = home.querySelector('nav.nav a.contact-pill');
+    expect(contact?.getAttribute('href')).toBe('#contact');
+    expect(contact?.text.trim()).toBe('Contact');
+    expect(contact?.querySelector('i')).toBeNull();
   });
 
-  it('renders the footer from site settings', () => {
-    expect(home.querySelectorAll('.foot .big .big-line').map((l) => l.text)).toEqual(['Every hard problem has a simple shape.', 'Finding it is the job.']);
-    expect(home.querySelector('.foot .foot-side .sub')?.text).toBe('Got a hard problem? Happy to talk it through.');
-    const pico = home.querySelector('.foot .foot-side figure.foot-pico img');
-    expect(pico?.getAttribute('alt')).toMatch(/Pico/);
-    expect(pico?.getAttribute('src')).toMatch(/^\/_astro\/pico-finding\./);
-    const socials = home.querySelectorAll('.foot .links > li > a').map((a) => a.text.replace('↗', '').trim());
-    expect(socials).toEqual(['GitHub']);
-    expect(home.querySelector('.foot .pop .pop-note')?.text).toBe('Where the code lives.');
+  it('marks the current section in the nav', () => {
+    const current = (route: string) => page(route).querySelectorAll('nav.nav a[aria-current="page"]').map((a) => a.getAttribute('data-nav'));
+    expect(current('/')).toEqual([]);
+    expect(current('/writing/')).toEqual(['blog']);
+    expect(current('/writing/mingraph/phase-0-oop-finally-clicked/')).toEqual(['blog']);
+    expect(current('/notes/')).toEqual(['notes']);
+    expect(current('/projects/')).toEqual(['projects']);
+    expect(current('/about/')).toEqual(['about']);
+  });
+
+  it('ends the homepage with the contact band', () => {
+    const band = home.querySelector('footer#contact.band')!;
+    expect(band.querySelectorAll('.band-big .band-line').map((l) => l.text)).toEqual(['Intuition comes from building.', 'Let’s build something.']);
+    const cta = band.querySelector('a.cta');
+    expect(cta?.text.trim()).toBe('Let’s talk it through');
+    expect(cta?.getAttribute('href')).toMatch(/^mailto:/);
+    expect(band.querySelector('.band-quote')?.text).toBe('Agents, evals, and the problems in between.');
+    expect(band.querySelectorAll('.band-foot nav a').map((a) => a.text.trim())).toEqual(['GitHub', 'Notes']);
+    expect(band.querySelector('.band-foot span')?.text).toBe(`© ${new Date().getFullYear()} Jairam Hegde.`);
+  });
+
+  it('ends other pages with the short contact band and a way back up', () => {
+    for (const route of ['/writing/mingraph/phase-0-oop-finally-clicked/', '/notes/']) {
+      const band = page(route).querySelector('footer#contact.band')!;
+      expect(band.querySelectorAll('.band-big .band-line').map((l) => l.text), route).toEqual(['Intuition comes from building.', 'Let’s build something.']);
+      expect(band.querySelector('.band-quote'), route).toBeNull();
+      expect(band.querySelector('a.cta')?.getAttribute('href'), route).toMatch(/^mailto:/);
+      expect(band.querySelector('.band-row a.gh')?.text.trim(), route).toBe('GitHub');
+      expect(band.querySelector('.band-foot a[href="#top"]')?.text.trim(), route).toBe('Back to top');
+    }
   });
 
   it('sets the theme before first paint and loads the fonts', () => {
     const head = home.querySelector('head')!.toString();
     expect(head).toContain("localStorage.getItem('theme')");
-    expect(head).toContain('family=Funnel+Display');
+    const fonts = home.querySelector('link[href*="fonts.googleapis.com/css2"]')?.getAttribute('href') ?? '';
+    for (const f of ['Funnel+Display', 'Inter+Tight', 'JetBrains+Mono']) expect(fonts).toContain(f);
+    expect(fonts).not.toContain('Shantell');
+    expect(fonts).not.toContain('IBM+Plex');
+  });
+
+  it('lets the page draw under phone safe areas', () => {
+    expect(home.querySelector('meta[name="viewport"]')?.getAttribute('content')).toContain('viewport-fit=cover');
   });
 });

@@ -16,9 +16,10 @@ describe('case study', () => {
     expect(meta.Links.querySelector('a')?.getAttribute('href')).toBe('https://github.com/jairamshegde/mingraph');
   });
 
-  it('renders only the Problem card, then Lessons, with the back link at the top', () => {
+  it('renders only the Problem card, then Lessons', () => {
     expect(p.querySelectorAll('.cs-card .cs-card-title').map((t) => t.text)).toEqual(['Problem']);
     expect(p.querySelector('aside.lessons')).not.toBeNull();
-    expect(p.querySelector('.article-head a.article-crumb')?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    expect(p.querySelector('.article-head a.back-link')?.getAttribute('href')).toBe(`${BASE}/projects/`);
+    expect(p.querySelector('.article-head a.back-link')?.text.trim()).toBe('Back to projects');
   });
 });

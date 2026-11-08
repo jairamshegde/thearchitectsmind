@@ -12,6 +12,8 @@ import { rehypeFigure } from './src/markdown/rehype-figure';
 import { rehypeSideImage } from './src/markdown/rehype-side-image';
 import { rehypeTableWrap } from './src/markdown/rehype-table-wrap';
 import { rehypeBaseLinks } from './src/markdown/rehype-base-links';
+import { rehypePico } from './src/markdown/rehype-pico';
+import { rehypeSummaryBox } from './src/markdown/rehype-summary-box';
 
 export default defineConfig({
   site: SITE.url,
@@ -33,6 +35,8 @@ export default defineConfig({
         rehypeSideImage, // before rehypeFigure: "left"/"right" titles are layout, not captions
         rehypeFigure,
         rehypeTableWrap,
+        rehypeSummaryBox,
+        rehypePico,
         rehypeHeadingIds, // must run before autolink so headings have ids
         [rehypeAutolinkHeadings, {
           behavior: 'append',

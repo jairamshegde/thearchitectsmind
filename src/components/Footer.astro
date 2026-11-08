@@ -1,41 +1,62 @@
 ---
-import { Image } from 'astro:assets';
 import { getEntry } from 'astro:content';
 import { SITE } from '../site.config';
+import { withBase } from '../lib/url';
 
+interface Props {
+  variant?: 'home' | 'post' | 'page';
+}
+const { variant = 'page' } = Astro.props;
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { footerStatement, footerSub, footerImage, socials } = settings.data;
-// One line per sentence; the second line is set in grey.
-const statementLines = footerStatement.split(/(?<=[.!?])\s+/);
+const { footerStatement, footerSub, email, socials } = settings.data;
+const mailto = `mailto:${email ?? '[YOUR EMAIL]'}`;
+const github = socials.find((s) => s.label === 'GitHub')?.url ?? `https://github.com/${SITE.owner}`;
+const home = variant === 'home';
+// One line per sentence; the second is set in grey.
+const lines = footerStatement.split(/(?<=[.!?])\s+/);
 ---
-<footer class="foot wrap">
-  <div class="foot-main">
-    <p class="big">{statementLines.map((line, i) => <>{i > 0 && ' '}<span class="big-line">{line}</span></>)}</p>
-    <div class="foot-side">
-      {footerImage && (
-        <figure class="foot-pico">
-          <Image src={footerImage} alt="Pico the penguin peering at a pile of papers through a magnifying glass" widths={[130, 260]} sizes="130px" />
-        </figure>
-      )}
-      <p class="sub">{footerSub}</p>
-      <ul class="links">
-        {socials.map((s) => (
-          <li>
-            <a href={s.url} rel={s.url.startsWith('http') ? 'me noopener' : undefined}>{s.label}<span class="arr" aria-hidden="true">↗</span></a>
-            {(s.meta || s.note) && (
-              <div class="pop" role="tooltip">
-                {s.meta && <p class="pop-meta">{s.meta}</p>}
-                {s.note && <p class="pop-note">{s.note}</p>}
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+<footer id="contact" class:list={['band', { 'band-home': home }]}>
+  <div class="wrap">
+    <p class="band-big">{lines.map((line, i) => <>{i > 0 && ' '}<span class="band-line">{line}</span></>)}</p>
+    <div class="band-row">
+      <a class="pill pill-accent cta" href={mailto}>Let’s talk it through</a>
+      {home
+        ? <p class="band-quote">{footerSub}</p>
+        : <a class="gh ul" href={github} rel="me noopener">GitHub</a>}
+    </div>
+    <div class="band-foot">
+      <span>© {new Date().getFullYear()} {SITE.author}.</span>
+      {home
+        ? <nav aria-label="Elsewhere"><a class="ul" href={github} rel="me noopener">GitHub</a><a class="ul" href={withBase('/notes/')}>Notes</a></nav>
+        : <a class="ul" href="#top">Back to top</a>}
     </div>
   </div>
-  <div class="sig">
-    <span><b>{SITE.title}</b>Written and built by {SITE.author}</span>
-    <span>© {new Date().getFullYear()}</span>
-  </div>
 </footer>
+
+<style>
+  .band { background: var(--band-bg); color: var(--band-ink); }
+  .band .wrap { padding-top: 88px; padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)); }
+  .band-home .wrap { padding-top: 136px; padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px)); }
+  .band-line { display: block; }
+  .band-line + .band-line { color: var(--band-muted); }
+  .band-big { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.025em; text-wrap: balance; }
+  .band-home .band-big { font-size: clamp(40px, 5vw, 64px); line-height: 1; letter-spacing: -.03em; }
+  .band-row { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 32px; }
+  .band-home .band-row { margin-top: 56px; align-items: end; }
+  .cta { min-height: 52px; padding: 0 26px; font-size: 17px; }
+  .band-home .cta { min-height: 64px; padding: 0 32px; font-size: 22px; letter-spacing: -.01em; }
+  .band-quote { margin: 0; max-width: 360px; font-size: 18px; color: var(--band-muted); }
+  .gh { font-size: 18px; font-weight: 500; }
+  .band-foot { margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--band-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 14px; color: var(--band-muted); }
+  .band-home .band-foot { margin-top: 120px; padding-top: 24px; }
+  .band-foot nav { display: flex; gap: 24px; }
+  .band-foot a { color: var(--band-ink); }
+
+  @media (max-width: 720px) {
+    .band .wrap { padding-top: 64px; }
+    .band-home .wrap { padding-top: 72px; }
+    .band-home .cta { min-height: 56px; font-size: 18px; padding: 0 26px; }
+    .band-home .band-foot, .band-foot { margin-top: 56px; }
+  }
+</style>

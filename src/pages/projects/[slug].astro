@@ -19,7 +19,7 @@ const { Content, headings } = await render(project);
 const { title, summary, lessons } = project.data;
 const showLessons = isCaseStudy(project.data) && Boolean(lessons);
 ---
-<ArticleLayout title={title} description={summary} headings={headings} back={{ href: withBase('/projects/'), label: 'All projects' }}>
+<ArticleLayout title={title} description={summary} headings={headings} back={{ href: withBase('/projects/'), label: 'Back to projects' }}>
   <CaseStudyHeader slot="header" project={project} />
 
   <Content />

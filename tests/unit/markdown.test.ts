@@ -12,6 +12,8 @@ import { rehypeFigure } from '../../src/markdown/rehype-figure';
 import { rehypeTableWrap } from '../../src/markdown/rehype-table-wrap';
 import { rehypeBaseLinks } from '../../src/markdown/rehype-base-links';
 import { rehypeSideImage } from '../../src/markdown/rehype-side-image';
+import { rehypePico } from '../../src/markdown/rehype-pico';
+import { rehypeSummaryBox } from '../../src/markdown/rehype-summary-box';
 
 function html(md: string, ...plugins: Array<() => (tree: Root) => void>): string {
   let p = unified().use(remarkParse).use(remarkGfm).use(remarkRehype);
@@ -77,16 +79,16 @@ describe('rehypeCodeFrame', () => {
   });
   const run = (tree: Root) => { rehypeCodeFrame()(tree); return String(unified().use(rehypeStringify).stringify(tree)); };
 
-  it('wraps Shiki output in a frame titled from title="…"', () => {
+  it('wraps Shiki output in a frame with a language label and a Copy button', () => {
     const out = run(shikiPre('title="retry.py" {6-8}'));
-    expect(out).toMatch(/^<figure class="code-frame" data-lang="python"><figcaption class="code-head">/);
-    expect(out).toContain('<span class="code-title">retry.py</span>');
+    expect(out).toMatch(/^<figure class="code-frame" data-lang="python"><figcaption class="code-head"><span class="code-lang">retry.py<\/span>/);
+    expect(out).not.toContain('code-dots');
     expect(out).toContain('<button class="code-copy" type="button" data-copy hidden>Copy</button>');
     expect(out).toContain('<pre class="astro-code architect-ide"');
   });
 
   it('falls back to the language as the title', () => {
-    expect(run(shikiPre('', 'bash'))).toContain('<span class="code-title">bash</span>');
+    expect(run(shikiPre('', 'bash'))).toContain('<span class="code-lang">bash</span>');
   });
 
   it('ignores <pre> elements that are not Shiki output', () => {
@@ -161,3 +163,53 @@ describe('rehypeSideImage', () => {
     expect(md('![Pico](./p.png "A caption")\n\nText.')).not.toContain('md-split');
   });
 });
+
+describe('rehypePico', () => {
+  it('pairs a Pico line with the paragraph before it as a margin note', () => {
+    const out = html('Para one.\n\nPico: "Hmm?"', rehypePico);
+    expect(out).toMatch(/^<div class="pico-row"><p>Para one\.<\/p><aside class="pico">/);
+    expect(out).toContain('<span class="pico-av" aria-hidden="true"><i></i></span>');
+    expect(out).toContain('<span class="pico-text"><span class="pico-name">Pico</span>Hmm?</span></aside></div>');
+    expect(out).not.toContain('Pico:');
+  });
+
+  it('accepts curly quotes and keeps inline formatting', () => {
+    const out = html('Before.\n\nPico: \u201cWhy `self` here?\u201d', rehypePico);
+    expect(out).toContain('Why <code>self</code> here?</span></aside>');
+  });
+
+  it('works when the Pico line is the first thing in the post', () => {
+    const out = html('Pico: "First!"', rehypePico);
+    expect(out).toMatch(/^<div class="pico-row"><aside class="pico">/);
+  });
+
+  it('leaves Pico lines inside lists, quotes or sentences alone', () => {
+    for (const md of ['- Pico: "x"', '> Pico: "x"', 'I said Pico: "x" today', 'Pico: no quotes here']) {
+      expect(html(md, rehypePico), md).not.toContain('pico-row');
+    }
+  });
+});
+
+describe('rehypeSummaryBox', () => {
+  it('turns the TL;DR blockquote into a bordered box with a new heading', () => {
+    const out = html('> **TL;DR (for humans)**\n>\n> - one\n> - two', rehypeSummaryBox);
+    expect(out).toMatch(/^<section class="box box-tldr"><p class="box-h">TL;DR, for humans<\/p>/);
+    expect(out).toContain('<li>one</li>');
+    expect(out).not.toContain('<blockquote');
+  });
+
+  it('turns the AIDR blockquote into a quiet box, with straight or curly apostrophes', () => {
+    for (const title of ["AIDR (AI, don't read)", 'AIDR (AI, don\u2019t read)']) {
+      const out = html(`> **${title}**\n>\n> Hello, crawler.`, rehypeSummaryBox);
+      expect(out).toMatch(/^<section class="box box-aidr"><p class="box-h">AIDR, AI don\u2019t read<\/p>/);
+      expect(out).toContain('<p>Hello, crawler.</p>');
+    }
+  });
+
+  it('turns "In a hurry?" into the bordered box and leaves other quotes as pull quotes', () => {
+    expect(html('> **In a hurry?**\n>\n> Read this.', rehypeSummaryBox)).toContain('<section class="box box-tldr"><p class="box-h">In a hurry?</p>');
+    expect(html('> A real quote.', rehypeSummaryBox)).toContain('<blockquote>');
+    expect(html('> **Bold start** then text.', rehypeSummaryBox)).toContain('<blockquote>');
+  });
+});
+

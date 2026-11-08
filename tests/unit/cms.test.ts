@@ -73,4 +73,8 @@ describe('CMS config', () => {
     }
     expect(new RegExp((socialUrl.pattern as [string, string])[0]).test('mailto:me@example.com')).toBe(true);
   });
+
+  it('lets the contact email be edited in site settings', () => {
+    expect(fieldsFor('settings').find((f) => f.name === 'email')).toMatchObject({ widget: 'string', required: false });
+  });
 });

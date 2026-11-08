@@ -1,10 +1,11 @@
 {
-  "heroLead": "I turn hard problems into",
-  "heroHeadline": "simple systems.",
-  "heroSub": "Right now that means AI agents, and the evals that show they work.",
+  "heroLead": "In search of",
+  "heroHeadline": "intuition",
+  "heroSub": "Building intuition for complex systems.",
+  "heroBio": "I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.",
   "heroImage": "hero_new_workflow.png",
-  "footerStatement": "Every hard problem has a simple shape. Finding it is the job.",
-  "footerSub": "Got a hard problem? Happy to talk it through.",
+  "footerStatement": "Intuition comes from building. Let’s build something.",
+  "footerSub": "Agents, evals, and the problems in between.",
   "footerImage": "pico-finding.png",
   "socials": [
     {
@@ -12,6 +13,12 @@
       "url": "https://github.com/jairamshegde",
       "meta": "github.com/jairamshegde",
       "note": "Where the code lives."
+    },
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/in/YOUR-PROFILE",
+      "meta": "",
+      "note": ""
     }
   ]
 }

@@ -12,6 +12,18 @@ export function pickHome<T extends Entry>(items: T[], n: number): T[] {
   return [...sorted.filter((i) => i.data.featured), ...sorted.filter((i) => !i.data.featured)].slice(0, n);
 }
 
+const monthLabel = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' });
+
+/** Newest month first, items newest first; labels read "Oct 2026". Dates are UTC calendar days. */
+export function groupByMonth<T extends Entry>(items: T[]): { label: string; items: T[] }[] {
+  const groups = new Map<string, T[]>();
+  for (const item of [...items].sort(byDateDesc)) {
+    const label = monthLabel.format(item.data.date);
+    groups.set(label, [...(groups.get(label) ?? []), item]);
+  }
+  return [...groups].map(([label, list]) => ({ label, items: list }));
+}
+
 export function groupByYear<T extends Entry>(items: T[]): { year: number; items: T[] }[] {
   const groups = new Map<number, T[]>();
   for (const item of [...items].sort(byDateDesc)) {

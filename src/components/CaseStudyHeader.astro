@@ -27,8 +27,8 @@ const hasLinks = Boolean(d.links?.repo || d.links?.demo);
     <div>
       <dt>Links</dt>
       <dd class="cs-links">
-        {d.links?.repo && <a href={d.links.repo} rel="noopener">Repository <span aria-hidden="true">↗</span></a>}
-        {d.links?.demo && <a href={d.links.demo} rel="noopener">Live demo <span aria-hidden="true">↗</span></a>}
+        {d.links?.repo && <a href={d.links.repo} rel="noopener">Repository</a>}
+        {d.links?.demo && <a href={d.links.demo} rel="noopener">Live demo</a>}
       </dd>
     </div>
   )}
@@ -45,4 +45,4 @@ const hasLinks = Boolean(d.links?.repo || d.links?.demo);
   </div>
 )}
 
-{d.cover && <Image class="article-cover" src={d.cover} alt="" widths={[720, 1440]} sizes="(max-width: 800px) 100vw, 720px" loading="eager" />}
+{d.cover && <figure class="post-cover cs-cover"><Image src={d.cover} alt="" widths={[860, 1360, 2000]} sizes="(max-width: 1440px) calc(100vw - 80px), 1280px" loading="eager" /></figure>}
