@@ -126,89 +126,8 @@ a.pg-num:hover { background: var(--soft); color: var(--ink); }
 .home-link:hover .arr { transform: translateX(4px); }
 
 
-/* ---------- Pico with a handwritten note (home hero and about page) ---------- */
-.about-pico { display: flex; align-items: center; justify-content: flex-end; gap: 14px; margin: -24px 0 0; }
-.about-pico img { flex: none; width: clamp(130px, 14vw, 190px); height: auto; }
-.about-pico-note { max-width: 22ch; font-family: var(--font-hand); font-size: clamp(16px, 1.4vw, 19px); line-height: 1.35; color: var(--graphite); text-align: right; transform: rotate(-3deg); }
-/* Written in left → right when revealed (JS adds .reveal-ready first, then .is-revealed in view) */
-.about-pico.reveal-ready .about-pico-note { opacity: 0; clip-path: inset(0 100% 0 0); }
-.about-pico.reveal-ready.is-revealed .about-pico-note { opacity: 1; clip-path: inset(0 0 0 0); transition: clip-path 1.1s cubic-bezier(.4, .1, .3, 1) .15s, opacity .2s ease .15s; }
-@media (max-width: 900px) {
-  .about-pico { justify-content: flex-start; margin-top: 8px; }
-  .about-pico-note { text-align: left; }
-}
 
 /* ---------- Sticky nav ---------- */
 :root { --nav-h: 84px; }
 @media (max-width: 560px) { :root { --nav-h: 106px; } }
 /* Anchor jumps (nav links, TOC) stop below the sticky nav */
-
-/* ---------- About page: intro with Pico, summary strip, then labelled sections ---------- */
-.about { padding-bottom: clamp(40px, 8vh, 80px); }
-.about-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 360px); gap: 48px; align-items: center; padding: clamp(28px, 6vh, 48px) 0 52px; }
-.about-head h1 { margin: 0; font-size: clamp(44px, 5vw, 64px); font-weight: 600; line-height: 1.02; letter-spacing: -.035em; }
-.about-lead { max-width: 680px; margin: 22px 0 0; font-family: var(--font-display); font-size: clamp(21px, 2vw, 28px); font-weight: 500; line-height: 1.35; letter-spacing: -.015em; text-wrap: balance; }
-.about-lead span { color: var(--graphite); }
-.about-meta { margin: 26px 0 0; font-family: var(--font-mono); font-size: 13px; }
-.about-meta a { border-bottom: 1px solid var(--line-2); text-decoration: none; }
-.about-meta a:hover { border-color: var(--accent); }
-.about-head .about-pico { flex-direction: column; align-items: center; gap: 4px; margin: 0; }
-.about-head .about-pico img { width: 100%; }
-.about-head .about-pico-note { max-width: none; text-align: center; text-wrap: balance; transform: rotate(-2deg); }
-
-.about-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 0; background: var(--card); border-radius: var(--r-lg); box-shadow: 0 0 0 1px var(--line); }
-.about-summary div { padding: 22px 26px 24px; }
-.about-summary div + div { border-left: 1px solid var(--line); }
-.about-summary dt { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; color: var(--pencil); }
-.about-summary dd { margin: 8px 0 0; font-size: 16.5px; font-weight: 500; line-height: 1.45; }
-
-.about-sec { display: grid; grid-template-columns: 260px minmax(0, 640px); gap: 48px; padding: 64px 0; border-top: 1px solid var(--line-2); }
-.about-summary + .about-sec, .about-head + .about-sec { margin-top: 88px; }
-.about-sec.wide { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-.about-label { margin: 0; font-size: 22px; font-weight: 600; line-height: 1.2; letter-spacing: -.02em; }
-.about-label span { display: block; margin-bottom: 6px; font-family: var(--font-mono); font-size: 13px; font-weight: 400; letter-spacing: 0; color: var(--pencil); }
-.about-body p { margin: 0; font-size: 18px; line-height: 1.65; color: var(--graphite); }
-.about-body p + p { margin-top: 14px; }
-.about-body a:not(.home-link) { color: var(--ink); text-decoration-color: var(--accent); text-decoration-thickness: 2px; text-underline-offset: 4px; }
-.about-body .home-link { font-size: 18px; }
-
-.about-steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
-.about-steps li { position: relative; padding: 24px 24px 26px; border-radius: var(--r-lg); background: var(--card); box-shadow: 0 0 0 1px var(--line); }
-.about-steps li:not(:last-child)::after { content: "→"; position: absolute; right: -14px; top: 40px; z-index: 1; width: 12px; text-align: center; font-family: var(--font-mono); font-size: 14px; color: var(--pencil); }
-.about-steps svg { display: block; width: 44px; height: 48px; }
-.about-steps svg rect { fill: var(--card); stroke: var(--graphite); stroke-width: 1.6; }
-.about-steps svg rect.a { fill: var(--accent); stroke: none; }
-.about-steps svg rect.k { fill: var(--ink); stroke: none; }
-.about-steps svg .tick { fill: none; stroke: var(--page); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
-.about-steps .n { position: absolute; top: 24px; right: 24px; font-family: var(--font-mono); font-size: 12px; color: var(--pencil); }
-.about-steps h3 { margin: 22px 0 0; font-size: 19px; font-weight: 600; line-height: 1.25; letter-spacing: -.015em; }
-.about-steps p { margin: 8px 0 0; font-size: 15.5px; line-height: 1.55; color: var(--graphite); }
-
-.about-quirks { display: grid; gap: 18px; margin: 0; padding: 0; list-style: none; }
-.about-quirks li { position: relative; padding-left: 30px; }
-.about-quirks li::before { content: "!"; position: absolute; left: 0; top: 4px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: rgba(242, 163, 58, .16); color: var(--accent); font-family: var(--font-mono); font-size: 12px; font-weight: 600; }
-.about-now { display: grid; grid-template-columns: 120px minmax(0, 1fr); margin: 0; }
-.about-now dt, .about-now dd { padding: 14px 0; border-top: 1px solid var(--line); }
-.about-now dt { font-family: var(--font-mono); font-size: 13px; color: var(--pencil); }
-.about-now dd { margin: 0; font-size: 17px; }
-
-@media (max-width: 900px) {
-  .about-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .about-steps li:nth-child(2)::after { content: none; }
-}
-@media (max-width: 720px) {
-  .about-head { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-bottom: 40px; }
-  .about-head .about-pico { order: -1; justify-self: start; width: 220px; }
-  .about-head .about-pico-note { font-size: 15px; }
-  .about-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .about-summary div { padding: 16px 18px; }
-  .about-summary div:nth-child(3) { border-left: 0; }
-  .about-summary div:nth-child(n+3) { border-top: 1px solid var(--line); }
-  .about-sec { grid-template-columns: minmax(0, 1fr); gap: 18px; padding: 44px 0; }
-  .about-summary + .about-sec, .about-head + .about-sec { margin-top: 48px; }
-  .about-body p, .about-quirks li { font-size: 16.5px; }
-  .about-steps { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .about-steps li:not(:last-child)::after { content: "↓"; right: auto; left: 34px; top: auto; bottom: -15px; }
-  .about-now { grid-template-columns: 92px minmax(0, 1fr); }
-}
-

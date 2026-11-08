@@ -16,105 +16,115 @@ const github = settings.data.socials.find((s) => s.label === 'GitHub');
 // Quirks are short markdown; site-root links ("/writing/...") get the base path like the rest of the site.
 const quirkHtml = (q: string) => renderMarkdown(q).replaceAll('href="/', `href="${withBase('/')}`);
 
-// Sections are numbered in page order, skipping any left empty in the CMS.
-const sections = [
-  steps.length > 0 && 'steps',
-  'working',
-  signoff && 'signoff',
-  quirks.length > 0 && 'quirks',
-  now.length > 0 && 'now',
-  (contact || github) && 'contact',
-].filter(Boolean) as string[];
-const num = (id: string) => String(sections.indexOf(id) + 1).padStart(2, '0');
-
-// Tiny icons for the step cards: the heap of pieces gets tidier from step to step.
-const stepIcons = [
-  '<rect x="6" y="14" width="18" height="12" rx="3" transform="rotate(-18 15 20)"/><rect x="18" y="8" width="14" height="14" rx="3" transform="rotate(14 25 15)"/><rect class="a" x="14" y="24" width="12" height="14" rx="3" transform="rotate(8 20 31)"/>',
-  '<rect x="6" y="8" width="14" height="14" rx="3"/><rect x="24" y="8" width="14" height="14" rx="3"/><rect x="6" y="26" width="14" height="14" rx="3"/><rect class="a" x="24" y="26" width="14" height="14" rx="3"/>',
-  '<rect x="6" y="8" width="32" height="12" rx="3"/><rect class="a" x="6" y="24" width="14" height="16" rx="3"/><rect x="24" y="24" width="14" height="16" rx="3"/>',
-  '<rect class="k" x="6" y="8" width="32" height="32" rx="9"/><path class="tick" d="M14 24l5 5 11-12"/>',
-];
+const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 ---
 <BaseLayout title="About" description={intro}>
-  <div class="about wrap">
-    <header class="about-head">
-      <div>
-        <h1>{title}</h1>
-        {lead && <p class="about-lead">{lead}{leadMore && <> <span>{leadMore}</span></>}</p>}
-        {github && <p class="about-meta"><a href={github.url} rel="me noopener">{github.meta ?? github.url} <span aria-hidden="true">↗</span></a></p>}
-      </div>
+  <div class="wrap grid about">
+    <aside class="about-side">
       {welcomeImage && (
-        <figure class="about-pico" data-reveal-note>
-          {welcomeNote && <figcaption class="about-pico-note">{welcomeNote}</figcaption>}
-          <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[360, 720]} sizes="(max-width: 720px) 220px, 360px" loading="eager" />
+        <figure class="about-pico">
+          <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[280, 560]} sizes="140px" loading="eager" />
+          {welcomeNote && <figcaption>{welcomeNote}</figcaption>}
         </figure>
       )}
-    </header>
+      <h1>{title}</h1>
+      {lead && <p class="about-lead">{lead}{leadMore && <> <span>{leadMore}</span></>}</p>}
+      {summary.length > 0 && (
+        <dl class="about-summary">
+          {summary.map((s) => <div><dt>{sentence(s.label)}</dt><dd>{s.value}</dd></div>)}
+        </dl>
+      )}
+      <div class="about-actions">
+        <a class="pill pill-ink" href="#contact">Get in touch</a>
+        {github && <a class="ul-on" href={github.url} rel="me noopener">GitHub</a>}
+      </div>
+    </aside>
 
-    {summary.length > 0 && (
-      <dl class="about-summary">
-        {summary.map((s) => <div><dt>{s.label}</dt><dd>{s.value}</dd></div>)}
-      </dl>
-    )}
-
-    {steps.length > 0 && (
-      <section class="about-sec wide" id="approach">
-        <h2 class="about-label"><span>{num('steps')}</span>How I take a problem apart</h2>
-        <ol class="about-steps">
-          {steps.map((step, i) => (
-            <li>
-              <svg viewBox="0 0 44 48" aria-hidden="true" set:html={stepIcons[i % stepIcons.length]} />
-              <span class="n" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </li>
-          ))}
-        </ol>
+    <div class="about-main">
+      <section id="working-on">
+        <div class="sec-top"><h2>What I’m working on now</h2></div>
+        <div class="about-copy"><Content /></div>
       </section>
-    )}
 
-    <section class="about-sec" id="working-on">
-      <h2 class="about-label"><span>{num('working')}</span>What I’m working on now</h2>
-      <div class="about-body"><Content /></div>
-    </section>
+      {steps.length > 0 && (
+        <section id="approach">
+          <div class="sec-top"><h2>How I take a problem apart</h2></div>
+          <ol class="about-steps about-copy">{steps.map((step) => <li><b>{step.title}</b> {step.text}</li>)}</ol>
+        </section>
+      )}
 
-    {signoff && (
-      <section class="about-sec">
-        <h2 class="about-label"><span>{num('signoff')}</span>What I won’t sign off on</h2>
-        <div class="about-body"><p>{signoff}</p></div>
-      </section>
-    )}
+      {signoff && (
+        <section>
+          <div class="sec-top"><h2>What I won’t sign off on</h2></div>
+          <div class="about-copy"><p>{signoff}</p></div>
+        </section>
+      )}
 
-    {quirks.length > 0 && (
-      <section class="about-sec">
-        <h2 class="about-label"><span>{num('quirks')}</span>Known quirks</h2>
-        <div class="about-body">
-          <ul class="about-quirks">{quirks.map((q) => <li set:html={quirkHtml(q)} />)}</ul>
-        </div>
-      </section>
-    )}
+      {quirks.length > 0 && (
+        <section>
+          <div class="sec-top"><h2>Known quirks</h2></div>
+          <ul class="about-quirks about-copy">{quirks.map((q) => <li set:html={quirkHtml(q)} />)}</ul>
+        </section>
+      )}
 
-    {now.length > 0 && (
-      <section class="about-sec">
-        <h2 class="about-label"><span>{num('now')}</span>Right now</h2>
-        <div class="about-body">
-          <dl class="about-now">{now.map((n) => <><dt>{n.label}</dt><dd>{n.value}</dd></>)}</dl>
-        </div>
-      </section>
-    )}
+      {now.length > 0 && (
+        <section>
+          <div class="sec-top"><h2>Right now</h2></div>
+          <dl class="about-now">{now.map((n) => <div><dt>{sentence(n.label)}</dt><dd>{n.value}</dd></div>)}</dl>
+        </section>
+      )}
 
-    {(contact || github) && (
-      <section class="about-sec">
-        <h2 class="about-label"><span>{num('contact')}</span>Get in touch</h2>
-        <div class="about-body">
-          <p>{contact}{github && <> <a class="home-link accent" href={github.url} rel="me noopener">GitHub <span aria-hidden="true">↗</span></a></>}</p>
-        </div>
-      </section>
-    )}
+      {(contact || github) && (
+        <section>
+          <div class="sec-top"><h2>Get in touch</h2></div>
+          <div class="about-copy"><p>{contact}{github && <> <a href={github.url} rel="me noopener">GitHub</a>.</>}</p></div>
+        </section>
+      )}
+    </div>
   </div>
 </BaseLayout>
 
-<script>
-  import { initRevealNotes } from '../scripts/reveal-note';
-  initRevealNotes();
-</script>
+<style>
+  .about { padding-top: 64px; padding-bottom: 96px; align-items: start; }
+  .about-side { grid-column: 1 / span 4; position: sticky; top: 110px; }
+  .about-pico { margin: 0; }
+  .about-pico :global(img) { display: block; width: 140px; height: auto; }
+  .about-pico figcaption { margin-top: 10px; max-width: 30ch; font-size: 15px; font-style: italic; font-weight: 500; line-height: 1.4; color: var(--accent-ink); }
+  h1 { margin-top: 24px; font-size: clamp(40px, 4vw, 56px); line-height: 1; letter-spacing: -.035em; }
+  .about-lead { margin: 20px 0 0; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  .about-lead span { color: var(--muted); }
+  .about-summary { margin: 28px 0 0; padding-top: 16px; border-top: 2px solid var(--ink); display: grid; gap: 12px; }
+  .about-summary dt { font-size: 13px; color: var(--muted); }
+  .about-summary dd { margin: 2px 0 0; font-size: 15px; font-weight: 500; }
+  .about-actions { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+
+  .about-main { grid-column: 6 / span 7; }
+  .about-main section + section { margin-top: 64px; }
+  .about-main h2 { font-size: clamp(28px, 3vw, 40px); }
+  .about-copy { margin-top: 28px; }
+  .about-copy, .about-copy :global(p), .about-copy :global(li) { font-size: 19px; line-height: 1.6; color: var(--body); }
+  .about-copy :global(p) { margin: 0 0 1em; }
+  .about-copy > :global(:last-child) { margin-bottom: 0; }
+  .about-copy :global(a) { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+  .about-steps { padding-left: 1.3em; margin-bottom: 0; }
+  .about-steps li + li { margin-top: .8em; }
+  .about-steps li::marker { color: var(--accent); font-weight: 600; }
+  .about-steps b { color: var(--ink); font-weight: 600; }
+  .about-quirks { padding-left: 1.2em; margin-bottom: 0; }
+  .about-quirks li + li { margin-top: .4em; }
+  .about-quirks li::marker { color: var(--accent); }
+  .about-now { margin: 28px 0 0; border-top: 1px solid var(--line); }
+  .about-now div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 17px; }
+  .about-now dt { color: var(--muted); }
+  .about-now dd { margin: 0; }
+
+  @media (max-width: 1100px) {
+    .about-side, .about-main { grid-column: 1 / -1; }
+    .about-side { position: static; margin-bottom: 64px; }
+  }
+  @media (max-width: 720px) {
+    .about { padding-top: 40px; padding-bottom: 56px; }
+    .about-main section + section { margin-top: 48px; }
+    .about-now div { grid-template-columns: 110px minmax(0, 1fr); }
+  }
+</style>

@@ -54,12 +54,6 @@ test('pixel field: only the accent square follows the pointer, and it returns to
   await expect.poll(() => sq.evaluate((el) => el.style.transform)).toBe('');
 });
 
-test('about page: Pico’s welcome note writes itself in on load', async ({ page }) => {
-  await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto('./about/');
-  await expect.poll(() => page.locator('.about-head .about-pico-note').evaluate((el) => Number(getComputedStyle(el).opacity))).toBe(1);
-});
-
 test('band: Notes tab swaps the list and the link without leaving the page', async ({ page }) => {
   await page.goto('./');
   const all = page.locator('#writing a[data-all]');
@@ -97,12 +91,20 @@ test('band: "Read the blog" in the hero selects Blog after Notes was picked', as
   await expect(page.getByRole('tab', { name: 'Blog' })).toHaveAttribute('aria-selected', 'true');
 });
 
+test('about page: the profile column stays put on desktop while the sections scroll', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./about/');
+  expect(await page.locator('aside.about-side').evaluate((el) => getComputedStyle(el).position)).toBe('sticky');
+});
+
 test('about page: one column on phones, Pico above the name, nothing scrolls sideways', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('./about/');
-  const pico = (await page.locator('.about-head .about-pico img').boundingBox())!;
-  const name = (await page.locator('.about-head h1').boundingBox())!;
+  const pico = (await page.locator('.about-side .about-pico img').boundingBox())!;
+  const name = (await page.locator('.about-side h1').boundingBox())!;
+  const main = (await page.locator('.about-main').boundingBox())!;
   expect(pico.y + pico.height).toBeLessThanOrEqual(name.y + 2);
+  expect(main.y).toBeGreaterThan(name.y);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);
 });

@@ -3,38 +3,41 @@ import { BASE, page } from './helpers';
 
 describe('/about/', () => {
   const p = page('/about/');
-  it('opens with the name, a two-part lead, the GitHub link, and Pico with his note', () => {
-    expect(p.querySelector('.about-head h1')?.text).toBe('Jairam Hegde');
-    expect(p.querySelector('.about-lead')?.text).toBe('I’m happiest when a problem doesn’t have an obvious answer yet. Lately those problems are AI agents, and whether they really work.');
-    expect(p.querySelector('.about-lead span')?.text).toBe('Lately those problems are AI agents, and whether they really work.');
-    expect(p.querySelector('.about-meta a')?.getAttribute('href')).toBe('https://github.com/jairamshegde');
-    const pico = p.querySelector('.about-head figure.about-pico')!;
+  const side = p.querySelector('aside.about-side')!;
+
+  it('puts Pico, the name, the lead and the GitHub link in the side column', () => {
+    expect(side.querySelector('h1')?.text).toBe('Jairam Hegde');
+    expect(side.querySelector('.about-lead')?.text).toBe('I’m happiest when a problem doesn’t have an obvious answer yet. Lately those problems are AI agents, and whether they really work.');
+    expect(side.querySelector('.about-lead span')?.text).toBe('Lately those problems are AI agents, and whether they really work.');
+    const pico = side.querySelector('figure.about-pico')!;
     expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/_astro\/pico-welcome\./);
-    expect(pico.querySelector('.about-pico-note')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
+    expect(pico.querySelector('figcaption')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
+    expect(side.querySelector('a.ul-on[href="https://github.com/jairamshegde"]')?.text.trim()).toBe('GitHub');
     expect(p.querySelectorAll('main img')).toHaveLength(1);
   });
 
-  it('shows the summary strip', () => {
-    expect(p.querySelectorAll('.about-summary dt').map((d) => d.text)).toEqual(['approach', 'working on now', 'usual stack', 'reviewed by']);
+  it('shows the summary in sentence case', () => {
+    expect(side.querySelectorAll('dl.about-summary dt').map((d) => d.text)).toEqual(['Approach', 'Working on now', 'Usual stack', 'Reviewed by']);
   });
 
-  it('numbers the sections in order', () => {
-    expect(p.querySelectorAll('.about-label').map((h) => h.text)).toEqual([
-      '01How I take a problem apart',
-      '02What I’m working on now',
-      '03What I won’t sign off on',
-      '04Known quirks',
-      '05Right now',
-      '06Get in touch',
+  it('names the sections by their headings only, in order', () => {
+    expect(p.querySelectorAll('.about-main section .sec-top h2').map((h) => h.text)).toEqual([
+      'What I’m working on now',
+      'How I take a problem apart',
+      'What I won’t sign off on',
+      'Known quirks',
+      'Right now',
+      'Get in touch',
     ]);
+    expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]|>0\d</);
   });
 
-  it('shows four step cards, the body under "working on now", and the Now list', () => {
-    expect(p.querySelectorAll('.about-steps li h3').map((h) => h.text)).toEqual([
+  it('shows the steps, the body under "working on now", and the Now list', () => {
+    expect(p.querySelectorAll('ol.about-steps li b').map((h) => h.text)).toEqual([
       'Find the real problem.', 'Break it into small pieces.', 'Build the simplest thing that works.', 'Prove it works.',
     ]);
-    expect(p.querySelector('#working-on .about-body p')?.text).toMatch(/^AI agents, and the checks around them\./);
-    expect(p.querySelectorAll('.about-now dt').map((d) => d.text)).toEqual(['building', 'writing', 'reading', 'exploring']);
+    expect(p.querySelector('#working-on .about-copy p')?.text).toMatch(/^AI agents, and the checks around them\./);
+    expect(p.querySelectorAll('dl.about-now dt').map((d) => d.text)).toEqual(['Building', 'Writing', 'Reading', 'Exploring']);
   });
 
   it('links Mingraph in the quirks to its writing series, under the base path', () => {
