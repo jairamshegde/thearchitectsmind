@@ -60,12 +60,12 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
 
 <style>
   .wband { background: var(--band-soft); border-top: 1px solid var(--line); }
-  .wband > .wrap { padding-top: 112px; padding-bottom: 128px; }
+  .wband > .wrap { padding-top: 88px; padding-bottom: 96px; }
   .tablist { display: flex; align-items: end; gap: 40px; }
   [role='tab'] {
     appearance: none; border: 0; background: none; margin: 0; padding: 0 0 6px; cursor: pointer;
     color: var(--tab-off); line-height: 1;
-    font-family: var(--display); font-weight: 600; font-size: clamp(36px, 4vw, 52px); letter-spacing: -.03em;
+    font-family: var(--display); font-weight: 600; font-size: clamp(30px, 3.2vw, 40px); letter-spacing: -.03em;
     background-image: linear-gradient(var(--accent), var(--accent)); background-repeat: no-repeat; background-position: 0 100%; background-size: 0% 3px;
     transition: color .4s var(--ease), background-size .5s var(--ease);
   }

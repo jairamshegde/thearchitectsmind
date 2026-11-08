@@ -37,7 +37,7 @@ const headline = heroHeadline.replace(/\.$/, '');
 </script>
 
 <style>
-  .hero { padding-top: 72px; padding-bottom: 128px; align-items: center; }
+  .hero { padding-top: 72px; padding-bottom: 96px; align-items: center; }
   .hero-text { grid-column: 1 / span 7; min-width: 0; }
   h1 { font-size: clamp(56px, 8vw, 112px); line-height: .95; letter-spacing: -.045em; white-space: nowrap; }
   .lead { color: var(--title-muted); }
@@ -59,7 +59,7 @@ const headline = heroHeadline.replace(/\.$/, '');
   .hero :global(.hero-field) { grid-column: 8 / span 5; justify-self: end; }
 
   @media (max-width: 1100px) {
-    .hero { padding-bottom: 96px; }
+    .hero { padding-bottom: 72px; }
     .hero-text { grid-column: 1 / -1; }
     /* under the text, scaled down; the transform keeps the grid maths intact for the pointer */
     .hero :global(.hero-field) { grid-column: 1 / -1; justify-self: start; margin-top: 56px; transform: scale(.8); transform-origin: 0 0; margin-bottom: -88px; }

@@ -44,7 +44,7 @@ const rows = await Promise.all(parts.map(async (post) => ({ post, minutes: (awai
 </BaseLayout>
 
 <style>
-  .series-sec { padding-bottom: 96px; }
+  .series-sec { padding-bottom: 80px; }
   .rows { list-style: none; margin: 32px 0 0; padding: 0; border-top: 1px solid var(--line); }
   .row { position: relative; display: grid; grid-template-columns: 112px minmax(0, 1fr) 80px; gap: 20px; align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--line); }
   .row::before { content: ''; position: absolute; inset: 0 -20px; border-radius: 10px; background: var(--soft); opacity: 0; transform: scaleY(.85); transition: opacity .35s var(--ease), transform .45s var(--ease); }

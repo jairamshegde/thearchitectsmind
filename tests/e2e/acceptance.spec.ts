@@ -80,3 +80,15 @@ for (const route of ['./projects/', './notes/', './writing/']) {
     expect(intro.y).toBeGreaterThan(title.y + title.height);
   });
 }
+
+test('section headings are at most 40px and sections sit closer together at 1440px', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./');
+  const size = (sel: string) => page.locator(sel).first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  expect(await size('#projects .sec-top h2')).toBeLessThanOrEqual(40);
+  expect(await size('#writing [role="tab"]')).toBeLessThanOrEqual(40);
+  const pad = (sel: string, side: string) => page.locator(sel).first().evaluate((el, s) => parseFloat(getComputedStyle(el).getPropertyValue(s)), side);
+  expect(await pad('#hero', 'padding-bottom')).toBeLessThanOrEqual(100);
+  expect(await pad('#projects', 'padding-bottom')).toBeLessThanOrEqual(104);
+  expect(await pad('#writing > .wrap', 'padding-top')).toBeLessThanOrEqual(92);
+});

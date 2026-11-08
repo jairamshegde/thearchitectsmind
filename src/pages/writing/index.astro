@@ -74,7 +74,7 @@ const day = (d: Date) => d.toISOString().slice(0, 10);
 </script>
 
 <style>
-  .idx-sec { padding-bottom: 72px; }
+  .idx-sec { padding-bottom: 56px; }
   .card-meta { font-size: 13px; font-weight: 500; color: var(--muted); }
   .latest-card { margin-top: 40px; align-items: center; }
   .latest-media { grid-column: 1 / span 7; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: var(--soft); }
@@ -105,7 +105,7 @@ const day = (d: Date) => d.toISOString().slice(0, 10);
     .wgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 720px) {
-    .idx-sec { padding-bottom: 56px; }
+    .idx-sec { padding-bottom: 44px; }
     .wgrid { grid-template-columns: minmax(0, 1fr); }
     .wcard { min-height: 0; }
   }
