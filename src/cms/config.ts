@@ -152,6 +152,7 @@ export const cmsConfig: {
             opt(text('heroBio', 'Hero bio (two or three sentences under the subtitle)')),
             image('heroImage', 'Hero image (not shown in the current design)'),
             str('footerStatement', 'Footer heading (two sentences: the first in white, the second in grey below it)'),
+            list('footerTopics', 'Footer topics (the heading shows each one once, then rests on "anything")', 'What you are building now, e.g. AI agents, evals'),
             str('footerSub', 'Footer side line (homepage only, beside the button)'),
             image('footerImage', 'Footer image (right of the statement)'),
             opt(str('email', 'Contact email (the "Let\u2019s talk it through" button)')),

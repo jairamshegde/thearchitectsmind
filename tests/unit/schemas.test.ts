@@ -88,7 +88,7 @@ describe('aboutSchema and settingsSchema', () => {
 
   it('parses site settings with mailto links and optional popover text', () => {
     const r = settingsSchema(image).parse({
-      heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', heroImage: '', footerStatement: 'F', footerSub: 'S', footerImage: '',
+      heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', heroImage: '', footerStatement: 'F', footerTopics: ['T'], footerSub: 'S', footerImage: '',
       socials: [{ label: 'Email', url: 'mailto:me@example.com', meta: '', note: '' }],
     });
     expect(r.socials[0].meta).toBeUndefined();
@@ -98,8 +98,14 @@ describe('aboutSchema and settingsSchema', () => {
   });
 
   it('accepts an optional contact email and rejects one that is not an address', () => {
-    const base = { heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', footerStatement: 'F', footerSub: 'S', socials: [] };
+    const base = { heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', footerStatement: 'F', footerTopics: ['T'], footerSub: 'S', socials: [] };
     expect(settingsSchema(image).parse({ ...base, email: 'me@example.com' }).email).toBe('me@example.com');
     expect(() => settingsSchema(image).parse({ ...base, email: 'not-an-email' })).toThrow();
+  });
+
+  it('needs at least one footer topic', () => {
+    const base = { heroLead: 'L', heroHeadline: 'H', heroSub: 'Sub', footerStatement: 'F', footerSub: 'S', socials: [] };
+    expect(settingsSchema(image).parse({ ...base, footerTopics: ['evals'] }).footerTopics).toEqual(['evals']);
+    expect(() => settingsSchema(image).parse({ ...base, footerTopics: [] })).toThrow();
   });
 });

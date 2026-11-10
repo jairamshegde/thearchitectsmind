@@ -5,6 +5,7 @@
   "heroBio": "I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.",
   "heroImage": "hero_new_workflow.png",
   "footerStatement": "Intuition comes from building. Let’s build something.",
+  "footerTopics": ["AI agents", "RAG pipelines", "evals", "observability"],
   "footerSub": "Agents, evals, and the problems in between.",
   "footerImage": "pico-finding.png",
   "socials": [
