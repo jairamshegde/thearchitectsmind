@@ -38,24 +38,17 @@ describe('base layout', () => {
     expect(current('/about/')).toEqual(['about']);
   });
 
-  it('ends the homepage with the contact band', () => {
-    const band = home.querySelector('footer#contact.band')!;
-    expect(band.querySelectorAll('.band-big .band-line').map((l) => l.text)).toEqual(['Intuition comes from building.', 'Let’s build something.']);
-    const cta = band.querySelector('a.cta');
-    expect(cta?.text.trim()).toBe('Let’s talk it through');
-    expect(cta?.getAttribute('href')).toMatch(/^mailto:/);
-    expect(band.querySelector('.band-quote')?.text).toBe('Agents, evals, and the problems in between.');
-    expect(band.querySelectorAll('.band-foot nav a').map((a) => a.text.trim())).toEqual(['GitHub', 'Notes']);
-    expect(band.querySelector('.band-foot span')?.text).toBe(`© ${new Date().getFullYear()} Jairam Hegde.`);
-  });
-
-  it('ends other pages with the short contact band and a way back up', () => {
-    for (const route of ['/writing/mingraph/phase-0-oop-finally-clicked/', '/notes/']) {
+  it('ends every page with the contact band', () => {
+    for (const route of ['/', '/writing/mingraph/phase-0-oop-finally-clicked/', '/notes/']) {
       const band = page(route).querySelector('footer#contact.band')!;
-      expect(band.querySelectorAll('.band-big .band-line').map((l) => l.text), route).toEqual(['Intuition comes from building.', 'Let’s build something.']);
-      expect(band.querySelector('.band-quote'), route).toBeNull();
-      expect(band.querySelector('a.cta')?.getAttribute('href'), route).toMatch(/^mailto:/);
-      expect(band.querySelector('.band-row a.gh')?.text.trim(), route).toBe('GitHub');
+      expect(band.querySelector('.band-big')?.text, route).toBe('Let’s talk about anything.');
+      expect(band.querySelector('[data-footer-word]')?.getAttribute('data-topics'), route).toBe('AI agents|RAG pipelines|evals|observability');
+      expect(band.querySelector('.band-sub')?.text, route).toContain('AI agents, RAG pipelines, evals and observability');
+      const cta = band.querySelector('a.cta');
+      expect(cta?.text.trim(), route).toBe('Say hello');
+      expect(cta?.getAttribute('href'), route).toMatch(/^mailto:/);
+      expect(band.querySelectorAll('.band-act a.ul').map((a) => a.text.trim()), route).toEqual(['GitHub', 'LinkedIn']);
+      expect(band.querySelector('.band-foot span')?.text, route).toBe(`© ${new Date().getFullYear()} Jairam Hegde.`);
       expect(band.querySelector('.band-foot a[href="#top"]')?.text.trim(), route).toBe('Back to top');
     }
   });
