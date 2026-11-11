@@ -24,9 +24,8 @@ const name = title.charAt(0).toUpperCase() + title.slice(1);
 const rows = await Promise.all(parts.map(async (post) => ({ post, minutes: (await render(post)).remarkPluginFrontmatter.minutesRead as number })));
 ---
 <BaseLayout title={name} description={description}>
-  <PageHead lead="The" title={`${name} series`} intro={description} />
+  <PageHead title={`${name} series`} intro={description} />
   <section class="wrap series-sec">
-    <div class="sec-top"><h2>All parts</h2><a class="ul" href={withBase('/writing/')}>All posts</a></div>
     {rows.length === 0 ? <p class="empty">First part coming soon.</p> : (
       <ol class="rows">
         {rows.map(({ post, minutes }, i) => (
@@ -45,7 +44,7 @@ const rows = await Promise.all(parts.map(async (post) => ({ post, minutes: (awai
 
 <style>
   .series-sec { padding-bottom: 80px; }
-  .rows { list-style: none; margin: 32px 0 0; padding: 0; border-top: 1px solid var(--line); }
+  .rows { list-style: none; margin: 0; padding: 0; }
   .row { position: relative; display: grid; grid-template-columns: 112px minmax(0, 1fr) 80px; gap: 20px; align-items: baseline; padding: 24px 0; border-bottom: 1px solid var(--line); }
   .row::before { content: ''; position: absolute; inset: 0 -20px; border-radius: 10px; background: var(--soft); opacity: 0; transform: scaleY(.85); transition: opacity .35s var(--ease), transform .45s var(--ease); }
   .row:hover::before { opacity: 1; transform: none; }

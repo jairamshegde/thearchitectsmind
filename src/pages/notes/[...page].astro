@@ -18,7 +18,7 @@ const { page } = Astro.props;
 const groups = groupByMonth(page.data);
 ---
 <BaseLayout title={page.currentPage === 1 ? 'Notes' : `Notes, page ${page.currentPage}`} description="Short notes and quick tutorials on what I'm learning.">
-  <PageHead lead="Short" title="notes" intro="Short, unpolished notes. Sketches, half-formed ideas and things I’m still figuring out." />
+  <PageHead title="Notes" intro="Unpolished sketches, half-formed ideas and things I’m still figuring out." />
   <div class="wrap notes-body">
     {groups.length === 0 && <p class="empty">First note coming soon.</p>}
     {groups.map((g) => (
@@ -34,6 +34,7 @@ const groups = groupByMonth(page.data);
 <style>
   .notes-body { padding-bottom: 56px; }
   .month-group { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; padding-top: 20px; border-top: 2px solid var(--ink); margin-bottom: 40px; }
+  .month-group:first-of-type { border-top: 0; } /* the page header's rule sits right above */
   .month-group h2 { grid-column: 1 / span 3; font-size: 26px; line-height: 1.2; letter-spacing: -.02em; }
   .note-list { grid-column: 4 / span 9; list-style: none; margin: 0; padding: 0; }
   @media (max-width: 900px) {

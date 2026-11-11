@@ -9,9 +9,11 @@ describe('/writing/', () => {
   const p = page('/writing/');
   const cards = p.querySelectorAll('a.latest-card, a.wcard');
 
-  it('has the two-line page title and an intro', () => {
-    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Long-form writing.');
+  it('has the nav name as its title, an intro, and no second heading above the latest post', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Blog.');
     expect(p.querySelector('.page-intro')?.text).toBeTruthy();
+    expect(p.querySelector('header .page-rule')).not.toBeNull();
+    expect(p.querySelectorAll('main h2').map((h) => h.text)).toEqual(['All posts']);
   });
 
   it('lists published posts newest first, the latest one large and once', () => {
@@ -26,9 +28,10 @@ describe('/writing/', () => {
 
   it('shows date and read time on every card, and no series names', () => {
     for (const card of cards) {
-      expect(card.querySelector('.card-meta')?.text).toMatch(/^\w{3} \d{1,2}, \d{4} \u00b7 \d+ min$/);
+      expect(card.querySelector('.card-meta')?.text).toMatch(/^(Latest \u00b7 )?\w{3} \d{1,2}, \d{4} \u00b7 \d+ min$/);
       expect(card.querySelector('.card-meta')?.text).not.toMatch(/part|series/i);
     }
+    expect(p.querySelector('a.latest-card .card-meta')?.text).toMatch(/^Latest /);
     expect(p.querySelector('a.latest-card .pill')?.text.trim()).toBe('Read the post');
     expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]/);
   });
@@ -44,8 +47,8 @@ describe('/writing/', () => {
 
 describe('/notes/', () => {
   const p = page('/notes/');
-  it('has the two-line page title', () => {
-    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Short notes.');
+  it('has the nav name as its title', () => {
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Notes.');
   });
 
   it('groups notes by month, newest first, without drafts', () => {
@@ -92,8 +95,9 @@ describe('/notes/ pagination', () => {
 describe('/projects/', () => {
   const p = page('/projects/');
 
-  it('has the two-line page title', () => {
-    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Things I build.');
+  it('has the nav name as its title and no second heading', () => {
+    expect(p.querySelectorAll('main h2')).toHaveLength(0);
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Projects.');
   });
 
   it('shows the newest project as the featured card, with the CMS summary', () => {
@@ -112,7 +116,8 @@ describe('/writing/mingraph/ (series index)', () => {
   const p = page('/writing/mingraph/');
 
   it('titles the page with the series name and lists every part in order with read time', () => {
-    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('The Mingraph series.');
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Mingraph series.');
+    expect(p.querySelectorAll('main h2')).toHaveLength(0);
     const rows = p.querySelectorAll('ol.rows a.row');
     expect(rows).toHaveLength(8);
     expect(rows.map((r) => r.querySelector('.row-label')?.text)).toEqual(['Part 1', 'Part 2', 'Part 3', 'Part 4', 'Part 5', 'Part 6', 'Part 7', 'Part 8']);

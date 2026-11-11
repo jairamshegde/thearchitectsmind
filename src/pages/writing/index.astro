@@ -16,17 +16,16 @@ const tags = topTags(rest.map((r) => r.post), 10);
 const day = (d: Date) => d.toISOString().slice(0, 10);
 ---
 <BaseLayout title="Blog" description="Long-form writing on building software and AI systems.">
-  <PageHead lead="Long-form" title="writing" intro="Essays from building things. Most take one idea and build it into working code, then write down what broke." />
+  <PageHead title="Blog" intro="Essays from building things. Most take one idea and build it into working code, then write down what broke." />
 
   {latest ? (
-    <section class="wrap idx-sec" aria-labelledby="latest-h">
-      <div class="sec-top"><h2 id="latest-h">Latest</h2></div>
+    <section class="wrap idx-sec" aria-label="Latest post">
       <a class="latest-card grid" href={withBase(postPath(latest.post))}>
         <div class="latest-media">
           {latest.post.data.cover && <Image src={latest.post.data.cover} alt="" widths={[800, 1200, 1600]} sizes="(max-width: 1100px) 100vw, 760px" loading="eager" />}
         </div>
         <div class="latest-body">
-          <span class="card-meta"><time datetime={day(latest.post.data.date)}>{formatDate(latest.post.data.date)}</time> · {latest.minutes} min</span>
+          <span class="card-meta">Latest · <time datetime={day(latest.post.data.date)}>{formatDate(latest.post.data.date)}</time> · {latest.minutes} min</span>
           <span class="latest-title">{latest.post.data.title}</span>
           <span class="latest-desc">{latest.post.data.description}</span>
           <span class="pill pill-outline">Read the post</span>
