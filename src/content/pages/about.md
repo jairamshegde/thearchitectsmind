@@ -1,33 +1,33 @@
 ---
 title: "Jairam Hegde"
-intro: "Jairam Hegde is an engineer who turns hard problems into simple systems. Lately those problems are AI agents, and whether they really work."
-lead: "I’m happiest when a problem doesn’t have an obvious answer yet."
-leadMore: "Lately those problems are AI agents, and whether they really work."
+intro: "I'm an AI engineer who solves problems by asking \"why?\" layer by layer until the dots connect."
 welcomeImage: pico-welcome.png
 welcomeNote: "I’m Pico. I ask what the real problem is. Every time."
 summary:
-  - { label: "approach", value: "Problem first, tools second" }
-  - { label: "working on now", value: "AI agents, evals and observability" }
-  - { label: "usual stack", value: "Python, FastAPI, LangGraph, Qdrant" }
-  - { label: "reviewed by", value: "Pico" }
-steps:
-  - { title: "Find the real problem.", text: "The problem people describe is rarely the one that needs fixing. I ask until the two match." }
-  - { title: "Break it into small pieces.", text: "Each piece gets one job, so I can reason about it and replace it on its own." }
-  - { title: "Build the simplest thing that works.", text: "Plain code first. I add a framework, or a model, only when a piece needs it." }
-  - { title: "Prove it works.", text: "A test, an eval, a number. If I can’t show the fix worked, it isn’t done." }
-signoff: "A fix nobody measured. \"It looks better\" is where I start checking, not where I stop."
-quirks:
-  - "Rebuilds things from scratch to see how they work. See [Mingraph](/writing/mingraph/)."
-  - "Draws the boxes before writing any code."
-  - "Asks \"what problem are we solving?\" in every design review. Pico started it."
-now:
-  - { label: "building", value: "Mingraph, LangChain and LangGraph rebuilt from scratch" }
-  - { label: "writing", value: "The Mingraph series, one design pattern per part" }
-  - { label: "reading", value: "An Illustrated Guide to AI Agents" }
-  - { label: "exploring", value: "Evals for multi-step agents" }
-contact: "Open to conversations about agents, evals, or any problem that needs taking apart."
+  - { label: "working on now", value: "AI agents for enterprise clients, and their evals" }
+  - { label: "in data and AI for", value: "Almost six years" }
+writeAbout: "On this blog, I write about building AI agents that work in the real world. Expect posts on agent design, evals and observability, agentic coding for teams, and lessons from enterprise data. I also write about personal projects, where I build things from scratch to sharpen how I think. Each post starts from the core question and builds up from there, including the mistakes I made along the way."
+outside: "I like to measure things and analyze the results. The strangest thing I've measured so far is"
+saltLabel: "how many salt crystals I eat per meal"
+saltLine: "It's almost the digits of pi, so I like to say I eat pi salt."
+contact: "If you're working on agents or evals, or just want to talk through a hard problem, I'd like to hear from you. I'm open to collaborations, speaking, and conversations about building reliable AI."
+disclaimer: "The views here are my own."
 ---
 
-AI agents, and the checks around them. I build agents that call tools, and retrieval systems that answer from documents. Then I build the evals that score each answer, and the traces that show which step went wrong.
+## How I solve problems
 
-Usually on Python and FastAPI, with LangGraph, Qdrant, Redis and Celery underneath, and Ragas, DeepEval and Arize Phoenix to check the results.
+Learning researchers call this elaborative interrogation. When I take on a problem, I read about it, build prototypes, and try different approaches. Then I keep asking why until I reach one question.
+
+> "If I were building this for the first time, what would it need?"
+
+The answer to that question gives me the design. On this blog, I write up those answers so you can start from the core question too.
+
+## What I do
+
+I build AI agents for enterprise clients, and I spend as much time testing them as building them. Most of my work is on evals, finding where agents fail and fixing it before it reaches production.
+
+I've spent almost six years in data and AI. I started with classical ML, building record linkage models with random forests and XGBoost to deduplicate enterprise data. That work taught me how messy real enterprise data is, and that the unglamorous work is what makes the impressive work possible.
+
+From there I moved into generative AI. I designed AI workflows and internal automation, led my team's adoption of agentic coding, and went on to build RAG pipelines and single- and multi-agent applications. On one product, I cut the time my team spent on sprint planning and progress updates from two hours to 45 minutes.
+
+Along the way, I've made plenty of mistakes, met people who shaped how I work, and become a better problem solver and, I hope, a better person.

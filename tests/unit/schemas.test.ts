@@ -72,12 +72,11 @@ describe('projectSchema', () => {
 
 describe('aboutSchema and settingsSchema', () => {
   it('parses the about entry', () => {
-    const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I build things.', now: [{ label: 'Reading', value: 'DDIA' }] });
-    expect(r.now).toHaveLength(1);
+    const r = aboutSchema(image).parse({ title: 'Hi', intro: 'I build things.', saltLabel: 'salt', saltLine: '' });
     expect(r.welcomeImage).toBeUndefined();
     expect(r.summary).toEqual([]);
-    expect(r.steps).toEqual([]);
-    expect(r.quirks).toEqual([]);
+    expect(r.saltLabel).toBe('salt');
+    expect(r.saltLine).toBeUndefined();
   });
 
   it('treats a cleared Pico image or note as unset', () => {

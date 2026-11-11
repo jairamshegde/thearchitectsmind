@@ -207,3 +207,41 @@ test('band: the blog list has no rule of its own above the first row', async ({ 
   const title = (await page.locator('#panel-blog .row-title').first().boundingBox())!;
   expect(Math.abs(title.y - desc.y)).toBeLessThanOrEqual(4);
 });
+
+test('about page: the stack graph draws, hides an area, and shows "Used together" on demand', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./about/');
+  const canvas = page.locator('[data-stack] canvas');
+  await canvas.scrollIntoViewIfNeeded();
+  const inked = () => canvas.evaluate((c: HTMLCanvasElement) => {
+    const d = c.getContext('2d')!.getImageData(0, 0, c.width, c.height).data;
+    let n = 0; for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++;
+    return n;
+  });
+  await expect.poll(inked).toBeGreaterThan(1000);
+  const area = page.locator('.stack-legend button', { hasText: 'Classical ML' });
+  await area.click();
+  await expect(area).toHaveAttribute('aria-pressed', 'false');
+  const cross = page.locator('.stack-box [data-cross]');
+  await expect(cross).toHaveAttribute('aria-pressed', 'false');
+  await cross.click();
+  await expect(cross).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('about page: the salt link reveals the count, and the number flips to pi and back', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./about/');
+  const num = page.locator('[data-salt-num]');
+  const line = page.locator('[data-salt-end]');
+  await expect(num).toBeHidden();
+  await page.locator('[data-salt-link]').click();
+  await expect(num).toBeVisible();
+  await expect(num).toHaveText('3.1,459');
+  await expect(line).toHaveCSS('opacity', '0');
+  await num.click();
+  await expect(num).toHaveClass(/\bpi\b/);
+  await expect(line).toHaveCSS('opacity', '1');
+  await num.click();
+  await expect(num).not.toHaveClass(/\bpi\b/);
+  await expect(line).toHaveCSS('opacity', '0');
+});
