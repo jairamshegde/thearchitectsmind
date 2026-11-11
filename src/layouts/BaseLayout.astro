@@ -8,7 +8,7 @@ import { withBase } from '../lib/url';
 interface Props {
   title?: string;
   description?: string;
-  /** Picks the header and contact band variant. */
+  /** Picks the header variant. */
   variant?: 'home' | 'post' | 'page';
 }
 const { title, description = `Writing, notes and case studies by ${SITE.author}.`, variant = 'page' } = Astro.props;
@@ -41,6 +41,6 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <a class="skip" href="#main">Skip to content</a>
     <Nav />
     <main id="main"><slot /></main>
-    <Footer variant={variant} />
+    <Footer />
   </body>
 </html>

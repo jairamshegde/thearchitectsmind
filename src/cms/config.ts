@@ -151,10 +151,11 @@ export const cmsConfig: {
             str('heroSub', 'Hero subtitle'),
             opt(text('heroBio', 'Hero bio (two or three sentences under the subtitle)')),
             image('heroImage', 'Hero image (not shown in the current design)'),
-            str('footerStatement', 'Footer heading (two sentences: the first in white, the second in grey below it)'),
-            str('footerSub', 'Footer side line (homepage only, beside the button)'),
+            str('footerStatement', 'Footer heading, the grey start (a topic and an orange period are added after it)'),
+            list('footerTopics', 'Footer topics (the heading shows each one once, then rests on "anything")', 'What you are building now, e.g. AI agents, evals'),
+            text('footerSub', 'Footer sentence (under the heading)'),
             image('footerImage', 'Footer image (right of the statement)'),
-            opt(str('email', 'Contact email (the "Let\u2019s talk it through" button)')),
+            opt(str('email', 'Contact email (the "Say hello" button)')),
             {
               name: 'socials', label: 'Social links', widget: 'list',
               fields: [

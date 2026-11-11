@@ -176,3 +176,24 @@ for (const width of [1440, 1024, 390]) {
     expect(boxes[2].x).toBeGreaterThan(boxes[1].x);
   });
 }
+
+test('the footer heading runs through the topics once, then rests on "anything"', async ({ page }) => {
+  await page.goto('./notes/');
+  const word = page.locator('[data-footer-word]');
+  await expect(word).toHaveText('anything');
+  await word.scrollIntoViewIfNeeded();
+  for (const topic of ['AI agents', 'RAG pipelines', 'evals', 'observability', 'anything']) {
+    await expect(word).toHaveText(topic);
+  }
+  await page.waitForTimeout(2000);
+  await expect(word).toHaveText('anything');
+});
+
+test('the footer heading stays still with reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('./notes/');
+  const word = page.locator('[data-footer-word]');
+  await word.scrollIntoViewIfNeeded();
+  await page.waitForTimeout(2500);
+  await expect(word).toHaveText('anything');
+});

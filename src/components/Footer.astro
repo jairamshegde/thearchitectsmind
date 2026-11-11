@@ -1,62 +1,51 @@
 ---
 import { getEntry } from 'astro:content';
 import { SITE } from '../site.config';
-import { withBase } from '../lib/url';
 
-interface Props {
-  variant?: 'home' | 'post' | 'page';
-}
-const { variant = 'page' } = Astro.props;
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { footerStatement, footerSub, email, socials } = settings.data;
+const { footerStatement, footerTopics, footerSub, email, socials } = settings.data;
 const mailto = `mailto:${email ?? '[YOUR EMAIL]'}`;
-const github = socials.find((s) => s.label === 'GitHub')?.url ?? `https://github.com/${SITE.owner}`;
-const home = variant === 'home';
-// One line per sentence; the second is set in grey.
-const lines = footerStatement.split(/(?<=[.!?])\s+/);
 ---
-<footer id="contact" class:list={['band', { 'band-home': home }]}>
+<footer id="contact" class="band">
   <div class="wrap">
-    <p class="band-big">{lines.map((line, i) => <>{i > 0 && ' '}<span class="band-line">{line}</span></>)}</p>
+    <p class="band-big"><span class="band-lead">{footerStatement}</span> <span class="band-end"><span class="band-word" data-footer-word data-topics={footerTopics.join('|')}>anything</span><i>.</i></span></p>
     <div class="band-row">
-      <a class="pill pill-accent cta" href={mailto}>Let’s talk it through</a>
-      {home
-        ? <p class="band-quote">{footerSub}</p>
-        : <a class="gh ul" href={github} rel="me noopener">GitHub</a>}
+      <p class="band-sub">{footerSub}</p>
+      <div class="band-act">
+        <a class="pill pill-accent cta" href={mailto}>Say hello</a>
+        {socials.map((s) => <a class="ul" href={s.url} rel="me noopener">{s.label}</a>)}
+      </div>
     </div>
     <div class="band-foot">
       <span>© {new Date().getFullYear()} {SITE.author}.</span>
-      {home
-        ? <nav aria-label="Elsewhere"><a class="ul" href={github} rel="me noopener">GitHub</a><a class="ul" href={withBase('/notes/')}>Notes</a></nav>
-        : <a class="ul" href="#top">Back to top</a>}
+      <a class="ul" href="#top">Back to top</a>
     </div>
   </div>
 </footer>
 
+<script>
+  import { initFooterWord } from '../scripts/footer-word';
+  initFooterWord();
+</script>
+
 <style>
   .band { background: var(--band-bg); color: var(--band-ink); }
-  .band .wrap { padding-top: 88px; padding-bottom: calc(36px + env(safe-area-inset-bottom, 0px)); }
-  .band-home .wrap { padding-top: 136px; padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px)); }
-  .band-line { display: block; }
-  .band-line + .band-line { color: var(--band-muted); }
-  .band-big { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.4vw, 44px); line-height: 1.1; letter-spacing: -.025em; text-wrap: balance; }
-  .band-home .band-big { font-size: clamp(40px, 5vw, 64px); line-height: 1; letter-spacing: -.03em; }
-  .band-row { margin-top: 48px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px 32px; }
-  .band-home .band-row { margin-top: 56px; align-items: end; }
-  .cta { min-height: 52px; padding: 0 26px; font-size: 17px; }
-  .band-home .cta { min-height: 64px; padding: 0 32px; font-size: 22px; letter-spacing: -.01em; }
-  .band-quote { margin: 0; max-width: 360px; font-size: 18px; color: var(--band-muted); }
-  .gh { font-size: 18px; font-weight: 500; }
-  .band-foot { margin-top: 72px; padding-top: 22px; border-top: 1px solid var(--band-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 14px; color: var(--band-muted); }
-  .band-home .band-foot { margin-top: 120px; padding-top: 24px; }
-  .band-foot nav { display: flex; gap: 24px; }
+  .band .wrap { padding-top: 64px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+  .band-big { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(34px, 4.4vw, 60px); line-height: 1.05; letter-spacing: -.035em; }
+  .band-lead { color: var(--band-muted); }
+  .band-end { white-space: nowrap; }
+  .band-word { display: inline-block; transition: opacity .3s var(--ease), transform .3s var(--ease); }
+  .band-word.out { opacity: 0; transform: translateY(.18em); }
+  .band-big i { font-style: normal; color: var(--accent); }
+  .band-row { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px 40px; }
+  .band-sub { margin: 0; max-width: 52ch; font-size: 17px; line-height: 1.5; color: var(--band-muted); }
+  .band-act { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; font-size: 16px; font-weight: 500; }
+  .band-foot { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--band-line); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; font-size: 14px; color: var(--band-muted); }
   .band-foot a { color: var(--band-ink); }
 
+  /* the word gets its own line on phones, so the heading keeps one height for every topic */
   @media (max-width: 720px) {
-    .band .wrap { padding-top: 64px; }
-    .band-home .wrap { padding-top: 72px; }
-    .band-home .cta { min-height: 56px; font-size: 18px; padding: 0 26px; }
-    .band-home .band-foot, .band-foot { margin-top: 56px; }
+    .band-end { display: block; }
   }
 </style>
