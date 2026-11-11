@@ -1,0 +1,261 @@
+---
+import { groups, tools } from '../lib/stack';
+---
+<div class="stack" data-stack>
+  <div class="stack-legend">
+    {groups.map((g) => <button type="button" aria-pressed="true" data-area={g.id}>{g.label}</button>)}
+  </div>
+  <p class="stack-hint">Drag a node. Scroll to zoom. Hover to highlight its links.</p>
+  <div class="stack-box">
+    <canvas role="img" aria-label="Graph of the tools I build with, grouped by area. The list follows as text."></canvas>
+    <button type="button" class="stack-x" aria-pressed="false" data-cross><i aria-hidden="true"></i>Used together</button>
+    <div class="stack-tip" aria-hidden="true"></div>
+  </div>
+  <ul class="visually-hidden">
+    {groups.map((g) => <li>{g.label}: {tools[g.id].join(', ')}</li>)}
+  </ul>
+</div>
+
+<script>
+  import { drag, forceCollide, forceLink, forceManyBody, forceSimulation, forceX, forceY, select, zoom as d3zoom, zoomIdentity } from 'd3';
+  import type { SimulationLinkDatum, SimulationNodeDatum, ZoomTransform } from 'd3';
+  import { crossLinks, groups, parentOverride, tools } from '../lib/stack';
+
+  type Kind = 'root' | 'cat' | 'hub' | 'tool';
+  interface N extends SimulationNodeDatum { id: string; label: string; type: Kind; group: string | null }
+  interface L extends SimulationLinkDatum<N> { type: 'root' | 'tree' | 'x' }
+  type Raw = { s: string; t: string; type: L['type'] };
+
+  const R: Record<Kind, number> = { root: 22, cat: 13, hub: 8, tool: 5.5 };
+  const areaLabel = Object.fromEntries(groups.map((g) => [g.id, g.label]));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function mount(host: HTMLElement) {
+    const box = host.querySelector<HTMLElement>('.stack-box')!;
+    const canvas = box.querySelector('canvas')!;
+    const tip = box.querySelector<HTMLElement>('.stack-tip')!;
+    const ctx = canvas.getContext('2d')!;
+
+    let C: Record<string, string> = {};
+    const readColors = () => {
+      const s = getComputedStyle(document.documentElement);
+      C = Object.fromEntries(['ink', 'body', 'muted', 'line', 'bg', 'accent'].map((k) => [k, s.getPropertyValue('--' + k).trim()]));
+    };
+    readColors();
+
+    // One node list and one string-id link list. Links are rebuilt from these ids on every
+    // rebuild, because d3 swaps the ids for node objects once a simulation uses them.
+    const hubs = new Set(Object.values(parentOverride));
+    const all: N[] = [{ id: 'root', label: 'Stack', type: 'root', group: null }];
+    const raw: Raw[] = [];
+    for (const g of groups) {
+      all.push({ id: 'cat:' + g.id, label: g.label, type: 'cat', group: g.id });
+      raw.push({ s: 'root', t: 'cat:' + g.id, type: 'root' });
+      for (const t of tools[g.id]) {
+        all.push({ id: t, label: t, type: hubs.has(t) ? 'hub' : 'tool', group: g.id });
+        raw.push({ s: t, t: parentOverride[t] ?? 'cat:' + g.id, type: 'tree' });
+      }
+    }
+    for (const [a, b] of crossLinks) raw.push({ s: a, t: b, type: 'x' });
+    // Start everyone in a small circle, so the first layout is the page's one entrance animation.
+    all.forEach((n, i) => { const a = (i / all.length) * Math.PI * 2; n.x = Math.cos(a) * 20; n.y = Math.sin(a) * 20; });
+
+    const hidden = new Set<string>();
+    let showCross = false;
+    let nodes: N[] = [], links: L[] = [], neighbours = new Map<string, Set<string>>();
+    let hover: N | null = null, transform: ZoomTransform = zoomIdentity, W = 0, H = 0;
+    const dpr = window.devicePixelRatio || 1;
+
+    const linkForce = forceLink<N, L>().id((d) => d.id)
+      .distance((l) => l.type === 'root' ? 120 : l.type === 'x' ? 90 : (l.target as N).type === 'hub' ? 38 : 62)
+      .strength((l) => l.type === 'x' ? 0.04 : 0.9);
+    const sim = forceSimulation<N>().velocityDecay(0.32)
+      .force('link', linkForce)
+      .force('charge', forceManyBody<N>().strength((d) => d.type === 'root' ? -900 : d.type === 'cat' ? -520 : -170))
+      .force('collide', forceCollide<N>((d) => R[d.type] + 14))
+      .force('x', forceX(0).strength(0.03)).force('y', forceY(0).strength(0.03))
+      .on('tick', draw)
+      .on('end', settle);
+
+    function rebuild() {
+      nodes = all.filter((n) => n.type === 'root' || !hidden.has(n.group!));
+      const visible = new Set(nodes.map((n) => n.id));
+      const active = raw.filter((l) => visible.has(l.s) && visible.has(l.t) && (showCross || l.type !== 'x'));
+      neighbours = new Map(nodes.map((n) => [n.id, new Set([n.id])]));
+      for (const l of active) { neighbours.get(l.s)!.add(l.t); neighbours.get(l.t)!.add(l.s); }
+      links = active.map((l) => ({ source: l.s, target: l.t, type: l.type }));
+      sim.nodes(nodes); linkForce.links(links);
+      if (reduce) { sim.stop(); sim.tick(300); draw(); settle(); }
+      else sim.alpha(0.6).restart();
+    }
+
+    function draw() {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      ctx.translate(transform.x, transform.y);
+      ctx.scale(transform.k, transform.k);
+      const near = hover ? neighbours.get(hover.id) : null;
+      const lit = (id: string) => !near || near.has(id);
+
+      for (const l of links) {
+        const s = l.source as N, t = l.target as N;
+        const on = !hover || s === hover || t === hover;
+        ctx.globalAlpha = on ? 1 : 0.12;
+        ctx.beginPath(); ctx.moveTo(s.x!, s.y!); ctx.lineTo(t.x!, t.y!);
+        ctx.setLineDash(l.type === 'x' ? [4, 4] : []);
+        ctx.strokeStyle = l.type === 'x' ? C.accent : hover && on ? C.muted : C.line;
+        ctx.lineWidth = l.type === 'root' ? 1.5 : 1;
+        ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      for (const n of nodes) {
+        ctx.globalAlpha = lit(n.id) ? 1 : 0.15;
+        ctx.beginPath(); ctx.arc(n.x!, n.y!, R[n.type], 0, Math.PI * 2);
+        ctx.fillStyle = n.type === 'root' || n === hover ? C.accent : n.type === 'tool' ? C.muted : C.ink;
+        ctx.fill();
+        ctx.lineWidth = 2; ctx.strokeStyle = C.bg; ctx.stroke();
+      }
+
+      // Labels get a halo: a thick stroke in the page colour, then the text on top.
+      ctx.lineJoin = 'round';
+      for (const n of nodes) {
+        ctx.globalAlpha = lit(n.id) ? 1 : 0.15;
+        const big = n.type === 'root' || n.type === 'cat';
+        ctx.font = big ? "600 14px 'Inter Tight'" : "500 12.5px 'Inter Tight'";
+        ctx.textAlign = big ? 'center' : 'left';
+        ctx.textBaseline = big ? 'top' : 'middle';
+        const x = big ? n.x! : n.x! + R[n.type] + 6, y = big ? n.y! + R[n.type] + 6 : n.y!;
+        ctx.lineWidth = 4; ctx.strokeStyle = C.bg; ctx.strokeText(n.label, x, y);
+        ctx.fillStyle = big ? C.ink : C.body; ctx.fillText(n.label, x, y);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    const toWorld = (px: number, py: number): [number, number] => [(px - transform.x) / transform.k, (py - transform.y) / transform.k];
+    function findNode(px: number, py: number) {
+      const [x, y] = toWorld(px, py);
+      let best: N | null = null, bestD = Infinity;
+      for (const n of nodes) {
+        const d = Math.hypot(n.x! - x, n.y! - y);
+        if (d < R[n.type] + 8 / transform.k && d < bestD) { best = n; bestD = d; }
+      }
+      return best;
+    }
+    // A dragged node stays inside the visible box.
+    function pin(n: N, px: number, py: number) {
+      const m = 16;
+      [n.fx, n.fy] = toWorld(Math.max(m, Math.min(W - m, px)), Math.max(m, Math.min(H - m, py)));
+    }
+
+    // Panning stops at the graph's own edges (plus a margin). When the graph is smaller than
+    // the box, d3 centres it, so zooming never pushes it out of view.
+    function extent(): [[number, number], [number, number]] {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      for (const n of nodes) {
+        const r = R[n.type], right = n.type === 'tool' || n.type === 'hub' ? 110 : 60;
+        x0 = Math.min(x0, n.x! - r - 40); x1 = Math.max(x1, n.x! + r + right);
+        y0 = Math.min(y0, n.y! - r - 20); y1 = Math.max(y1, n.y! + r + 34);
+      }
+      return [[x0 - 24, y0 - 24], [x1 + 24, y1 + 24]];
+    }
+    // The first time the layout settles, scale it to fit the box; after that only keep it in view.
+    let fitted = false;
+    function settle() {
+      if (fitted || !nodes.length || !W) return clampView();
+      fitted = true;
+      const [[x0, y0], [x1, y1]] = extent();
+      const k = Math.max(0.5, Math.min(1, W / (x1 - x0), H / (y1 - y0)));
+      const to = zoomIdentity.translate(W / 2 - k * (x0 + x1) / 2, H / 2 - k * (y0 + y1) / 2).scale(k);
+      zoom.translateExtent(extent());
+      if (reduce) sel.call(zoom.transform, to);
+      else sel.transition().duration(500).call(zoom.transform, to);
+    }
+    function clampView() {
+      if (!nodes.length || !W) return;
+      zoom.translateExtent(extent());
+      if (reduce) sel.call(zoom.translateBy, 0, 0);
+      else sel.transition().duration(400).call(zoom.translateBy, 0, 0);
+    }
+
+    const sel = select(canvas);
+    // Drag attaches before zoom. With no node under the pointer the drag never starts,
+    // and the event falls through to zoom, which pans.
+    sel.call(drag<HTMLCanvasElement, unknown, { n: N; x: number; y: number } | null>()
+      .subject((e) => { const n = findNode(e.x, e.y); return n ? { n, x: e.x, y: e.y } : null; })
+      .on('start', (e) => { if (!reduce) sim.alphaTarget(0.25).restart(); pin(e.subject!.n, e.x, e.y); box.classList.add('grabbing'); })
+      .on('drag', (e) => { const n = e.subject!.n; pin(n, e.x, e.y); if (reduce) { n.x = n.fx!; n.y = n.fy!; draw(); } })
+      .on('end', (e) => { sim.alphaTarget(0); e.subject!.n.fx = e.subject!.n.fy = null; box.classList.remove('grabbing'); if (reduce) clampView(); }));
+    const zoom = d3zoom<HTMLCanvasElement, unknown>().scaleExtent([0.5, 3]).on('zoom', (e) => { transform = e.transform; draw(); });
+    sel.call(zoom).on('dblclick.zoom', null);
+
+    canvas.addEventListener('pointermove', (e) => {
+      const r = canvas.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+      const n = findNode(px, py);
+      if (n !== hover) { hover = n; draw(); }
+      if (n && n.type !== 'root') {
+        tip.innerHTML = '';
+        const name = document.createElement('b'); name.textContent = n.label;
+        const area = document.createElement('span'); area.textContent = n.type === 'cat' ? 'Area' : areaLabel[n.group!];
+        tip.append(name, area);
+        tip.classList.add('on');
+        const tw = tip.offsetWidth, th = tip.offsetHeight;
+        tip.style.left = (px + 16 + tw > W ? px - tw - 16 : px + 16) + 'px';
+        tip.style.top = Math.min(py + 12, H - th - 8) + 'px';
+      } else tip.classList.remove('on');
+    });
+    canvas.addEventListener('pointerleave', () => { hover = null; tip.classList.remove('on'); draw(); });
+
+    host.querySelectorAll<HTMLButtonElement>('[data-area]').forEach((b) => b.addEventListener('click', () => {
+      const id = b.dataset.area!;
+      if (hidden.has(id)) hidden.delete(id); else hidden.add(id);
+      b.setAttribute('aria-pressed', String(!hidden.has(id)));
+      rebuild();
+    }));
+    const cross = host.querySelector<HTMLButtonElement>('[data-cross]')!;
+    cross.addEventListener('click', () => { showCross = !showCross; cross.setAttribute('aria-pressed', String(showCross)); rebuild(); });
+
+    let started = false;
+    function resize() {
+      W = box.clientWidth; H = box.clientHeight;
+      if (!W) return;
+      canvas.width = W * dpr; canvas.height = H * dpr;
+      zoom.extent([[0, 0], [W, H]]);
+      if (!started) { transform = zoomIdentity.translate(W / 2, H / 2).scale(Math.min(1, W / 760, H / 640)); sel.call(zoom.transform, transform); started = true; }
+      draw();
+      if (fitted) clampView(); else if (reduce) settle();
+    }
+    new ResizeObserver(resize).observe(box);
+
+    // Redraw in the new colours when the theme changes.
+    const recolor = () => { readColors(); draw(); };
+    new MutationObserver(recolor).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', recolor);
+
+    resize();
+    rebuild();
+  }
+
+  // Canvas text uses whatever font is loaded when it draws, so wait for the web fonts first.
+  document.fonts.ready.then(() => document.querySelectorAll<HTMLElement>('[data-stack]').forEach(mount));
+</script>
+
+<style>
+  .stack-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .stack-legend button, .stack-x { font: inherit; font-size: 14px; line-height: 1.2; border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 6px 14px; cursor: pointer; color: var(--ink); transition: color .25s var(--ease), border-color .25s var(--ease); }
+  .stack-legend button[aria-pressed="false"] { color: var(--title-muted); text-decoration: line-through; }
+  .stack-hint { margin: 14px 0 10px; font-size: 13px; color: var(--muted); }
+  .stack-box { position: relative; height: 460px; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line); overflow: hidden; cursor: grab; }
+  .stack-box.grabbing { cursor: grabbing; }
+  .stack-box canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+  .stack-x { position: absolute; top: 12px; right: 12px; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+  .stack-x i { width: 18px; border-top: 2px dashed var(--accent); }
+  .stack-x[aria-pressed="true"] { border-color: var(--accent); }
+  .stack-tip { position: absolute; pointer-events: none; max-width: 240px; padding: 10px 12px; border-radius: 8px; background: var(--ink); color: var(--bg); font-size: 13px; line-height: 1.4; opacity: 0; transition: opacity .15s; }
+  .stack-tip.on { opacity: 1; }
+  .stack-tip :global(b) { display: block; font-size: 14px; }
+  .stack-tip :global(span) { opacity: .7; }
+  @media (max-width: 720px) {
+    .stack-box { height: 400px; }
+  }
+</style>
