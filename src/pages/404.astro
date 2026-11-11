@@ -4,7 +4,7 @@ import PageHead from '../components/PageHead.astro';
 import { withBase } from '../lib/url';
 ---
 <BaseLayout title="Not found">
-  <PageHead lead="404." title="This page took a different path" intro="Maybe it was renamed, or it never existed.">
+  <PageHead lead="404." title="This page took a different path" intro="Maybe it was renamed, or it never existed." rule={false}>
     <div class="nf-links">
       <a class="pill pill-ink" href={withBase('/')}>Go home</a>
       <a class="ul-on" href={withBase('/writing/')}>Read the blog</a>

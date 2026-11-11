@@ -1,28 +1,33 @@
 ---
 interface Props {
-  /** First words of the title, set in grey. */
-  lead: string;
-  /** Rest of the title; an orange period is added after it. */
+  /** Optional first words of the title, set in grey. */
+  lead?: string;
+  /** The title; an orange period is added after it. */
   title: string;
   intro?: string;
+  /** The 2px rule that closes the header. Off for pages with nothing under it. */
+  rule?: boolean;
 }
-const { lead, title, intro } = Astro.props;
+const { lead, title, intro, rule = true } = Astro.props;
 ---
 <header class="wrap page-head-x">
   <h1 class="page-title">
-    <span class="mask"><span><span class="lead">{lead}</span> {title}<span class="accent-dot">.</span></span></span>
+    <span class="mask"><span>{lead && <><span class="lead">{lead}</span>{' '}</>}{title}<span class="accent-dot">.</span></span></span>
   </h1>
   {intro && <p class="page-intro fade-up" style="--d:.45s">{intro}</p>}
   <slot />
+  {rule && <hr class="page-rule" />}
 </header>
 
 <style>
-  .page-head-x { padding-top: 56px; padding-bottom: 44px; }
-  .page-title { font-size: clamp(40px, 6vw, 80px); line-height: 1; letter-spacing: -.045em; overflow-wrap: anywhere; }
+  /* Same sizes as a post's header (post.css), so an index page and a post open alike. */
+  .page-head-x { padding-top: 64px; }
+  .page-title { font-size: clamp(32px, 3.6vw, 52px); line-height: 1.05; letter-spacing: -.035em; overflow-wrap: anywhere; }
   .lead { color: var(--title-muted); }
   .accent-dot { color: var(--accent); }
-  .page-intro { margin: 20px 0 0; max-width: 760px; font-size: 18px; line-height: 1.5; color: var(--muted); }
+  .page-intro { margin: 18px 0 0; max-width: 60ch; font-family: var(--display); font-size: clamp(18px, 1.6vw, 22px); line-height: 1.3; letter-spacing: -.01em; color: var(--muted); }
+  .page-rule { margin: 40px 0 0; border: 0; border-top: 2px solid var(--ink); }
   @media (max-width: 720px) {
-    .page-head-x { padding-top: 40px; padding-bottom: 40px; }
+    .page-head-x { padding-top: 40px; }
   }
 </style>
