@@ -176,3 +176,13 @@ for (const width of [1440, 1024, 390]) {
     expect(boxes[2].x).toBeGreaterThan(boxes[1].x);
   });
 }
+
+test('band: the blog list has no rule of its own above the first row', async ({ page }) => {
+  await page.goto('./');
+  const border = await page.locator('#panel-blog .rows').evaluate((el) => getComputedStyle(el).borderTopWidth);
+  expect(border).toBe('0px');
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const desc = (await page.locator('#panel-blog .panel-desc').boundingBox())!;
+  const title = (await page.locator('#panel-blog .row-title').first().boundingBox())!;
+  expect(Math.abs(title.y - desc.y)).toBeLessThanOrEqual(4);
+});
