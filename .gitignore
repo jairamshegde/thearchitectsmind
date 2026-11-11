@@ -29,6 +29,7 @@ pnpm-debug.log*
 # local design and planning docs
 docs/
 .claude/
+.superpowers/
 # test output
 test-results/
 playwright-report/
