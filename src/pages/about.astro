@@ -2,15 +2,14 @@
 import { Image } from 'astro:assets';
 import { getEntry, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { renderMarkdown } from '../lib/markdown-text';
-import { withBase } from '../lib/url';
+import StackGraph from '../components/StackGraph.astro';
 
 const about = await getEntry('pages', 'about');
 if (!about) throw new Error('Missing src/content/pages/about.md');
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
 const { Content } = await render(about);
-const { title, intro, lead, leadMore, welcomeImage, welcomeNote, summary, steps, signoff, quirks, now, contact } = about.data;
+const { title, intro, welcomeImage, welcomeNote, summary, writeAbout, outside, saltLabel, saltLine, contact, disclaimer } = about.data;
 const github = settings.data.socials.find((s) => s.label === 'GitHub');
 const linkedin = settings.data.socials.find((s) => s.label === 'LinkedIn');
 const email = settings.data.email ?? '[YOUR EMAIL]';
@@ -26,9 +25,6 @@ const socialLinks = [
   github && { label: 'GitHub', href: github.url },
 ].filter(Boolean) as { label: keyof typeof icons; href: string }[];
 
-// Quirks are short markdown; site-root links ("/writing/...") get the base path like the rest of the site.
-const quirkHtml = (q: string) => renderMarkdown(q).replaceAll('href="/', `href="${withBase('/')}`);
-
 const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 ---
 <BaseLayout title="About" description={intro}>
@@ -40,8 +36,8 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
           {welcomeNote && <figcaption>{welcomeNote}</figcaption>}
         </figure>
       )}
-      <h1>{title}</h1>
-      {lead && <p class="about-lead">{lead}{leadMore && <> <span>{leadMore}</span></>}</p>}
+      <h1>{title}<span class="accent-dot">.</span></h1>
+      <p class="about-lead">{intro}</p>
       {summary.length > 0 && (
         <dl class="about-summary">
           {summary.map((s) => <div><dt>{sentence(s.label)}</dt><dd>{s.value}</dd></div>)}
@@ -54,42 +50,39 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
     </aside>
 
     <div class="about-main">
-      <section id="working-on">
-        <div class="sec-top"><h2>What I’m working on now</h2></div>
-        <div class="about-copy"><Content /></div>
+      <section class="about-body about-copy"><Content /></section>
+
+      <section id="stack">
+        <h2>What I build with</h2>
+        <StackGraph />
       </section>
 
-      {steps.length > 0 && (
-        <section id="approach">
-          <div class="sec-top"><h2>How I take a problem apart</h2></div>
-          <ol class="about-steps about-copy">{steps.map((step) => <li><b>{step.title}</b> {step.text}</li>)}</ol>
+      {writeAbout && (
+        <section>
+          <h2>What I write about</h2>
+          <div class="about-copy"><p>{writeAbout}</p></div>
         </section>
       )}
 
-      {signoff && (
+      {outside && saltLabel && (
         <section>
-          <div class="sec-top"><h2>What I won’t sign off on</h2></div>
-          <div class="about-copy"><p>{signoff}</p></div>
-        </section>
-      )}
-
-      {quirks.length > 0 && (
-        <section>
-          <div class="sec-top"><h2>Known quirks</h2></div>
-          <ul class="about-quirks about-copy">{quirks.map((q) => <li set:html={quirkHtml(q)} />)}</ul>
-        </section>
-      )}
-
-      {now.length > 0 && (
-        <section>
-          <div class="sec-top"><h2>Right now</h2></div>
-          <dl class="about-now">{now.map((n) => <div><dt>{sentence(n.label)}</dt><dd>{n.value}</dd></div>)}</dl>
+          <h2>Outside work</h2>
+          <div class="about-copy">
+            <p class="salt-intro">{outside} <button type="button" class="salt-link" aria-expanded="false" aria-controls="salt" data-salt-link>{saltLabel}</button>.</p>
+            <div class="salt" id="salt" data-salt>
+              <div>
+                <button type="button" class="salt-num" aria-label="31,459 salt crystals. Click to look again." data-salt-num><span>3</span><span class="p">.</span><span>1</span><span class="c">,</span><span>4</span><span>5</span><span>9</span></button>
+                <p class="salt-cap" data-salt-cap>salt crystals per meal. <button type="button" data-salt-again>Look at the digits again.</button></p>
+                {saltLine && <p class="salt-end" data-salt-end>{saltLine}</p>}
+              </div>
+            </div>
+          </div>
         </section>
       )}
 
       {(contact || socialLinks.length > 0) && (
         <section id="get-in-touch">
-          <div class="sec-top"><h2>Get in touch</h2></div>
+          <h2>Get in touch</h2>
           {contact && <div class="about-copy"><p>{contact}</p></div>}
           <ul class="socials">
             {socialLinks.map((s) => (
@@ -100,11 +93,49 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
               </li>
             ))}
           </ul>
+          {disclaimer && <p class="about-fine">{disclaimer}</p>}
         </section>
       )}
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  // Salt: the link opens the count (it counts up once), then each click on the number
+  // flips it between 31,459 and 3.1459. The pi line shows only in the pi state.
+  const link = document.querySelector<HTMLButtonElement>('[data-salt-link]');
+  const box = document.querySelector<HTMLElement>('[data-salt]');
+  const num = document.querySelector<HTMLButtonElement>('[data-salt-num]');
+  if (link && box && num) {
+    const cap = document.querySelector<HTMLElement>('[data-salt-cap]')!;
+    const end = document.querySelector<HTMLElement>('[data-salt-end]');
+    const digits = [...num.querySelectorAll('span:not(.p):not(.c)')];
+    const target = '31459';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    link.addEventListener('click', () => {
+      if (box.classList.contains('open')) return;
+      box.classList.add('open');
+      link.setAttribute('aria-expanded', 'true');
+      if (reduce) return;
+      const t0 = performance.now(), dur = 1100;
+      const step = (t: number) => {
+        const k = Math.min(1, (t - t0) / dur);
+        const s = String(Math.round(31459 * (1 - Math.pow(1 - k, 3)))).padStart(5, '0');
+        digits.forEach((d, i) => { d.textContent = k < 1 ? s[i] : target[i]; });
+        if (k < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+    const flip = () => {
+      const pi = num.classList.toggle('pi');
+      num.setAttribute('aria-label', pi ? '3.1459, almost pi. Click to go back.' : '31,459 salt crystals. Click to look again.');
+      cap.style.visibility = pi ? 'hidden' : '';
+      end?.classList.toggle('show', pi);
+    };
+    num.addEventListener('click', flip);
+    document.querySelector('[data-salt-again]')?.addEventListener('click', flip);
+  }
+</script>
 
 <style>
   .about { padding-top: 64px; padding-bottom: 96px; align-items: start; }
@@ -113,36 +144,49 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
   .about-pico :global(img) { display: block; width: 140px; height: auto; }
   .about-pico figcaption { margin-top: 10px; max-width: 30ch; font-size: 15px; font-style: italic; font-weight: 500; line-height: 1.4; color: var(--accent-ink); }
   h1 { margin-top: 24px; font-size: clamp(40px, 4vw, 56px); line-height: 1; letter-spacing: -.035em; }
+  .accent-dot { color: var(--accent); }
   .about-lead { margin: 20px 0 0; font-size: 18px; line-height: 1.5; color: var(--ink); }
-  .about-lead span { color: var(--muted); }
   .about-summary { margin: 28px 0 0; padding-top: 16px; border-top: 2px solid var(--ink); display: grid; gap: 12px; }
   .about-summary dt { font-size: 13px; color: var(--muted); }
   .about-summary dd { margin: 2px 0 0; font-size: 15px; font-weight: 500; }
   .about-actions { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
 
   .about-main { grid-column: 6 / span 7; }
-  .about-main section + section { margin-top: 52px; }
-  .about-main h2 { font-size: clamp(26px, 2.6vw, 34px); }
-  .about-copy { margin-top: 28px; }
+  .about-main > section + section { margin-top: 52px; }
+  .about-main h2, .about-body :global(h2) { font-size: clamp(26px, 2.6vw, 34px); }
+  .about-body :global(h2:not(:first-child)) { margin-top: 52px; }
+  .about-body :global(h2 + *) { margin-top: 20px; }
+  .about-body :global(.anchor) { display: none; }
+  .about-main h2 + .about-copy { margin-top: 20px; }
   .about-copy, .about-copy :global(p), .about-copy :global(li) { font-size: 17px; line-height: 1.6; color: var(--body); }
   .about-copy :global(p) { margin: 0 0 1em; }
   .about-copy > :global(:last-child) { margin-bottom: 0; }
   .about-copy :global(a) { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
-  .about-steps { padding-left: 1.3em; margin-bottom: 0; }
-  .about-steps li + li { margin-top: .8em; }
-  .about-steps li::marker { color: var(--accent); font-weight: 600; }
-  .about-steps b { color: var(--ink); font-weight: 600; }
-  .about-quirks { padding-left: 1.2em; margin-bottom: 0; }
-  .about-quirks li + li { margin-top: .4em; }
-  .about-quirks li::marker { color: var(--accent); }
+  .about-body :global(blockquote) { margin: 36px 0; padding-left: 24px; border-left: 3px solid var(--accent); }
+  .about-body :global(blockquote p) { margin: 0; font-family: var(--display); font-size: clamp(24px, 2.4vw, 32px); line-height: 1.2; letter-spacing: -.02em; color: var(--ink); }
+
+  .about-copy .salt-intro { margin-bottom: 0; }
+  .salt-link { padding: 0; border: 0; background: none; font: inherit; color: var(--ink); cursor: pointer; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+  .salt { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
+  .salt:global(.open) { grid-template-rows: 1fr; }
+  .salt > div { overflow: hidden; }
+  .salt:not(:global(.open)) > div { visibility: hidden; }
+  .salt-num { display: inline-flex; align-items: baseline; margin: 20px 0 0; padding: 0; border: 0; background: none; color: var(--ink); cursor: pointer; font-family: var(--display); font-size: clamp(56px, 6vw, 88px); font-weight: 600; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .salt-num .c, .salt-num .p { display: inline-block; overflow: hidden; transition: max-width .7s var(--ease), opacity .5s var(--ease), transform .7s var(--ease); }
+  .salt-num .c { max-width: .4em; }
+  .salt-num .p { max-width: 0; opacity: 0; color: var(--accent); transform: translateY(-.4em); }
+  .salt-num:global(.pi) .c { max-width: 0; opacity: 0; }
+  .salt-num:global(.pi) .p { max-width: .4em; opacity: 1; transform: none; }
+  .salt-cap { margin: 10px 0 0 !important; font-size: 15px !important; color: var(--muted) !important; }
+  .salt-cap button { padding: 0; border: 0; background: none; font: inherit; color: var(--ink); cursor: pointer; border-bottom: 1px dashed var(--accent); }
+  .salt-end { margin-top: 16px !important; opacity: 0; transition: opacity .5s var(--ease); }
+  .salt-end:global(.show) { opacity: 1; }
+
   .socials { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; gap: 16px; }
   .socials li { display: block; margin: 0; padding: 0; }
   .socials a { display: inline-flex; align-items: center; justify-content: center; width: 60px; height: 60px; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); transition: background-color .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), transform .35s var(--ease); }
   .socials a:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); transform: translateY(-2px); }
-  .about-now { margin: 28px 0 0; border-top: 1px solid var(--line); }
-  .about-now div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); font-size: 17px; }
-  .about-now dt { color: var(--muted); }
-  .about-now dd { margin: 0; }
+  .about-fine { margin: 28px 0 0; font-size: 14px; color: var(--muted); }
 
   @media (max-width: 1100px) {
     .about-side, .about-main { grid-column: 1 / -1; }
@@ -150,7 +194,6 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
   }
   @media (max-width: 720px) {
     .about { padding-top: 40px; padding-bottom: 56px; }
-    .about-main section + section { margin-top: 48px; }
-    .about-now div { grid-template-columns: 110px minmax(0, 1fr); }
+    .about-main > section + section { margin-top: 48px; }
   }
 </style>

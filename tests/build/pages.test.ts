@@ -5,10 +5,9 @@ describe('/about/', () => {
   const p = page('/about/');
   const side = p.querySelector('aside.about-side')!;
 
-  it('puts Pico, the name, the lead and the GitHub link in the side column', () => {
-    expect(side.querySelector('h1')?.text).toBe('Jairam Hegde');
-    expect(side.querySelector('.about-lead')?.text).toBe('I’m happiest when a problem doesn’t have an obvious answer yet. Lately those problems are AI agents, and whether they really work.');
-    expect(side.querySelector('.about-lead span')?.text).toBe('Lately those problems are AI agents, and whether they really work.');
+  it('puts Pico, the name, the intro and the GitHub link in the side column', () => {
+    expect(side.querySelector('h1')?.text).toBe('Jairam Hegde.');
+    expect(side.querySelector('.about-lead')?.text).toMatch(/^I'm an AI engineer who solves problems by asking/);
     const pico = side.querySelector('figure.about-pico')!;
     expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/_astro\/pico-welcome\./);
     expect(pico.querySelector('figcaption')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
@@ -17,27 +16,33 @@ describe('/about/', () => {
   });
 
   it('shows the summary in sentence case', () => {
-    expect(side.querySelectorAll('dl.about-summary dt').map((d) => d.text)).toEqual(['Approach', 'Working on now', 'Usual stack', 'Reviewed by']);
+    expect(side.querySelectorAll('dl.about-summary dt').map((d) => d.text)).toEqual(['Working on now', 'In data and AI for']);
   });
 
-  it('names the sections by their headings only, in order', () => {
-    expect(p.querySelectorAll('.about-main section .sec-top h2').map((h) => h.text)).toEqual([
-      'What I’m working on now',
-      'How I take a problem apart',
-      'What I won’t sign off on',
-      'Known quirks',
-      'Right now',
+  it('names the sections by their headings, in order', () => {
+    expect(p.querySelectorAll('.about-main h2').map((h) => h.text.replace(/#$/, ''))).toEqual([
+      'How I solve problems',
+      'What I do',
+      'What I build with',
+      'What I write about',
+      'Outside work',
       'Get in touch',
     ]);
-    expect(p.querySelector('main')?.toString()).not.toMatch(/[→↗←]|>0\d</);
+    expect(p.querySelector('.about-body blockquote')?.text.trim()).toBe('“If I were building this for the first time, what would it need?”');
   });
 
-  it('shows the steps, the body under "working on now", and the Now list', () => {
-    expect(p.querySelectorAll('ol.about-steps li b').map((h) => h.text)).toEqual([
-      'Find the real problem.', 'Break it into small pieces.', 'Build the simplest thing that works.', 'Prove it works.',
-    ]);
-    expect(p.querySelector('#working-on .about-copy p')?.text).toMatch(/^AI agents, and the checks around them\./);
-    expect(p.querySelectorAll('dl.about-now dt').map((d) => d.text)).toEqual(['Building', 'Writing', 'Reading', 'Exploring']);
+  it('draws the stack graph with one filter button per area, the "Used together" toggle off, and a text list', () => {
+    const stack = p.querySelector('#stack [data-stack]')!;
+    expect(stack.querySelectorAll('.stack-legend button').map((b) => b.text)).toEqual(['Web apps', 'Agents', 'Retrieval', 'Models', 'Evals and tracing', 'Classical ML']);
+    expect(stack.querySelector('.stack-box [data-cross]')?.getAttribute('aria-pressed')).toBe('false');
+    expect(stack.querySelector('canvas')?.getAttribute('role')).toBe('img');
+    expect(stack.querySelectorAll('ul.visually-hidden li')).toHaveLength(6);
+  });
+
+  it('hides the salt count behind its link', () => {
+    expect(p.querySelector('[data-salt-link]')?.text).toBe('how many salt crystals I eat per meal');
+    expect(p.querySelector('[data-salt-num]')?.text).toBe('3.1,459');
+    expect(p.querySelector('[data-salt-end]')?.text).toBe("It's almost the digits of pi, so I like to say I eat pi salt.");
   });
 
   it('offers email, LinkedIn and GitHub as icon links under "Get in touch"', () => {
@@ -50,10 +55,7 @@ describe('/about/', () => {
     expect(links[1].getAttribute('href')).toMatch(/^https:\/\/www\.linkedin\.com\//);
     expect(links[2].getAttribute('href')).toBe('https://github.com/jairamshegde');
     for (const a of links) expect(a.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
-  });
-
-  it('links Mingraph in the quirks to its writing series, under the base path', () => {
-    expect(p.querySelector('.about-quirks a')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
+    expect(section.querySelector('.about-fine')?.text).toBe('The views here are my own.');
   });
 });
 
