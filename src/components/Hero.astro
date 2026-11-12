@@ -2,12 +2,11 @@
 import { getEntry } from 'astro:content';
 import PixelField from './PixelField.astro';
 import { HOME_FIELD } from '../lib/pixel-field';
-import { SITE } from '../site.config';
+import { withBase } from '../lib/url';
 
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
-const { heroLead, heroHeadline, heroSub, heroBio, socials } = settings.data;
-const github = socials.find((s) => s.label === 'GitHub')?.url ?? `https://github.com/${SITE.owner}`;
+const { heroLead, heroHeadline, heroSub, heroBio } = settings.data;
 // The CMS text is the word; the orange period belongs to the design.
 const headline = heroHeadline.replace(/\.$/, '');
 ---
@@ -24,7 +23,7 @@ const headline = heroHeadline.replace(/\.$/, '');
     <div class="hero-links fade-up" style="--d:.7s">
       <a class="ul-on" href="#projects">See the projects</a>
       <a class="ul-on" href="#writing" data-tab-link="blog">Read the blog</a>
-      <a class="ul-on" href={github} rel="me noopener">GitHub</a>
+      <a class="ul-on" href={withBase('/about/')}>Know me</a>
     </div>
   </div>
   <PixelField config={HOME_FIELD} class="hero-field" />

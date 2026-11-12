@@ -9,7 +9,7 @@ if (!about) throw new Error('Missing src/content/pages/about.md');
 const settings = await getEntry('settings', 'site');
 if (!settings) throw new Error('Missing src/content/settings/site.json');
 const { Content } = await render(about);
-const { title, intro, welcomeImage, welcomeNote, summary, writeAbout, outside, saltLabel, saltLine, contact, disclaimer } = about.data;
+const { title, intro, tagline, photo, welcomeImage, welcomeNote, summary, writeAbout, outside, saltLabel, saltLine, contact, disclaimer } = about.data;
 const github = settings.data.socials.find((s) => s.label === 'GitHub');
 const linkedin = settings.data.socials.find((s) => s.label === 'LinkedIn');
 const email = settings.data.email ?? '[YOUR EMAIL]';
@@ -30,14 +30,18 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 <BaseLayout title="About" description={intro}>
   <div class="wrap grid about">
     <aside class="about-side">
-      {welcomeImage && (
-        <figure class="about-pico">
-          <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[280, 560]} sizes="140px" loading="eager" />
-          {welcomeNote && <figcaption>{welcomeNote}</figcaption>}
+      {photo && (
+        <figure class="about-photo" data-photo>
+          <Image src={photo} alt={`Portrait of ${title}`} widths={[220, 440]} sizes="220px" loading="eager" />
+          <canvas aria-hidden="true"></canvas>
         </figure>
       )}
       <h1>{title}<span class="accent-dot">.</span></h1>
-      <p class="about-lead">{intro}</p>
+      {tagline && (
+        <p class="about-tagline">
+          <span>{tagline.split('|').map((part) => <span>{part.trim()}</span>)}</span>
+        </p>
+      )}
       {summary.length > 0 && (
         <dl class="about-summary">
           {summary.map((s) => <div><dt>{sentence(s.label)}</dt><dd>{s.value}</dd></div>)}
@@ -47,6 +51,24 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
         <a class="pill pill-ink" href="#get-in-touch">Get in touch</a>
         {github && <a class="ul-on" href={github.url} rel="me noopener">GitHub</a>}
       </div>
+      {welcomeImage && (
+        <div class="about-pico" data-pico>
+          <button type="button" class="pico-btn" aria-expanded="false" aria-controls="pico" data-pico-btn>Meet Pico</button>
+          <figure class="pico-peek" id="pico">
+            <div>
+              <div class="pico-window">
+                <Image src={welcomeImage} alt="Pico the penguin waving hello from behind a laptop, next to a mug and a stack of books" widths={[240, 480]} sizes="120px" />
+              </div>
+              {welcomeNote && (
+                <figcaption class="pico-note">
+                  <span class="visually-hidden">{welcomeNote}</span>
+                  <span aria-hidden="true">{[...welcomeNote].map((c, i) => <span style={`--i:${i}`}>{c}</span>)}</span>
+                </figcaption>
+              )}
+            </div>
+          </figure>
+        </div>
+      )}
     </aside>
 
     <div class="about-main">
@@ -101,6 +123,60 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 </BaseLayout>
 
 <script>
+  // Photo: drawn pixelated on a canvas; hover (or a tap) steps the blocks down to the sharp image.
+  const photo = document.querySelector<HTMLElement>('[data-photo]');
+  const img = photo?.querySelector('img');
+  const canvas = photo?.querySelector('canvas');
+  if (photo && img && canvas) {
+    const ctx = canvas.getContext('2d')!;
+    const small = document.createElement('canvas');
+    const sctx = small.getContext('2d')!;
+    const blocks = [22, 14, 9, 5, 3, 0]; // CSS px per block; 0 = the sharp image
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let at = 0, target = 0, timer = 0;
+    const draw = () => {
+      const block = blocks[at];
+      photo.classList.toggle('sharp', block === 0);
+      if (block === 0) return;
+      const r = photo.getBoundingClientRect(), dpr = devicePixelRatio || 1;
+      canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+      small.width = Math.max(1, Math.ceil(r.width / block)); small.height = Math.max(1, Math.ceil(r.height / block));
+      // object-fit: cover crop of the source
+      const s = Math.max(small.width / img.naturalWidth, small.height / img.naturalHeight);
+      const w = small.width / s, h = small.height / s;
+      sctx.drawImage(img, (img.naturalWidth - w) / 2, (img.naturalHeight - h) / 2, w, h, 0, 0, small.width, small.height);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(small, 0, 0, canvas.width, canvas.height);
+    };
+    const go = (to: number) => {
+      target = to;
+      clearInterval(timer);
+      if (reduce) { at = to; draw(); return; }
+      timer = window.setInterval(() => {
+        if (at === target) return clearInterval(timer);
+        at += Math.sign(target - at);
+        draw();
+      }, 70);
+    };
+    const start = () => {
+      draw();
+      photo.classList.add('ready');
+      const last = blocks.length - 1;
+      photo.addEventListener('pointerenter', (e) => { if (e.pointerType !== 'touch') go(last); });
+      photo.addEventListener('pointerleave', (e) => { if (e.pointerType !== 'touch') go(0); });
+      photo.addEventListener('click', () => { if (matchMedia('(hover: none)').matches) go(target ? 0 : last); });
+      new ResizeObserver(draw).observe(photo);
+    };
+    if (img.complete && img.naturalWidth) start(); else img.addEventListener('load', start, { once: true });
+  }
+
+  // Pico: hidden until "Meet Pico"; he peeks up and the note writes itself out.
+  const picoBtn = document.querySelector<HTMLButtonElement>('[data-pico-btn]');
+  picoBtn?.addEventListener('click', () => {
+    const open = picoBtn.closest('[data-pico]')!.classList.toggle('open');
+    picoBtn.setAttribute('aria-expanded', String(open));
+  });
+
   // Salt: the link opens the count (it counts up once), then each click on the number
   // flips it between 31,459 and 3.1459. The pi line shows only in the pi state.
   const link = document.querySelector<HTMLButtonElement>('[data-salt-link]');
@@ -140,16 +216,39 @@ const sentence = (t: string) => t.charAt(0).toUpperCase() + t.slice(1);
 <style>
   .about { padding-top: 64px; padding-bottom: 96px; align-items: start; }
   .about-side { grid-column: 1 / span 4; position: sticky; top: 110px; }
-  .about-pico { margin: 0; }
-  .about-pico :global(img) { display: block; width: 140px; height: auto; }
-  .about-pico figcaption { margin-top: 10px; max-width: 30ch; font-size: 15px; font-style: italic; font-weight: 500; line-height: 1.4; color: var(--accent-ink); }
+  .about-photo { position: relative; margin: 0; width: 220px; aspect-ratio: 4 / 5; overflow: hidden; border-radius: 4px; background: var(--soft); cursor: crosshair; }
+  .about-photo :global(img), .about-photo canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .about-photo :global(img) { display: block; }
+  /* without the script the photo stays blurred; with it, the canvas covers it until the last step */
+  .about-photo:not(:global(.ready)) :global(img) { filter: blur(10px); transform: scale(1.06); }
+  .about-photo:not(:global(.ready)) canvas, .about-photo:global(.sharp) canvas { visibility: hidden; }
   h1 { margin-top: 24px; font-size: clamp(40px, 4vw, 56px); line-height: 1; letter-spacing: -.035em; }
   .accent-dot { color: var(--accent); }
-  .about-lead { margin: 20px 0 0; font-size: 18px; line-height: 1.5; color: var(--ink); }
+  /* each part carries its "|" in front; a part that starts a line pushes its "|" into the clipped margin */
+  .about-tagline { margin: 18px 0 0; overflow: hidden; font-size: 16px; font-weight: 500; line-height: 1.4; color: var(--ink); }
+  .about-tagline > span { display: flex; flex-wrap: wrap; row-gap: 4px; margin-left: -22px; }
+  .about-tagline > span > span::before { content: '|'; display: inline-block; width: 22px; text-align: center; color: var(--accent); }
   .about-summary { margin: 28px 0 0; padding-top: 16px; border-top: 2px solid var(--ink); display: grid; gap: 12px; }
   .about-summary dt { font-size: 13px; color: var(--muted); }
   .about-summary dd { margin: 2px 0 0; font-size: 15px; font-weight: 500; }
   .about-actions { margin-top: 28px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; }
+
+  .about-pico { margin-top: 36px; }
+  .pico-btn { padding: 0; border: 0; background: none; font: inherit; font-size: 15px; font-weight: 500; color: var(--ink); cursor: pointer; border-bottom: 1px dashed var(--accent); }
+  .pico-peek { margin: 0; display: grid; grid-template-rows: 0fr; transition: grid-template-rows .6s var(--ease); }
+  .about-pico:global(.open) .pico-peek { grid-template-rows: 1fr; }
+  .pico-peek > div { overflow: hidden; display: flex; align-items: flex-end; gap: 14px; }
+  .about-pico:not(:global(.open)) .pico-peek > div { visibility: hidden; }
+  /* Pico rises from behind the rule, stopping short so he peeks rather than stands */
+  .pico-window { flex: none; width: 120px; height: 104px; margin-top: 16px; overflow: hidden; border-bottom: 2px solid var(--ink); }
+  .pico-window :global(img) { display: block; width: 120px; height: auto; transform: translateY(100%); transition: transform .8s cubic-bezier(.34, 1.4, .64, 1) .15s; }
+  .about-pico:global(.open) .pico-window :global(img) { transform: translateY(6%); }
+  .pico-note { padding-bottom: 8px; max-width: 18ch; font-family: 'Caveat', cursive; font-size: 22px; font-weight: 600; line-height: 1.1; color: var(--accent-ink); transform: rotate(-3deg); transform-origin: 0 100%; }
+  .pico-note span span { opacity: 0; transition: opacity .12s linear; }
+  .about-pico:global(.open) .pico-note span span { opacity: 1; transition-delay: calc(.75s + var(--i) * 35ms); }
+  @media (prefers-reduced-motion: reduce) {
+    .pico-peek, .pico-window :global(img), .pico-note span span { transition: none !important; }
+  }
 
   .about-main { grid-column: 6 / span 7; }
   .about-main > section + section { margin-top: 52px; }
