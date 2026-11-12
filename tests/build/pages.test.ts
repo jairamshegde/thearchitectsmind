@@ -5,24 +5,24 @@ describe('/about/', () => {
   const p = page('/about/');
   const side = p.querySelector('aside.about-side')!;
 
-  it('puts Pico, the name, the intro and the GitHub link in the side column', () => {
+  it('puts the name, the tagline, the GitHub link and a hidden Pico in the side column', () => {
     expect(side.querySelector('h1')?.text).toBe('Jairam Hegde.');
-    expect(side.querySelector('.about-lead')?.text).toMatch(/^I'm an AI engineer who solves problems by asking/);
-    const pico = side.querySelector('figure.about-pico')!;
+    expect(side.querySelectorAll('.about-tagline > span > span').map((s) => s.text)).toEqual(['Senior AI Engineer', 'Enterprise Solutions', '"Why" gives me direction']);
+    const pico = side.querySelector('.about-pico')!;
+    expect(pico.querySelector('button[aria-controls="pico"]')?.getAttribute('aria-expanded')).toBe('false');
     expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/_astro\/pico-welcome\./);
-    expect(pico.querySelector('figcaption')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
+    expect(pico.querySelector('figcaption .visually-hidden')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
     expect(side.querySelector('a.ul-on[href="https://github.com/jairamshegde"]')?.text.trim()).toBe('GitHub');
     expect(p.querySelectorAll('main img')).toHaveLength(1);
   });
 
   it('shows the summary in sentence case', () => {
-    expect(side.querySelectorAll('dl.about-summary dt').map((d) => d.text)).toEqual(['Working on now', 'In data and AI for']);
+    expect(side.querySelectorAll('dl.about-summary dt').map((d) => d.text)).toEqual(['In data and AI for', 'Working on now']);
   });
 
   it('names the sections by their headings, in order', () => {
     expect(p.querySelectorAll('.about-main h2').map((h) => h.text.replace(/#$/, ''))).toEqual([
-      'How I solve problems',
-      'What I do',
+      'About me',
       'What I build with',
       'What I write about',
       'Outside work',

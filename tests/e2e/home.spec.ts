@@ -150,13 +150,13 @@ test('about page: the profile column stays put on desktop while the sections scr
   expect(await page.locator('aside.about-side').evaluate((el) => getComputedStyle(el).position)).toBe('sticky');
 });
 
-test('about page: one column on phones, Pico above the name, nothing scrolls sideways', async ({ page }) => {
+test('about page: one column on phones, Pico below the name, nothing scrolls sideways', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 800 });
   await page.goto('./about/');
-  const pico = (await page.locator('.about-side .about-pico img').boundingBox())!;
   const name = (await page.locator('.about-side h1').boundingBox())!;
+  const pico = (await page.locator('.about-side [data-pico-btn]').boundingBox())!;
   const main = (await page.locator('.about-main').boundingBox())!;
-  expect(pico.y + pico.height).toBeLessThanOrEqual(name.y + 2);
+  expect(pico.y).toBeGreaterThan(name.y + name.height);
   expect(main.y).toBeGreaterThan(name.y);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
   expect(overflow).toBeLessThanOrEqual(0);

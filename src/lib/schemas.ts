@@ -59,6 +59,8 @@ export const aboutSchema = <I extends z.ZodType>(image: ImageFn<I>) =>
   z.object({
     title: z.string().min(1),
     intro: z.string().min(1),
+    tagline: optional(z.string()),
+    photo: optional(image()),
     welcomeImage: optional(image()),
     welcomeNote: optional(z.string()),
     summary: z.array(z.object({ label: z.string().min(1), value: z.string().min(1) })).default([]),

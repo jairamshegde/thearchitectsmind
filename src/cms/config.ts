@@ -126,9 +126,11 @@ export const cmsConfig: {
           ...besideEntry,
           fields: [
             title,
-            text('intro', 'Intro sentence below your name (also the search and link preview description)'),
-            image('welcomeImage', 'Pico image above your name'),
-            opt(text('welcomeNote', 'Pico note under the image')),
+            text('intro', 'Search and link preview description'),
+            opt(str('tagline', 'Line below your name (separate parts with |)')),
+            opt(image('photo', 'Profile photo above your name (pixelated until hovered)')),
+            image('welcomeImage', 'Pico image (hidden until "Meet Pico" is clicked)'),
+            opt(text('welcomeNote', 'Pico handwritten note')),
             { name: 'summary', label: 'Facts under the intro (label and value pairs)', widget: 'list', required: false, fields: [str('label', 'Label'), str('value', 'Value')] },
             opt(text('writeAbout', 'What I write about')),
             opt(text('outside', 'Outside work, the sentence before the salt link')),
@@ -136,7 +138,7 @@ export const cmsConfig: {
             opt(text('saltLine', 'Pi line (shown while the number reads as pi)')),
             opt(text('contact', 'Get in touch text (the email, LinkedIn and GitHub icons follow it)')),
             opt(str('disclaimer', 'Small print under the icons')),
-            body('How I solve problems and What I do (use ## for each heading, > for the big quote)'),
+            body('About me (use ## for each heading, > for the big quote)'),
           ],
         },
         {

@@ -1,11 +1,12 @@
 ---
 title: "Jairam Hegde"
 intro: "I'm an AI engineer who solves problems by asking \"why?\" layer by layer until the dots connect."
+tagline: "Senior AI Engineer | Enterprise Solutions | \"Why\" gives me direction"
 welcomeImage: pico-welcome.png
 welcomeNote: "I’m Pico. I ask what the real problem is. Every time."
 summary:
-  - { label: "working on now", value: "AI agents for enterprise clients, and their evals" }
   - { label: "in data and AI for", value: "Almost six years" }
+  - { label: "working on now", value: "AI agents for enterprise clients, and their evals" }
 writeAbout: "On this blog, I write about building AI agents that work in the real world. Expect posts on agent design, evals and observability, agentic coding for teams, and lessons from enterprise data. I also write about personal projects, where I build things from scratch to sharpen how I think. Each post starts from the core question and builds up from there, including the mistakes I made along the way."
 outside: "I like to measure things and analyze the results. The strangest thing I've measured so far is"
 saltLabel: "how many salt crystals I eat per meal"
@@ -14,15 +15,15 @@ contact: "If you're working on agents or evals, or just want to talk through a h
 disclaimer: "The views here are my own."
 ---
 
-## How I solve problems
+## About me
 
-Learning researchers call this elaborative interrogation. When I take on a problem, I read about it, build prototypes, and try different approaches. Then I keep asking why until I reach one question.
+I'm an AI engineer who solves problems by asking "why?" layer by layer until the dots connect. Learning researchers call this elaborative interrogation.
+
+When I take on a problem, I read about it, build prototypes, and try different approaches. Then I keep asking why until I reach one question:
 
 > "If I were building this for the first time, what would it need?"
 
 The answer to that question gives me the design. On this blog, I write up those answers so you can start from the core question too.
-
-## What I do
 
 I build AI agents for enterprise clients, and I spend as much time testing them as building them. Most of my work is on evals, finding where agents fail and fixing it before it reaches production.
 
