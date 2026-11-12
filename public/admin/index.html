@@ -7,6 +7,8 @@
     <title>The Architect's Mind · CMS</title>
   </head>
   <body>
-    <script src="https://unpkg.com/@sveltia/cms@0/dist/sveltia-cms.js"></script>
+    <!-- Pinned with a hash so a changed file is refused. To upgrade: bump the version and recompute
+         the hash: curl -s <url> | openssl dgst -sha384 -binary | openssl base64 -A -->
+    <script src="https://unpkg.com/@sveltia/cms@0.263.0/dist/sveltia-cms.js" integrity="sha384-hVO21ZfJcVoU4TMwvTwtOuSoFXfzzTWKVsnPRgTLVxm2HXEriFFotrXTziF1FvDv" crossorigin="anonymous"></script>
   </body>
 </html>
