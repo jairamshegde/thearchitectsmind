@@ -13,7 +13,8 @@ describe('/about/', () => {
     expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/_astro\/pico-welcome\./);
     expect(pico.querySelector('figcaption .visually-hidden')?.text).toBe('I’m Pico. I ask what the real problem is. Every time.');
     expect(side.querySelector('a.ul-on[href="https://github.com/jairamshegde"]')?.text.trim()).toBe('GitHub');
-    expect(p.querySelectorAll('main img')).toHaveLength(1);
+    expect(side.querySelector('figure.about-photo img')?.getAttribute('alt')).toBe('Portrait of Jairam Hegde');
+    expect(p.querySelectorAll('main img')).toHaveLength(2);
   });
 
   it('shows the summary in sentence case', () => {

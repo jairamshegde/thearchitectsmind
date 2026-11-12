@@ -2,6 +2,7 @@
 title: "Jairam Hegde"
 intro: "I'm an AI engineer who solves problems by asking \"why?\" layer by layer until the dots connect."
 tagline: "Senior AI Engineer | Enterprise Solutions | \"Why\" gives me direction"
+photo: profile.png
 welcomeImage: pico-welcome.png
 welcomeNote: "I’m Pico. I ask what the real problem is. Every time."
 summary:
