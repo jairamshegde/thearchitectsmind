@@ -19,8 +19,8 @@ describe('home page', () => {
     expect(hero.querySelector('.hero-sub')?.text).toBe('Building intuition for complex systems.');
     expect(hero.querySelector('.hero-bio')?.text).toBe('I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.');
     const links = hero.querySelectorAll('.hero-links a');
-    expect(links.map((a) => a.text.trim())).toEqual(['See the projects', 'Read the blog', 'GitHub']);
-    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#projects', '#writing', 'https://github.com/jairamshegde']);
+    expect(links.map((a) => a.text.trim())).toEqual(['See the projects', 'Read the blog', 'Know me']);
+    expect(links.map((a) => a.getAttribute('href'))).toEqual(['#projects', '#writing', `${BASE}/about/`]);
     expect(links[1].getAttribute('data-tab-link')).toBe('blog');
   });
 
