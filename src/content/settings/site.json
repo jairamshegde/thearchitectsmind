@@ -3,9 +3,13 @@
   "heroHeadline": "intuition",
   "heroSub": "Building intuition for complex systems.",
   "heroBio": "I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.",
-  "heroImage": "hero_new_workflow.png",
   "footerStatement": "Let’s talk about",
-  "footerTopics": ["AI agents", "RAG pipelines", "evals", "observability"],
+  "footerTopics": [
+    "AI agents",
+    "RAG pipelines",
+    "evals",
+    "observability"
+  ],
   "footerSub": "Right now I’m building AI agents, RAG pipelines, evals and observability. I’m up for a question, a collaboration, or a plain chit-chat.",
   "footerImage": "pico-finding.png",
   "socials": [
@@ -17,9 +21,7 @@
     },
     {
       "label": "LinkedIn",
-      "url": "https://www.linkedin.com/in/YOUR-PROFILE",
-      "meta": "",
-      "note": ""
+      "url": "https://www.linkedin.com/in/YOUR-PROFILE"
     }
   ]
 }
