@@ -9,7 +9,7 @@ tags:
   - multi-agent
   - python
   - jev
-cover: cover-1-our-voice-tutor-graded-half-sentences.png
+cover: cover-2-anything-code-knows-code-decides.png
 series: system-one
 part: 2
 featured: true
