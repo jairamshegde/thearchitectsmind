@@ -9,6 +9,7 @@ tags:
   - multi-agent
   - LLM
   - tutor
+cover: cover-1-our-voice-tutor-graded-half-sentences.png
 series: system-one
 part: 1
 featured: true
