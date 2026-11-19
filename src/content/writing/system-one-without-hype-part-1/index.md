@@ -13,7 +13,7 @@ cover: cover-1-our-voice-tutor-graded-half-sentences.png
 series: system-one
 part: 1
 featured: true
-draft: true
+draft: false
 ---
 
 # Our voice tutor graded half-sentences
