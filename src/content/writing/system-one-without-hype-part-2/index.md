@@ -9,6 +9,7 @@ tags:
   - multi-agent
   - python
   - jev
+cover: cover-1-our-voice-tutor-graded-half-sentences.png
 series: system-one
 part: 2
 featured: true
