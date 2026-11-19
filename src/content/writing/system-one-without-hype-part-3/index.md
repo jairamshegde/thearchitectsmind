@@ -9,6 +9,7 @@ tags:
   - LLM
   - jev
   - python
+cover: cover-3-150-ms-on-a-slide-408-ms-at-home.png
 series: system-one
 part: 3
 featured: true
