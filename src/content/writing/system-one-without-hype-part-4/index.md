@@ -9,6 +9,7 @@ tags:
   - decisions-api
   - python
   - multi-agent
+cover: cover-4-what-a-fast-classifier-let-us-build.png
 series: system-one
 part: 4
 featured: true
