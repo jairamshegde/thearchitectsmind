@@ -8,7 +8,7 @@ tags:
   - structured-output
   - LLM
   - agents
-cover: /uploads/Pydantic Lifecycle Pipeline.png
+cover: Pydantic Lifecycle Pipeline.png
 featured: false
 draft: true
 ---
