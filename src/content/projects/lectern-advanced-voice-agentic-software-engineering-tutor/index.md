@@ -14,8 +14,8 @@ role: Senior AI Engineer
 timeline: Oct - Dec 2026
 problem: coming soon..
 constraints: local first voice tutor with customization according to your need.
-featured: true
-draft: false
+featured: false
+draft: true
 ---
 
 coming soon..
