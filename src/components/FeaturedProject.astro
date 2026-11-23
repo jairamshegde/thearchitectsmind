@@ -12,10 +12,12 @@ const { title, summary, stack, cover, date, links } = project.data;
 const name = title.split(':')[0].trim();
 const meta = links?.repo ? `${date.getUTCFullYear()}, open source` : `${date.getUTCFullYear()}`;
 ---
-<a class="feat" href={withBase(`/projects/${project.id}/`)}>
-  <div class="feat-media">
-    {cover && <Image src={cover} alt="" widths={[800, 1200, 1600]} sizes="(max-width: 720px) 100vw, 760px" />}
-  </div>
+<a class:list={['feat', { 'no-media': !cover }]} href={withBase(`/projects/${project.id}/`)}>
+  {cover && (
+    <div class="feat-media">
+      <Image src={cover} alt="" widths={[600, 900, 1200]} sizes="(max-width: 720px) 100vw, 540px" />
+    </div>
+  )}
   <div class="feat-body">
     <span class="feat-meta">{meta}</span>
     <h3>{name}</h3>
@@ -27,24 +29,27 @@ const meta = links?.repo ? `${date.getUTCFullYear()}, open source` : `${date.get
 
 <style>
   .feat { margin-top: 48px; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: center; }
-  .feat-media { grid-column: 1 / span 7; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: var(--soft); }
+  .feat-media { grid-column: 1 / span 5; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: var(--soft); }
   .feat-media :global(img) { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
   .feat:hover .feat-media :global(img) { transform: scale(1.025); }
-  .feat-body { grid-column: 9 / span 4; display: flex; flex-direction: column; align-items: flex-start; gap: 20px; }
+  .feat-body { grid-column: 7 / span 6; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  /* no cover: no empty box, the text takes the row */
+  .no-media .feat-body { grid-column: 1 / -1; }
+  .no-media .feat-desc { max-width: 68ch; }
   .feat-meta { font-size: 13px; color: var(--muted); }
-  h3 { font-size: 48px; line-height: 1; letter-spacing: -.03em; transition: color .35s var(--ease); }
+  h3 { font-size: clamp(30px, 3vw, 40px); line-height: 1.05; letter-spacing: -.03em; overflow-wrap: anywhere; transition: color .35s var(--ease); }
   .feat:hover h3 { color: var(--accent-ink); }
-  .feat-desc { margin: 0; font-size: 18px; line-height: 1.5; color: var(--muted); }
+  .feat-desc { margin: 0; font-size: 18px; line-height: 1.5; color: var(--muted); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4; overflow: hidden; }
   .feat-cta { margin-top: 8px; font-size: 15px; padding: 0 20px; }
   .feat:hover .feat-cta { background: var(--ink); color: var(--bg); }
 
   @media (max-width: 1100px) {
-    .feat-media { grid-column: 1 / span 6; }
-    .feat-body { grid-column: 7 / span 6; }
+    .feat-media { grid-column: 1 / span 5; }
+    .feat-body { grid-column: 6 / span 7; }
   }
   @media (max-width: 720px) {
     .feat { margin-top: 32px; row-gap: 28px; }
     .feat-media, .feat-body { grid-column: 1 / -1; }
-    h3 { font-size: 40px; }
+    h3 { font-size: 30px; }
   }
 </style>
