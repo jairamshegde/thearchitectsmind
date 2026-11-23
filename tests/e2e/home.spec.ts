@@ -43,6 +43,9 @@ test.describe('hero: the full stop is the missing piece', () => {
   test.use({ viewport: { width: 1440, height: 900 } });
   const brightest = (page: import('@playwright/test').Page) =>
     page.locator('#hero [data-pf] i.pf-s').evaluateAll((els) => Math.max(...els.map((e) => Number(getComputedStyle(e).opacity))));
+  // true when "intuition" is drawn in the full stop's orange
+  const wordIsAccent = (page: import('@playwright/test').Page) =>
+    page.locator('#hero h1 .word').evaluate((el) => getComputedStyle(el).color === getComputedStyle(el.querySelector('.accent-dot')!).backgroundColor);
 
   test('at rest the full stop sits after "intuition" and the spark is dim', async ({ page }) => {
     await page.goto('./');
@@ -50,6 +53,7 @@ test.describe('hero: the full stop is the missing piece', () => {
     await expect(page.locator('[data-hero-dot]')).toBeVisible();
     expect(await page.locator('[data-hero-sq]').evaluate((el) => getComputedStyle(el).opacity)).toBe('0');
     expect(await brightest(page)).toBeLessThan(0.4);
+    expect(await wordIsAccent(page)).toBe(false);
   });
 
   test('on hover the full stop flies into the spark, which lights up, and the text stays', async ({ page }) => {
@@ -67,6 +71,7 @@ test.describe('hero: the full stop is the missing piece', () => {
     await expect.poll(() => brightest(page)).toBeGreaterThan(0.8);
     await expect(page.locator('[data-hero-dot]')).toBeHidden();
     expect(await page.locator('#hero h1').evaluate((el) => getComputedStyle(el).opacity)).toBe('1');
+    await expect.poll(() => wordIsAccent(page)).toBe(true);
   });
 
   test('over the pattern the square follows the cursor, leaves a fading trail, and flies home on leave', async ({ page }) => {
@@ -87,6 +92,7 @@ test.describe('hero: the full stop is the missing piece', () => {
     await expect(page.locator('#hero')).not.toHaveClass(/lit/);
     await expect(page.locator('[data-hero-dot]')).toBeVisible({ timeout: 3000 });
     expect(await page.locator('[data-hero-sq]').evaluate((el) => getComputedStyle(el).opacity)).toBe('0');
+    await expect.poll(() => wordIsAccent(page)).toBe(false);
   });
 
   test('a cursor resting on the hero at load does nothing until it moves', async ({ page }) => {
@@ -106,6 +112,7 @@ test.describe('hero: the full stop is the missing piece', () => {
     await page.waitForTimeout(800);
     await expect(page.locator('[data-hero-dot]')).toBeVisible();
     expect(await brightest(page)).toBeGreaterThan(0.8);
+    expect(await wordIsAccent(page)).toBe(false);
   });
 });
 

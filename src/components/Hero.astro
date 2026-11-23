@@ -43,7 +43,9 @@ const headline = heroHeadline.replace(/\.$/, '');
   .hero-text { grid-column: 1 / span 7; min-width: 0; }
   h1 { line-height: .95; letter-spacing: -.045em; white-space: nowrap; }
   .lead { padding-bottom: .2em; font-size: clamp(24px, 2.6vw, 36px); font-weight: 500; letter-spacing: -.02em; color: var(--title-muted); }
-  .word { font-size: clamp(64px, 8vw, 112px); }
+  .word { font-size: clamp(64px, 8vw, 112px); transition: color .5s var(--ease); }
+  /* the word takes the full stop's colour while the stop sits in the spark */
+  .hero.armed.lit .word { color: var(--accent); }
   /* the full stop is drawn as a circle so the square can take its exact place; the "." stays in the text */
   .accent-dot { display: inline-block; width: .17em; height: .17em; margin-left: .03em; overflow: hidden; border-radius: 50%; background: var(--accent); color: transparent; line-height: 0; vertical-align: baseline; }
   .hero { position: relative; }
