@@ -19,8 +19,7 @@ disclaimer: The views here are my own.
 ---
 
 ## About me
-I’m Jairam, an AI engineer working on enterprise systems. **Enterprise systems can't tolerate probabilistic surprises**.
-I build AI agents for enterprise clients, and I spend as much time testing them as building them. Most of my work is on evals, finding where agents fail and fixing it before it reaches production.
+I’m Jairam, an AI engineer who builds agents for enterprise clients. **Enterprise systems can't tolerate probabilistic surprises**, so I spend as much time testing my agents as building them. Most of my work is on evals, which means finding where an agent fails and fixing the problem before it reaches production.
 
 I've spent **almost 6 years in data and AI**. I started with classical ML, building record linkage models with random forests and XGBoost to deduplicate enterprise data. That work taught me how messy real enterprise data is, and that the unglamorous work is what makes the impressive work possible.
 
