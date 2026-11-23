@@ -15,8 +15,8 @@ const [latest, ...rest] = posts;
 const tags = topTags(rest.map((r) => r.post), 10);
 const day = (d: Date) => d.toISOString().slice(0, 10);
 ---
-<BaseLayout title="Blog" description="Long-form writing on building software and AI systems.">
-  <PageHead title="Blog" intro="Essays from building things. Most take one idea and build it into working code, then write down what broke." />
+<BaseLayout title="Writing" description="Long-form writing on building software and AI systems.">
+  <PageHead title="Writing" intro="Essays from building things. Most take one idea and build it into working code, then write down what broke." />
 
   {latest ? (
     <section class="wrap idx-sec" aria-label="Latest post">

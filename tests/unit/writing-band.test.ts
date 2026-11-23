@@ -12,10 +12,10 @@ async function band(props: Record<string, unknown>) {
 }
 
 describe('WritingBand', () => {
-  it('has Blog and Notes tabs with no counts, Blog selected', async () => {
+  it('has Writing and Notes tabs with no counts, Writing selected', async () => {
     const html = await band({ posts: [post(1)], notes: [note(1)] });
     const tabs = html.querySelectorAll('[role="tablist"] button[role="tab"]');
-    expect(tabs.map((t) => t.text.trim())).toEqual(['Blog', 'Notes']);
+    expect(tabs.map((t) => t.text.trim())).toEqual(['Writing', 'Notes']);
     expect(tabs.map((t) => t.getAttribute('aria-selected'))).toEqual(['true', 'false']);
     expect(html.querySelector('#panel-notes')?.hasAttribute('hidden')).toBe(true);
   });
@@ -28,12 +28,12 @@ describe('WritingBand', () => {
 
   it('says so when there are no posts yet', async () => {
     const html = await band({ posts: [], notes: [note(1)] });
-    expect(html.querySelector('#panel-blog')?.text).toContain('First post coming soon.');
+    expect(html.querySelector('#panel-writing')?.text).toContain('First post coming soon.');
   });
 
   it('shows the date, title and read time on each row and the topic, date and title on each card', async () => {
     const html = await band({ posts: [post(3)], notes: [note(4)] });
-    const row = html.querySelector('#panel-blog a.row')!;
+    const row = html.querySelector('#panel-writing a.row')!;
     expect(row.getAttribute('href')).toBe('/writing/p3/');
     expect(row.querySelector('.row-label')).toBeNull();
     expect(row.querySelector('time.row-date')?.getAttribute('datetime')).toBe('2026-10-03');

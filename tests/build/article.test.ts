@@ -8,10 +8,10 @@ describe('writing article: the last Mingraph part', () => {
   const POST = '/writing/mingraph/phase-7-state-pattern-and-agent-loop/';
   const p = page(POST);
 
-  it('links back to the blog at the top, without an arrow', () => {
+  it('links back to writing at the top, without an arrow', () => {
     const back = p.querySelector('header.post-head a.back-link');
     expect(back?.getAttribute('href')).toBe(`${BASE}/writing/`);
-    expect(back?.text.trim()).toBe('Back to blog');
+    expect(back?.text.trim()).toBe('Back to writing');
   });
 
   it('renders the post head in order: series line, title, dek, meta', () => {

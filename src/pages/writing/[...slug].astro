@@ -40,7 +40,7 @@ const { title, description, date, tags, cover } = post.data;
 const nextMinutes = next ? ((await render(next)).remarkPluginFrontmatter.minutesRead as number) : 0;
 const seriesName = series ? series.entry.data.title.charAt(0).toUpperCase() + series.entry.data.title.slice(1) : '';
 ---
-<ArticleLayout title={title} description={description} headings={headings} headClass="post-head" back={{ href: withBase('/writing/'), label: 'Back to blog' }}>
+<ArticleLayout title={title} description={description} headings={headings} headClass="post-head" back={{ href: withBase('/writing/'), label: 'Back to writing' }}>
   <Fragment slot="header">
     {series && (
       <p class="series-line fade-up" style="--d:.3s">{seriesName} series, part {series.at} of {series.of} · <a class="ul-on" href={withBase(`/writing/${series.entry.id}/`)}>See all parts</a></p>
