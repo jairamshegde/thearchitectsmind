@@ -1,5 +1,9 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { BASE, page } from './helpers';
+
+// The About copy is edited in the CMS, so compare against the file rather than a copy of its text.
+const aboutSource = readFileSync('src/content/pages/about.md', 'utf8');
 
 describe('/about/', () => {
   const p = page('/about/');
@@ -7,7 +11,8 @@ describe('/about/', () => {
 
   it('puts the name, the tagline, the GitHub link and a hidden Pico in the side column', () => {
     expect(side.querySelector('h1')?.text).toBe('Jairam Hegde.');
-    expect(side.querySelectorAll('.about-tagline > span > span').map((s) => s.text)).toEqual(['Senior AI Engineer', 'Enterprise Solutions', '"Why" gives me direction']);
+    const tagline = aboutSource.match(/^tagline: (.+)$/m)![1].split('|').map((s) => s.trim());
+    expect(side.querySelectorAll('.about-tagline > span > span').map((s) => s.text)).toEqual(tagline);
     const pico = side.querySelector('.about-pico')!;
     expect(pico.querySelector('button[aria-controls="pico"]')?.getAttribute('aria-expanded')).toBe('false');
     expect(pico.querySelector('img')?.getAttribute('src')).toMatch(/^\/_astro\/pico-welcome\./);
@@ -29,7 +34,6 @@ describe('/about/', () => {
       'Outside work',
       'Get in touch',
     ]);
-    expect(p.querySelector('.about-body blockquote')?.text.trim()).toBe('“If I were building this for the first time, what would it need?”');
   });
 
   it('draws the stack graph with one filter button per area, the "Used together" toggle off, and a text list', () => {

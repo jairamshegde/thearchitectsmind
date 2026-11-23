@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { BASE, built, page } from './helpers';
 
@@ -104,7 +105,12 @@ describe('/projects/', () => {
     const cards = p.querySelectorAll('a.feat');
     expect(cards).toHaveLength(1);
     expect(cards[0].getAttribute('href')).toMatch(new RegExp(`^${BASE}/projects/[^/]+/$`));
-    expect(cards[0].querySelector('.feat-desc')?.text).toMatch(/^The core of LangChain and LangGraph/);
+    // the summary is CMS text, so check it came from the featured project's own file
+    const id = cards[0].getAttribute('href')!.split('/').at(-2)!;
+    const source = readFileSync(`src/content/projects/${id}/index.md`, 'utf8');
+    const desc = cards[0].querySelector('.feat-desc')!.text.trim();
+    expect(desc.length).toBeGreaterThan(0);
+    expect(source).toContain(desc.split('\n')[0]);
     expect(cards[0].querySelector('.feat-cta')?.text.trim()).toBe('View case study');
     const featured = cards[0].getAttribute('href');
     expect(p.querySelectorAll('.proj-rows a').map((a) => a.getAttribute('href'))).not.toContain(featured);
