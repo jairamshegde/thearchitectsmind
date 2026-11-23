@@ -1,8 +1,7 @@
 {
   "heroLead": "In search of",
   "heroHeadline": "intuition",
-  "heroSub": "Building intuition for complex systems.",
-  "heroBio": "I’m Jairam. I write and build my way to the simple shape inside hard problems, lately AI agents, and the evals that show they work.",
+  "heroSub": "An AI engineer’s working notes on building reliable agents, designing evals, and shipping AI that survives production.",
   "footerStatement": "Let’s talk about",
   "footerTopics": [
     "AI agents",
