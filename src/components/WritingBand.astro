@@ -24,7 +24,7 @@ const { posts, notes, writingHref = '/writing/', notesHref = '/notes/' } = Astro
     </div>
 
     <div class="panel grid" role="tabpanel" id="panel-writing" aria-labelledby="tab-writing">
-      <p class="panel-desc">Essays from building things. Most take one idea and build it into working code, then write down what broke.</p>
+      <p class="panel-desc">Long-form essays and case-study series on applied AI engineering: agents, evaluation, production trade-offs, and lessons from building systems.</p>
       {posts.length > 0 ? (
         <ul class="rows">
           {posts.map((p) => (
@@ -41,7 +41,7 @@ const { posts, notes, writingHref = '/writing/', notesHref = '/notes/' } = Astro
     </div>
 
     <div class="panel grid" role="tabpanel" id="panel-notes" aria-labelledby="tab-notes" hidden>
-      <p class="panel-desc">Short, unpolished notes. Sketches, half-formed ideas and things I’m still figuring out.</p>
+      <p class="panel-desc">Short notes, TILs, snippets, and working thoughts. Less polished by design. Long-form versions live in Writing.</p>
       {notes.length > 0 ? (
         <ul class="cards">
           {notes.map((n) => (
