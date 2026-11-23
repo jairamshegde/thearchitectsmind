@@ -19,12 +19,11 @@ disclaimer: The views here are my own.
 ---
 
 ## About me
-I’m Jairam, an AI engineer working on enterprise systems. Enterprise systems can't tolerate probabilistic surprises. I write about the architecture, trace-level evaluations, and failure modes required to keep AI agents grounded in reality.
-
+I’m Jairam, an AI engineer working on enterprise systems. **Enterprise systems can't tolerate probabilistic surprises**.
 I build AI agents for enterprise clients, and I spend as much time testing them as building them. Most of my work is on evals, finding where agents fail and fixing it before it reaches production.
 
-I've spent a**lmost 6 years in data and AI**. I started with classical ML, building record linkage models with random forests and XGBoost to deduplicate enterprise data. That work taught me how messy real enterprise data is, and that the unglamorous work is what makes the impressive work possible.
+I've spent **almost 6 years in data and AI**. I started with classical ML, building record linkage models with random forests and XGBoost to deduplicate enterprise data. That work taught me how messy real enterprise data is, and that the unglamorous work is what makes the impressive work possible.
 
-From there I moved into generative AI. I designed AI workflows and internal automation, led my team's adoption of agentic coding, and went on to build RAG pipelines and single- and multi-agent applications. On one product, I cut the time my team spent on sprint planning and **progress updates from 2 hours to 45 minutes**.
+From there I moved into generative AI. I designed AI workflows and internal automation, led my team's adoption of agentic coding, and went on to build RAG pipelines and single and multi-agent applications. On one product, I cut the time my team spent on sprint planning and progress updates **from 2 hours to 45 minutes**.
 
 Along the way, I've made plenty of mistakes, met people who shaped how I work, and become a better problem solver and, I hope, a better person.
