@@ -13,6 +13,7 @@ stack:
 date: 2026-11-20
 problem: coming soon..
 constraints: coming soon..
+cover: Expense_Assistant_Architecture.png
 featured: true
 draft: false
 ---
