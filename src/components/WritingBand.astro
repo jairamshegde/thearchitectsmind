@@ -7,24 +7,24 @@ export type BandNote = { href: string; topic: string; date: Date; title: string 
 interface Props {
   posts: BandPost[];
   notes: BandNote[];
-  blogHref?: string;
+  writingHref?: string;
   notesHref?: string;
 }
-const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.props;
+const { posts, notes, writingHref = '/writing/', notesHref = '/notes/' } = Astro.props;
 ---
-<section id="writing" class="wband" data-tabs data-blog-href={blogHref} data-notes-href={notesHref}>
+<section id="writing" class="wband" data-tabs data-writing-href={writingHref} data-notes-href={notesHref}>
   <div class="wrap">
-    <h2 class="visually-hidden">Blog and notes</h2>
+    <h2 class="visually-hidden">Latest writing and notes</h2>
     <div class="sec-top">
-      <div class="tablist" role="tablist" aria-label="Blog or notes">
-        <button type="button" role="tab" id="tab-blog" aria-selected="true" aria-controls="panel-blog" tabindex="0" data-tab="blog">Blog</button>
+      <div class="tablist" role="tablist" aria-label="Writing or notes">
+        <button type="button" role="tab" id="tab-writing" aria-selected="true" aria-controls="panel-writing" tabindex="0" data-tab="writing">Writing</button>
         <button type="button" role="tab" id="tab-notes" aria-selected="false" aria-controls="panel-notes" tabindex="-1" data-tab="notes">Notes</button>
       </div>
-      <a class="ul" href={blogHref} data-all>All posts</a>
+      <a class="ul" href={writingHref} data-all>All writing</a>
     </div>
 
-    <div class="panel grid" role="tabpanel" id="panel-blog" aria-labelledby="tab-blog">
-      <p class="panel-desc">Long-form essays from building Mingraph. Each one takes a single design pattern and builds it into a working LLM framework.</p>
+    <div class="panel grid" role="tabpanel" id="panel-writing" aria-labelledby="tab-writing">
+      <p class="panel-desc">Long-form essays and case-study series on applied AI engineering: agents, evaluation, production trade-offs, and lessons from building systems.</p>
       {posts.length > 0 ? (
         <ul class="rows">
           {posts.map((p) => (
@@ -41,7 +41,7 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
     </div>
 
     <div class="panel grid" role="tabpanel" id="panel-notes" aria-labelledby="tab-notes" hidden>
-      <p class="panel-desc">Short, unpolished notes. Sketches, half-formed ideas and things I’m still figuring out.</p>
+      <p class="panel-desc">Short notes, TILs, snippets, and working thoughts. Less polished by design. Long-form versions live in Writing.</p>
       {notes.length > 0 ? (
         <ul class="cards">
           {notes.map((n) => (
@@ -60,7 +60,7 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
 
 <style>
   .wband { background: var(--band-soft); border-top: 1px solid var(--line); }
-  .wband > .wrap { padding-top: 88px; padding-bottom: 96px; }
+  .wband > .wrap { padding-top: 80px; padding-bottom: 88px; }
   .tablist { display: flex; align-items: end; gap: 40px; }
   [role='tab'] {
     appearance: none; border: 0; background: none; margin: 0; padding: 0 0 6px; cursor: pointer;
@@ -105,7 +105,7 @@ const { posts, notes, blogHref = '/writing/', notesHref = '/notes/' } = Astro.pr
     .rows, .cards, .panel-list { grid-column: 1 / -1; }
   }
   @media (max-width: 720px) {
-    .wband > .wrap { padding-top: 64px; padding-bottom: 72px; }
+    .wband > .wrap { padding-top: 56px; padding-bottom: 64px; }
     .tablist { gap: 28px; }
     .panel { margin-top: 32px; }
     .row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'label time' 'title title'; gap: 8px 16px; padding: 20px 0; }

@@ -1,0 +1,70 @@
+---
+export type SeriesPart = { href: string; title: string; minutes: number };
+
+interface Props {
+  name: string;
+  description: string;
+  href: string;
+  /** Published parts in order. */
+  parts: SeriesPart[];
+}
+const { name, description, href, parts } = Astro.props;
+const SHOWN = 4;
+const minutes = parts.reduce((sum, p) => sum + p.minutes, 0);
+---
+<div class="series grid">
+  <div class="series-body">
+    <span class="series-meta">{parts.length} {parts.length === 1 ? 'part' : 'parts'} · {minutes} min</span>
+    <h3><a href={href}>{name}</a></h3>
+    <p class="series-desc">{description}</p>
+    <a class="pill pill-outline series-cta" href={parts[0].href}>Start with part 1</a>
+  </div>
+  <ol class="parts">
+    {parts.slice(0, SHOWN).map((p, i) => (
+      <li>
+        <a class="part" href={p.href}>
+          <span class="part-n">Part {i + 1}</span>
+          <span class="part-title">{p.title}</span>
+          <span class="part-time">{p.minutes} min</span>
+        </a>
+      </li>
+    ))}
+    {parts.length > SHOWN && <li class="parts-more"><a class="ul" href={href}>All {parts.length} parts</a></li>}
+  </ol>
+</div>
+
+<style>
+  .series { margin-top: 48px; align-items: start; }
+  .series + .series { margin-top: 72px; }
+  .series-body { grid-column: 1 / span 5; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+  .series-meta { font-size: 13px; font-weight: 500; color: var(--muted); }
+  h3 { font-size: 48px; line-height: 1; letter-spacing: -.03em; transition: color .35s var(--ease); }
+  h3 a:hover { color: var(--accent-ink); }
+  .series-desc { margin: 0; font-size: 18px; line-height: 1.5; color: var(--muted); }
+  .series-desc::first-letter { text-transform: uppercase; }
+  .series-cta { margin-top: 6px; font-size: 15px; padding: 0 20px; }
+  .series-cta:hover { background: var(--ink); color: var(--bg); }
+
+  .parts { grid-column: 7 / span 6; list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .part { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1fr) 56px; gap: 16px; align-items: baseline; padding: 18px 0; border-bottom: 1px solid var(--line); }
+  .part::before { content: ''; position: absolute; inset: 0 -16px; border-radius: 10px; background: var(--soft); opacity: 0; transform: scaleY(.85); transition: opacity .35s var(--ease), transform .45s var(--ease); }
+  .part:hover::before { opacity: 1; transform: none; }
+  .part > * { position: relative; }
+  .part-n, .part-time { font-size: 12px; font-weight: 500; color: var(--muted); white-space: nowrap; }
+  .part-time { text-align: right; }
+  .part-title { font-size: 18px; font-weight: 500; line-height: 1.35; letter-spacing: -.01em; transition: transform .45s var(--ease); }
+  .part:hover .part-title { transform: translateX(6px); }
+  .parts-more { padding-top: 16px; font-size: 15px; font-weight: 500; }
+
+  @media (max-width: 1100px) {
+    .series-body, .parts { grid-column: 1 / -1; }
+    .parts { margin-top: 32px; }
+  }
+  @media (max-width: 720px) {
+    .series { margin-top: 32px; }
+    h3 { font-size: 40px; }
+    .part { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'n time' 'title title'; gap: 6px 16px; }
+    .part::before { inset: 0 -10px; }
+    .part-n { grid-area: n; } .part-time { grid-area: time; } .part-title { grid-area: title; }
+  }
+</style>

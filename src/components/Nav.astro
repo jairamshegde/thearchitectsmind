@@ -4,7 +4,7 @@ import ThemeToggle from './ThemeToggle.astro';
 
 const links = [
   { key: 'projects', label: 'Projects', path: '/projects/', wide: true },
-  { key: 'blog', label: 'Blog', path: '/writing/', wide: false },
+  { key: 'writing', label: 'Writing', path: '/writing/', wide: false },
   { key: 'notes', label: 'Notes', path: '/notes/', wide: true },
   { key: 'about', label: 'About', path: '/about/', wide: true },
 ];
@@ -49,10 +49,14 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
     .nav .wide { display: none; }
     .bar { padding-top: 14px; padding-bottom: 14px; }
   }
+  @media (max-width: 400px) {
+    .bar { gap: 12px; }
+    .nav { gap: 10px; }
+  }
   @media (max-width: 360px) {
-    .bar { gap: 10px; }
-    .brand { font-size: 17px; }
-    .nav { gap: 8px; }
+    .bar { gap: 8px; }
+    .brand { font-size: 16px; }
+    .nav { gap: 6px; font-size: 14px; }
     .contact-pill { padding: 0 12px; }
   }
 </style>

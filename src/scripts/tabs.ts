@@ -1,8 +1,8 @@
-type Tab = 'blog' | 'notes';
+type Tab = 'writing' | 'notes';
 
 /**
- * Blog / Notes tabs on the homepage band. Also takes over the header's Blog and Notes links
- * and the hero's "Read the blog" link, so they open the right tab instead of leaving the page.
+ * Writing / Notes tabs on the homepage band. Also takes over the header's Writing and Notes links,
+ * so they open the right tab instead of leaving the page.
  */
 export function initTabs(): void {
   const band = document.querySelector<HTMLElement>('[data-tabs]');
@@ -19,8 +19,8 @@ export function initTabs(): void {
       if (on && focus) tab.focus();
     }
     if (all) {
-      all.textContent = name === 'blog' ? 'All posts' : 'All notes';
-      all.href = (name === 'blog' ? band.dataset.blogHref : band.dataset.notesHref) ?? all.href;
+      all.textContent = name === 'writing' ? 'All writing' : 'All notes';
+      all.href = (name === 'writing' ? band.dataset.writingHref : band.dataset.notesHref) ?? all.href;
     }
   };
 
@@ -40,7 +40,7 @@ export function initTabs(): void {
     select(name);
     band.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   };
-  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-nav="blog"], [data-tab-link="blog"]')) link.addEventListener('click', open('blog'));
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-nav="writing"], [data-tab-link="writing"]')) link.addEventListener('click', open('writing'));
   for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-nav="notes"], [data-tab-link="notes"]')) link.addEventListener('click', open('notes'));
 
   if (location.hash === '#notes') select('notes');

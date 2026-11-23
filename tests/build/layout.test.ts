@@ -8,7 +8,7 @@ describe('base layout', () => {
     const links = home.querySelectorAll('nav.nav a[data-nav]').map((a) => [a.text.trim(), a.getAttribute('href')]);
     expect(links).toEqual([
       ['Projects', `${BASE}/projects/`],
-      ['Blog', `${BASE}/writing/`],
+      ['Writing', `${BASE}/writing/`],
       ['Notes', `${BASE}/notes/`],
       ['About', `${BASE}/about/`],
     ]);
@@ -31,8 +31,8 @@ describe('base layout', () => {
   it('marks the current section in the nav', () => {
     const current = (route: string) => page(route).querySelectorAll('nav.nav a[aria-current="page"]').map((a) => a.getAttribute('data-nav'));
     expect(current('/')).toEqual([]);
-    expect(current('/writing/')).toEqual(['blog']);
-    expect(current('/writing/mingraph/phase-0-oop-finally-clicked/')).toEqual(['blog']);
+    expect(current('/writing/')).toEqual(['writing']);
+    expect(current('/writing/mingraph/phase-0-oop-finally-clicked/')).toEqual(['writing']);
     expect(current('/notes/')).toEqual(['notes']);
     expect(current('/projects/')).toEqual(['projects']);
     expect(current('/about/')).toEqual(['about']);

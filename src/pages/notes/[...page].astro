@@ -18,7 +18,7 @@ const { page } = Astro.props;
 const groups = groupByMonth(page.data);
 ---
 <BaseLayout title={page.currentPage === 1 ? 'Notes' : `Notes, page ${page.currentPage}`} description="Short notes and quick tutorials on what I'm learning.">
-  <PageHead title="Notes" intro="Unpolished sketches, half-formed ideas and things I’m still figuring out." />
+  <PageHead title="Notes" intro="Short notes, TILs, snippets, and working thoughts. Less polished by design. Long-form versions live in Writing." />
   <div class="wrap notes-body">
     {groups.length === 0 && <p class="empty">First note coming soon.</p>}
     {groups.map((g) => (

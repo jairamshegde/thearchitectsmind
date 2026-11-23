@@ -8,7 +8,7 @@ import { withBase } from '../../lib/url';
 const [featured, ...others] = await published('projects');
 ---
 <BaseLayout title="Projects" description="Projects and case studies.">
-  <PageHead title="Projects" intro="Things I rebuild to understand them, with a write-up of what broke." />
+  <PageHead title="Projects" intro="Selected systems I’ve built, with the engineering write-ups behind them: architecture, trade-offs, failure modes, and evaluations." />
   <section class="wrap proj-sec">
     {featured ? <FeaturedProject project={featured} /> : <p class="empty">First project write-up coming soon.</p>}
     {others.length > 0 && (

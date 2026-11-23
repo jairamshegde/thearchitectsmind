@@ -10,7 +10,7 @@ describe('/writing/', () => {
   const cards = p.querySelectorAll('a.latest-card, a.wcard');
 
   it('has the nav name as its title, an intro, and no second heading above the latest post', () => {
-    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Blog.');
+    expect(p.querySelector('h1.page-title')?.text.replace(/\s+/g, ' ').trim()).toBe('Writing.');
     expect(p.querySelector('.page-intro')?.text).toBeTruthy();
     expect(p.querySelector('header .page-rule')).not.toBeNull();
     expect(p.querySelectorAll('main h2').map((h) => h.text)).toEqual(['All posts']);
