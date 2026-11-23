@@ -9,10 +9,12 @@ test('keeps a side gutter on phones (hero, sections, contact band)', async ({ pa
   }
 });
 
-test('hero title is at most 112px at 1440px', async ({ page }) => {
+test('hero headline word is at most 112px at 1440px, the muted lead above it smaller', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./');
-  const px = await page.locator('#hero h1').evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  const size = (sel: string) => page.locator(sel).evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
+  const px = await size('#hero h1 .word');
+  expect(await size('#hero h1 .lead')).toBeLessThan(px / 2);
   expect(px).toBeLessThanOrEqual(112);
   expect(px).toBeGreaterThan(90);
 });
@@ -22,7 +24,7 @@ for (const width of [1440, 1024, 390]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto('./');
     for (const line of await page.locator('#hero h1 .mask').all()) {
-      const { height, lineHeight } = await line.evaluate((el) => ({ height: el.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el).fontSize) * 0.95 }));
+      const { height, lineHeight } = await line.evaluate((el) => ({ height: el.firstElementChild!.getBoundingClientRect().height, lineHeight: parseFloat(getComputedStyle(el.firstElementChild!).fontSize) * 0.95 }));
       expect(Math.round(height / lineHeight)).toBe(1);
     }
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
@@ -113,7 +115,7 @@ test('band: Notes tab swaps the list and the link without leaving the page', asy
   await page.getByRole('tab', { name: 'Notes' }).click();
   await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'true');
   await expect(page.locator('#panel-notes')).toBeVisible();
-  await expect(page.locator('#panel-blog')).toBeHidden();
+  await expect(page.locator('#panel-writing')).toBeHidden();
   await expect(all).toHaveText('All notes');
   await expect(all).toHaveAttribute('href', /\/notes\/$/);
   expect(new URL(page.url()).pathname).toBe('/');
@@ -121,7 +123,7 @@ test('band: Notes tab swaps the list and the link without leaving the page', asy
 
 test('band: arrow keys move between tabs', async ({ page }) => {
   await page.goto('./');
-  await page.getByRole('tab', { name: 'Blog' }).focus();
+  await page.getByRole('tab', { name: 'Writing' }).focus();
   await page.keyboard.press('ArrowRight');
   await expect(page.getByRole('tab', { name: 'Notes' })).toBeFocused();
   await expect(page.getByRole('tab', { name: 'Notes' })).toHaveAttribute('aria-selected', 'true');
@@ -136,12 +138,12 @@ test('band: Notes in the header selects the Notes tab and scrolls to the band on
   expect(new URL(page.url()).pathname).toBe('/');
 });
 
-test('band: "Read the blog" in the hero selects Blog after Notes was picked', async ({ page }) => {
+test('band: Writing in the header selects Writing after Notes was picked', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto('./');
   await page.getByRole('tab', { name: 'Notes' }).click();
-  await page.locator('#hero').getByRole('link', { name: 'Read the blog' }).click();
-  await expect(page.getByRole('tab', { name: 'Blog' })).toHaveAttribute('aria-selected', 'true');
+  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Writing', exact: true }).click();
+  await expect(page.getByRole('tab', { name: 'Writing' })).toHaveAttribute('aria-selected', 'true');
 });
 
 test('about page: the profile column stays put on desktop while the sections scroll', async ({ page }) => {
@@ -198,13 +200,13 @@ test('the footer heading stays still with reduced motion', async ({ page }) => {
   await expect(word).toHaveText('anything');
 });
 
-test('band: the blog list has no rule of its own above the first row', async ({ page }) => {
+test('band: the writing list has no rule of its own above the first row', async ({ page }) => {
   await page.goto('./');
-  const border = await page.locator('#panel-blog .rows').evaluate((el) => getComputedStyle(el).borderTopWidth);
+  const border = await page.locator('#panel-writing .rows').evaluate((el) => getComputedStyle(el).borderTopWidth);
   expect(border).toBe('0px');
   await page.setViewportSize({ width: 1440, height: 900 });
-  const desc = (await page.locator('#panel-blog .panel-desc').boundingBox())!;
-  const title = (await page.locator('#panel-blog .row-title').first().boundingBox())!;
+  const desc = (await page.locator('#panel-writing .panel-desc').boundingBox())!;
+  const title = (await page.locator('#panel-writing .row-title').first().boundingBox())!;
   expect(Math.abs(title.y - desc.y)).toBeLessThanOrEqual(4);
 });
 
