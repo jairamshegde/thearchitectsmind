@@ -16,8 +16,6 @@ featured: true
 draft: false
 ---
 
-# There's no such thing as a trace: making sense of spans, traces, and sessions
-
 I was building a bookmark recommendation project, my first project with observability, and using Phoenix to see what it was doing. What confused me was the relation between spans and traces. In theory I could understand it, but in the tool it was confusing. I read their blog post, [LLM Tracing and Observability](https://arize.com/blog/llm-tracing-and-observability-with-arize-phoenix/), and it didn't make much sense.
 
 A while later I came across a short video by Mikio from Arize, [OpenTelemetry Concepts for AI: Span, Trace, Session](https://www.youtube.com/watch?v=7XgNHzHXeaM), and it all made sense. He starts in Phoenix itself. Open Phoenix, go to the Spans tab with the "root spans only" filter on, then click over to the Traces tab. The two lists look the same. The answer is simpler than two tabs suggest: the root spans are the traces, because a trace isn't stored anywhere as its own thing.
