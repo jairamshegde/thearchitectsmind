@@ -21,7 +21,7 @@
   --ease: cubic-bezier(.22, 1, .36, 1);
   --max: 1360px;
   --pad: 40px;
-  --post-w: 860px;
+  --post-w: 760px;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
