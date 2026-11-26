@@ -93,3 +93,10 @@ test('section headings are at most 40px and sections sit closer together at 1440
   expect(await pad('#projects', 'padding-bottom')).toBeLessThanOrEqual(104);
   expect(await pad('#writing > .wrap', 'padding-top')).toBeLessThanOrEqual(92);
 });
+
+test('writing index: the latest cover leaves the first card of "All posts" above the fold at 1440×900', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./writing/');
+  const card = (await page.locator('.wcard').first().boundingBox())!;
+  expect(card.y).toBeLessThan(900);
+});
