@@ -38,7 +38,7 @@ const posts: BandPost[] = await Promise.all(
     minutes: await minutesOf(post),
   })),
 );
-const notes: BandNote[] = (await published('notes')).slice(0, 4).map((n) => ({
+const notes: BandNote[] = (await published('notes')).slice(0, 3).map((n) => ({
   href: withBase(`/notes/${n.id}/`),
   topic: n.data.tags[0],
   date: n.data.date,
@@ -73,7 +73,9 @@ const [project] = pickHome(await published('projects'), 1);
 
 <style>
   /* every homepage section uses the same rhythm as the writing band */
-  .home-sec { padding-top: 80px; padding-bottom: 88px; }
+  .home-sec { padding-top: 56px; padding-bottom: 56px; }
+  .home-sec .sec-top { padding-bottom: 16px; }
+  .home-sec .sec-top h2 { font-size: 28px; letter-spacing: -.02em; }
   #series { padding-top: 24px; }
   @media (max-width: 720px) {
     .home-sec { padding-top: 56px; padding-bottom: 64px; }

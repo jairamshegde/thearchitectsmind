@@ -30,7 +30,7 @@ const mailto = `mailto:${email ?? '[YOUR EMAIL]'}`;
 </script>
 
 <style>
-  .band { background: var(--band-bg); color: var(--band-ink); }
+  .band { --display: var(--display-brand); --sans: var(--sans-brand); font-family: var(--sans); background: var(--band-bg); color: var(--band-ink); }
   .band .wrap { padding-top: 64px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
   .band-big { margin: 0; font-family: var(--display); font-weight: 600; font-size: clamp(34px, 4.4vw, 60px); line-height: 1.05; letter-spacing: -.035em; }
   .band-lead { color: var(--band-muted); }

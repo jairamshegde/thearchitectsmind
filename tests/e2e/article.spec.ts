@@ -49,12 +49,12 @@ test.describe('mobile', () => {
 });
 
 test.describe('reading width', () => {
-  test('body text is 860px wide with the table of contents to its left at 1440px', async ({ page }) => {
+  test('body text is 760px wide with the table of contents to its left at 1440px', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(POST);
     const para = (await page.locator('.prose > p').first().boundingBox())!;
     const toc = (await page.locator('nav.toc').boundingBox())!;
-    expect(Math.round(para.width)).toBe(860);
+    expect(Math.round(para.width)).toBe(760);
     expect(toc.x + toc.width).toBeLessThanOrEqual(para.x - 40);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
@@ -106,12 +106,22 @@ for (const [width, px] of [[1440, '17px'], [390, '16px']] as const) {
 }
 
 for (const route of [POST, './notes/dataclass-slots/', './projects/mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-scratch-to-learn-object-oriented-design-and-design-patterns-in-python./']) {
-  test(`${route}: the title can use the full width at 1440px`, async ({ page }) => {
-    await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto(route);
-    const css = await page.locator('h1').first().evaluate((el) => getComputedStyle(el).maxWidth);
-    expect(css).toBe('none');
-  });
+  for (const width of [1440, 390]) {
+    test(`${route}: the header lines up with the body text at ${width}px`, async ({ page }) => {
+      await page.setViewportSize({ width, height: 900 });
+      await page.goto(route);
+      const prose = (await page.locator('.prose').boundingBox())!;
+      const back = (await page.locator('.article-head .back-link').boundingBox())!;
+      const title = (await page.locator('h1').first().boundingBox())!;
+      expect(Math.abs(title.x - prose.x)).toBeLessThanOrEqual(1);
+      expect(Math.abs(back.x - prose.x)).toBeLessThanOrEqual(1);
+      expect(title.width).toBeLessThanOrEqual(761);
+      const cover = page.locator('.article-head figure.post-cover');
+      if (await cover.count()) expect((await cover.boundingBox())!.width).toBeLessThanOrEqual(761);
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    });
+  }
 }
 
 test('the progress bar stays empty on a note too short to scroll', async ({ page }) => {
@@ -122,9 +132,21 @@ test('the progress bar stays empty on a note too short to scroll', async ({ page
 });
 
 for (const route of [POST, './notes/dataclass-slots/', './projects/mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-scratch-to-learn-object-oriented-design-and-design-patterns-in-python./']) {
-  test(`${route}: the title is at most 52px at 1440px`, async ({ page }) => {
+  test(`${route}: the title is at most 40px at 1440px`, async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto(route);
-    expect(await page.locator('h1').first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeLessThanOrEqual(52);
+    expect(await page.locator('h1').first().evaluate((el) => parseFloat(getComputedStyle(el).fontSize))).toBeLessThanOrEqual(40);
   });
 }
+
+test('the back link is an outline pill that fills on hover', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto(POST);
+  const back = page.locator('.article-head .back-link');
+  const style = () => back.evaluate((el) => { const s = getComputedStyle(el); return { border: s.borderTopWidth, radius: parseFloat(s.borderTopLeftRadius), bg: s.backgroundColor }; });
+  const rest = await style();
+  expect(rest.border).toBe('1px');
+  expect(rest.radius).toBeGreaterThanOrEqual(18);
+  await back.hover();
+  await expect.poll(async () => (await style()).bg).not.toBe(rest.bg);
+});

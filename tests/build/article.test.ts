@@ -14,25 +14,32 @@ describe('writing article: the last Mingraph part', () => {
     expect(back?.text.trim()).toBe('Back to writing');
   });
 
-  it('renders the post head in order: series line, title, dek, meta', () => {
+  it('renders the post head in order: back link, cover, series line, title, meta line', () => {
     const head = p.querySelector('header.post-head')!;
-    const order = head.querySelectorAll('.series-line, .post-title, .dek, .post-meta').map((el) => el.classNames.split(' ').find((c) => ['series-line', 'post-title', 'dek', 'post-meta'].includes(c)));
-    expect(order).toEqual(['series-line', 'post-title', 'dek', 'post-meta']);
+    const names = ['back-link', 'post-cover', 'series-line', 'post-title', 'post-meta'];
+    const order = head.querySelectorAll(names.map((n) => `.${n}`).join(', ')).map((el) => el.classNames.split(' ').find((c) => names.includes(c)));
+    expect(order).toEqual(names);
     const series = head.querySelector('.series-line')!;
     expect(series.text.replace(/\s+/g, ' ').trim()).toBe('Mingraph series, part 8 of 8 · See all parts');
     expect(series.querySelector('a')?.getAttribute('href')).toBe(`${BASE}/writing/mingraph/`);
     expect(head.querySelectorAll('h1.post-title .mask').length).toBe(1);
-    expect(head.querySelector('.dek')?.text).toBeTruthy();
-    expect(head.querySelectorAll('dl.post-meta dt').map((d) => d.text)).toEqual(['Published', 'Reading time', 'Part', 'Tags']);
-    expect(head.querySelectorAll('dl.post-meta dd')[1].text).toMatch(/^\d+ min$/);
-    expect(head.querySelectorAll('dl.post-meta dd')[2].text).toBe('8 of 8');
-    expect(head.querySelectorAll('dl.post-meta .tag').length).toBeGreaterThan(0);
+    expect(head.querySelector('figure.post-cover img')).not.toBeNull();
+    expect(p.querySelector('.dek')).toBeNull();
+    expect(p.querySelector('dl.post-meta')).toBeNull();
+    expect(head.querySelector('p.post-meta')?.text.replace(/\s+/g, ' ').trim()).toMatch(/^[A-Z][a-z]{2} \d{1,2}, \d{4} · \d+ min read · Part 8 of 8$/);
     expect(p.querySelector('[data-pf]')).toBeNull();
   });
 
-  it('puts the cover after the head, and a reading progress bar at the top', () => {
-    const cover = p.querySelector('figure.post-cover img');
-    expect(cover).not.toBeNull();
+  it('lists the tags after the article text, before the series end', () => {
+    const tags = p.querySelector('.article .post-tags')!;
+    expect(tags.querySelector('.post-tags-label')?.text).toBe('Tagged');
+    expect(tags.querySelectorAll('.tag').length).toBeGreaterThan(0);
+    const html = p.toString();
+    expect(html.indexOf('class="post-tags"')).toBeLessThan(html.indexOf('class="series-end'));
+    expect(html.indexOf('class="prose"')).toBeLessThan(html.indexOf('class="post-tags"'));
+  });
+
+  it('has a reading progress bar at the top', () => {
     expect(p.querySelector('.progress[aria-hidden="true"] > i')).not.toBeNull();
   });
 
@@ -117,7 +124,9 @@ describe('notes', () => {
     expect(p.querySelector('nav.toc')).toBeNull();
     expect(p.querySelector('.article-head a.back-link')?.getAttribute('href')).toBe(`${BASE}/notes/`);
     expect(p.querySelector('.article-head a.back-link')?.text.trim()).toBe('Back to notes');
-    expect(p.querySelector('.article-meta')?.text).toBe('Sep 12, 2026 · python');
+    expect(p.querySelector('.article-head p.post-meta')?.text).toMatch(/^Sep 12, 2026 · \d+ min read$/);
+    expect(p.querySelector('.article-lead')).toBeNull();
+    expect(p.querySelectorAll('.post-tags .tag').map((t) => t.text)).toEqual(['python']);
   });
 
   it('shows the TOC for a note with three headings', () => {

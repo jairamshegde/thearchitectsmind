@@ -40,7 +40,7 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
   }
   .site-header.scrolled { border-bottom-color: var(--line); }
   .bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 20px; padding-bottom: 20px; }
-  .brand { font-weight: 700; font-size: 19px; letter-spacing: -.02em; white-space: nowrap; }
+  .brand { font-family: var(--sans-brand); font-weight: 700; font-size: 19px; letter-spacing: -.02em; white-space: nowrap; }
   .nav { display: flex; align-items: center; gap: 28px; font-size: 16px; font-weight: 500; }
   .nav .on { background-size: 100% 1px; }
 
@@ -51,12 +51,12 @@ const isCurrent = (path: string) => here.startsWith(withBase(path));
   }
   @media (max-width: 400px) {
     .bar { gap: 12px; }
-    .nav { gap: 10px; }
+    .nav { gap: 10px; font-size: 14px; }
   }
   @media (max-width: 360px) {
     .bar { gap: 8px; }
     .brand { font-size: 16px; }
-    .nav { gap: 6px; font-size: 14px; }
+    .nav { gap: 6px; font-size: 13px; }
     .contact-pill { padding: 0 12px; }
   }
 </style>

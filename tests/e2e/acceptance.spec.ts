@@ -9,8 +9,13 @@ for (const route of ROUTES) {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
     const font = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).fontFamily);
-    expect(await font('h1')).toMatch(/^"?Funnel Display/);
-    expect(await font('body')).toMatch(/^"?Inter Tight/);
+    expect(await font('h1')).toMatch(route === './' ? /^"?Funnel Display/ : /^"?Instrument Sans/);
+    expect(await font('body')).toMatch(/^"?Inter"?,/);
+    if (route === './') {
+      expect(await font('#hero h1')).toMatch(/^"?Funnel Display/);
+      expect(await font('footer.band .band-big')).toMatch(/^"?Funnel Display/);
+      expect(await font('footer.band')).toMatch(/^"?Inter Tight/);
+    }
   });
 }
 
@@ -92,4 +97,11 @@ test('section headings are at most 40px and sections sit closer together at 1440
   expect(await pad('#hero', 'padding-bottom')).toBeLessThanOrEqual(100);
   expect(await pad('#projects', 'padding-bottom')).toBeLessThanOrEqual(104);
   expect(await pad('#writing > .wrap', 'padding-top')).toBeLessThanOrEqual(92);
+});
+
+test('writing index: the latest cover leaves the first card of "All posts" above the fold at 1440×900', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('./writing/');
+  const card = (await page.locator('.wcard').first().boundingBox())!;
+  expect(card.y).toBeLessThan(900);
 });

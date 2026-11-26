@@ -207,14 +207,23 @@ test('the footer heading stays still with reduced motion', async ({ page }) => {
   await expect(word).toHaveText('anything');
 });
 
-test('band: the writing list has no rule of its own above the first row', async ({ page }) => {
+test('band: the writing list has no rule and spans the full width', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto('./');
   const border = await page.locator('#panel-writing .rows').evaluate((el) => getComputedStyle(el).borderTopWidth);
   expect(border).toBe('0px');
+  const top = (await page.locator('#writing .sec-top').boundingBox())!;
+  const row = (await page.locator('#panel-writing .row').first().boundingBox())!;
+  expect(Math.abs(row.x - top.x)).toBeLessThanOrEqual(1);
+  expect(row.width).toBeGreaterThanOrEqual(1200);
+});
+
+test('series: the parts list has no rule above Part 1 and gets the wide column', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  const desc = (await page.locator('#panel-writing .panel-desc').boundingBox())!;
-  const title = (await page.locator('#panel-writing .row-title').first().boundingBox())!;
-  expect(Math.abs(title.y - desc.y)).toBeLessThanOrEqual(4);
+  await page.goto('./');
+  const parts = page.locator('#series .parts').first();
+  expect(await parts.evaluate((el) => getComputedStyle(el).borderTopWidth)).toBe('0px');
+  expect((await parts.boundingBox())!.width).toBeGreaterThanOrEqual(780);
 });
 
 test('about page: the stack graph draws, hides an area, and shows "Used together" on demand', async ({ page }) => {
