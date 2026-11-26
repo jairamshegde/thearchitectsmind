@@ -11,8 +11,11 @@
   --band-bg: #0E0E0E; --band-ink: #F4F4F1; --band-muted: #A3A39D; --band-line: #2E2E2B;
   --tab-off: #A3A39D;
 
-  --display: 'Funnel Display', 'Inter Tight', system-ui, sans-serif;
-  --sans: 'Inter Tight', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display: 'Instrument Sans', Inter, system-ui, sans-serif;
+  --sans: Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* The hero and footer keep the original pair; they set these on their own root. */
+  --display-brand: 'Funnel Display', 'Inter Tight', system-ui, sans-serif;
+  --sans-brand: 'Inter Tight', Inter, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   --ease: cubic-bezier(.22, 1, .36, 1);

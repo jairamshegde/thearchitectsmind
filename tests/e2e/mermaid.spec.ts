@@ -24,9 +24,10 @@ test('renders every diagram in the post', async ({ page }) => {
     await expect(panels.nth(i).locator('svg')).toBeVisible();
   }
   await expect(panels.nth(1).locator('svg')).toContainText('f = 196');
-  // Diagrams draw with the site's tokens: Inter Tight text on the page background.
+  // Diagrams draw with the site's tokens: Inter body text on the page background.
   const svg = await panels.first().locator('svg').innerHTML();
-  expect(svg).toContain('Inter Tight');
+  expect(svg).toContain('Inter');
+  expect(svg).not.toContain('Inter Tight');
   expect(svg.toLowerCase()).toContain('#f4f4f1');
 });
 

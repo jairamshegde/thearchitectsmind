@@ -39,7 +39,7 @@ const headline = heroHeadline.replace(/\.$/, '');
 </script>
 
 <style>
-  .hero { padding-top: 40px; padding-bottom: 56px; align-items: center; }
+  .hero { --display: var(--display-brand); --sans: var(--sans-brand); font-family: var(--sans); padding-top: 40px; padding-bottom: 56px; align-items: center; }
   .hero-text { grid-column: 1 / span 7; min-width: 0; }
   h1 { line-height: .95; letter-spacing: -.045em; white-space: nowrap; }
   .lead { padding-bottom: .2em; font-size: clamp(24px, 2.6vw, 36px); font-weight: 500; letter-spacing: -.02em; color: var(--title-muted); }

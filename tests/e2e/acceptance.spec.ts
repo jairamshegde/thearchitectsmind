@@ -9,8 +9,13 @@ for (const route of ROUTES) {
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     expect(overflow).toBeLessThanOrEqual(0);
     const font = (sel: string) => page.locator(sel).first().evaluate((el) => getComputedStyle(el).fontFamily);
-    expect(await font('h1')).toMatch(/^"?Funnel Display/);
-    expect(await font('body')).toMatch(/^"?Inter Tight/);
+    expect(await font('h1')).toMatch(route === './' ? /^"?Funnel Display/ : /^"?Instrument Sans/);
+    expect(await font('body')).toMatch(/^"?Inter"?,/);
+    if (route === './') {
+      expect(await font('#hero h1')).toMatch(/^"?Funnel Display/);
+      expect(await font('footer.band .band-big')).toMatch(/^"?Funnel Display/);
+      expect(await font('footer.band')).toMatch(/^"?Inter Tight/);
+    }
   });
 }
 

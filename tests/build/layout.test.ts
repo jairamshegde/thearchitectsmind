@@ -57,7 +57,7 @@ describe('base layout', () => {
     const head = home.querySelector('head')!.toString();
     expect(head).toContain("localStorage.getItem('theme')");
     const fonts = home.querySelector('link[href*="fonts.googleapis.com/css2"]')?.getAttribute('href') ?? '';
-    for (const f of ['Funnel+Display', 'Inter+Tight', 'JetBrains+Mono']) expect(fonts).toContain(f);
+    for (const f of ['Funnel+Display', 'Inter+Tight', 'Instrument+Sans', 'family=Inter:', 'JetBrains+Mono']) expect(fonts).toContain(f);
     expect(fonts).not.toContain('Shantell');
     expect(fonts).not.toContain('IBM+Plex');
   });
