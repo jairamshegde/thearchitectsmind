@@ -79,7 +79,8 @@ describe('home page', () => {
     }
     const cards = section.querySelectorAll('#panel-notes a.note-card');
     expect(cards.length).toBeGreaterThan(0);
-    expect(cards.length).toBeLessThanOrEqual(4);
+    expect(cards.length).toBeLessThanOrEqual(3);
+    expect(section.querySelectorAll('.panel-desc')).toHaveLength(0);
     for (const card of cards) expect(card.getAttribute('href')).toMatch(new RegExp(`^${BASE}/notes/[^/]+/$`));
     const all = section.querySelector('a[data-all]');
     expect(all?.text.trim()).toBe('All writing');
