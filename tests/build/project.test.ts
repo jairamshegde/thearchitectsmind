@@ -7,10 +7,12 @@ const MINGRAPH = 'mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-
 describe('case study', () => {
   const p = page(`/projects/${MINGRAPH}/`);
 
-  it('shows kicker, title, summary and the meta grid', () => {
+  it('shows kicker, title and the meta grid, without the summary', () => {
     expect(p.querySelector('.article-kicker')?.text).toBe('Case study · 2026');
     expect(p.querySelector('h1.article-title')?.text).toMatch(/^Mingraph/);
-    expect(p.querySelector('.article-lead')?.text).toBeTruthy();
+    expect(p.querySelector('.article-lead')).toBeNull();
+    const first = p.querySelector('.article-head .back-link')!.nextElementSibling!;
+    if (p.querySelector('figure.cs-cover')) expect(first.classNames).toContain('cs-cover');
     const meta = Object.fromEntries(p.querySelectorAll('.cs-meta > div').map((d) => [d.querySelector('dt')!.text, d.querySelector('dd')!]));
     expect(Object.keys(meta)).toEqual(['Stack', 'Links']);
     expect(meta.Links.querySelector('a')?.getAttribute('href')).toBe('https://github.com/jairamshegde/mingraph');

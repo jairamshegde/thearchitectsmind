@@ -15,9 +15,9 @@ for (const [label, body] of [['Problem', d.problem], ['Constraints', d.constrain
 }
 const hasLinks = Boolean(d.links?.repo || d.links?.demo);
 ---
+{d.cover && <figure class="post-cover cs-cover"><Image src={d.cover} alt="" widths={[760, 1140, 1520]} sizes="(max-width: 1100px) calc(100vw - 80px), 760px" loading="eager" /></figure>}
 <p class="article-kicker">{full ? 'Case study' : 'Project'} · {d.date.getUTCFullYear()}</p>
 <h1 class="article-title">{d.title}</h1>
-<p class="article-lead">{d.summary}</p>
 
 <dl class="cs-meta">
   {full && d.role && <div><dt>Role</dt><dd>{d.role}</dd></div>}
@@ -45,4 +45,3 @@ const hasLinks = Boolean(d.links?.repo || d.links?.demo);
   </div>
 )}
 
-{d.cover && <figure class="post-cover cs-cover"><Image src={d.cover} alt="" widths={[860, 1360, 2000]} sizes="(max-width: 1440px) calc(100vw - 80px), 1280px" loading="eager" /></figure>}

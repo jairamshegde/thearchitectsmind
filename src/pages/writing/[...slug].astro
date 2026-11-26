@@ -40,26 +40,20 @@ const { title, description, date, tags, cover } = post.data;
 const nextMinutes = next ? ((await render(next)).remarkPluginFrontmatter.minutesRead as number) : 0;
 const seriesName = series ? series.entry.data.title.charAt(0).toUpperCase() + series.entry.data.title.slice(1) : '';
 ---
-<ArticleLayout title={title} description={description} headings={headings} headClass="post-head" back={{ href: withBase('/writing/'), label: 'Back to writing' }}>
+<ArticleLayout title={title} description={description} headings={headings} headClass="post-head" tags={tags} back={{ href: withBase('/writing/'), label: 'Back to writing' }}>
   <Fragment slot="header">
+    {cover && (
+      <figure class="post-cover">
+        <Image src={cover} alt="" widths={[760, 1140, 1520]} sizes="(max-width: 1100px) calc(100vw - 80px), 760px" loading="eager" />
+      </figure>
+    )}
     {series && (
       <p class="series-line fade-up" style="--d:.3s">{seriesName} series, part {series.at} of {series.of} · <a class="ul-on" href={withBase(`/writing/${series.entry.id}/`)}>See all parts</a></p>
     )}
     <h1 class="post-title"><span class="mask"><span>{title}</span></span></h1>
-    <p class="dek fade-up" style="--d:.5s">{description}</p>
-    <dl class="post-meta fade-up" style="--d:.6s">
-      <div><dt>Published</dt><dd><time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time></dd></div>
-      <div><dt>Reading time</dt><dd>{remarkPluginFrontmatter.minutesRead} min</dd></div>
-      {series && <div><dt>Part</dt><dd>{series.at} of {series.of}</dd></div>}
-      <div><dt>Tags</dt><dd><ul class="tags">{tags.map((tag) => <li class="tag">{tag}</li>)}</ul></dd></div>
-    </dl>
+    <p class="post-meta fade-up" style="--d:.5s"><time datetime={date.toISOString().slice(0, 10)}>{formatDate(date)}</time> · {remarkPluginFrontmatter.minutesRead} min read{series && ` · Part ${series.at} of ${series.of}`}</p>
   </Fragment>
 
-  {cover && (
-    <figure class="post-cover" slot="cover">
-      <Image src={cover} alt="" widths={[860, 1360, 2000]} sizes="(max-width: 1440px) calc(100vw - 80px), 1280px" loading="eager" />
-    </figure>
-  )}
 
   <Content />
 

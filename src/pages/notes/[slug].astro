@@ -13,14 +13,13 @@ interface Props {
   note: CollectionEntry<'notes'>;
 }
 const { note } = Astro.props;
-const { Content, headings } = await render(note);
+const { Content, headings, remarkPluginFrontmatter } = await render(note);
 const { title, description, date, tags } = note.data;
 ---
-<ArticleLayout title={title} description={description} headings={headings} back={{ href: withBase('/notes/'), label: 'Back to notes' }}>
+<ArticleLayout title={title} description={description} headings={headings} tags={tags} back={{ href: withBase('/notes/'), label: 'Back to notes' }}>
   <Fragment slot="header">
-    <p class="article-meta"><time datetime={date.toISOString()}>{formatDate(date)}</time> · {tags.join(' · ')}</p>
     <h1 class="article-title">{title}</h1>
-    {description && <p class="article-lead">{description}</p>}
+    <p class="post-meta"><time datetime={date.toISOString()}>{formatDate(date)}</time> · {remarkPluginFrontmatter.minutesRead} min read</p>
   </Fragment>
 
   <Content />
