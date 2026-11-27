@@ -74,21 +74,63 @@ test.describe('hero: the full stop is the missing piece', () => {
     await expect.poll(() => wordIsAccent(page)).toBe(true);
   });
 
-  test('over the pattern the square follows the cursor, leaves a fading trail, and flies home on leave', async ({ page }) => {
+  // hover until the full stop has landed in the spark
+  const arm = async (page: import('@playwright/test').Page) => {
     await page.goto('./');
     await page.waitForTimeout(2200);
     const hero = (await page.locator('#hero').boundingBox())!;
     await page.mouse.move(hero.x + 300, hero.y + 300);
     await page.mouse.move(hero.x + 310, hero.y + 305);
     await expect(page.locator('#hero')).toHaveClass(/lit/, { timeout: 3000 });
-    const field = (await page.locator('#hero [data-pf]').boundingBox())!;
+    await expect(page.locator('[data-hero-score]')).toContainText('Three flicks');
+    return { hero, field: (await page.locator('#hero [data-pf]').boundingBox())! };
+  };
+  const knockedOut = (page: import('@playwright/test').Page) =>
+    page.locator('#hero [data-pf] i.pf-n').evaluateAll((els) => els.filter((e) => (e as HTMLElement).style.filter).length);
+  const flick = async (page: import('@playwright/test').Page, x: number, y: number) => {
+    await page.mouse.click(x, y);
+    await expect(page.locator('#hero')).not.toHaveClass(/flung/, { timeout: 5000 });
+  };
+
+  test('the full stop stays put while the cursor moves over the pattern', async ({ page }) => {
+    const { field } = await arm(page);
     await page.mouse.move(field.x + 18 * 20 + 7, field.y + 9 * 20 + 7);
-    await expect.poll(async () => {
-      const sq = (await page.locator('[data-hero-sq]').boundingBox())!;
-      return [Math.round(sq.x - field.x), Math.round(sq.y - field.y)];
-    }).toEqual([18 * 20, 9 * 20]);
-    expect(await page.locator('#hero .pf-ghost').count()).toBeGreaterThan(0);
+    await page.waitForTimeout(500);
+    const sq = (await page.locator('[data-hero-sq]').boundingBox())!;
+    expect([Math.round(sq.x - field.x), Math.round(sq.y - field.y)]).toEqual([15 * 20, 11 * 20]);
+  });
+
+  test('a click flicks the full stop towards it, knocking noise out and counting it', async ({ page }) => {
+    const { field } = await arm(page);
+    await flick(page, field.x + 20, field.y + 20);
+    const sq = (await page.locator('[data-hero-sq]').boundingBox())!;
+    expect([Math.round(sq.x - field.x), Math.round(sq.y - field.y)]).not.toEqual([15 * 20, 11 * 20]);
+    const out = await knockedOut(page);
+    expect(out).toBeGreaterThan(0);
+    await expect(page.locator('[data-hero-score]')).toHaveText(`${out} cleared · 2 flicks left`);
+  });
+
+  test('after three flicks the score is final, the best is kept, and a click starts over', async ({ page }) => {
+    const { field } = await arm(page);
+    await flick(page, field.x + 20, field.y + 20);
+    await flick(page, field.x + field.width - 20, field.y + field.height - 20);
+    await flick(page, field.x + 20, field.y + field.height - 20);
+    const out = await knockedOut(page);
+    await expect(page.locator('[data-hero-score]')).toHaveText(new RegExp(`^${out} of \\d+ cleared · new best\\. Click to go again\\.$`));
+    expect(await page.evaluate(() => localStorage.getItem('hero-flicks-best'))).toBe(String(out));
+    await page.mouse.click(field.x + 40, field.y + 40);
+    await expect(page.locator('[data-hero-score]')).toHaveText('Three flicks. Go.');
+    await expect.poll(() => knockedOut(page)).toBe(0);
+  });
+
+  test('on leave the full stop flies home, the noise comes back and the score hides', async ({ page }) => {
+    const { hero, field } = await arm(page);
+    await page.mouse.click(field.x + 20, field.y + 20);
+    await expect.poll(() => page.locator('#hero .pf-ghost').count()).toBeGreaterThan(0);
+    await expect(page.locator('#hero')).not.toHaveClass(/flung/, { timeout: 5000 });
     await page.mouse.move(5, hero.y + hero.height + 200);
+    await expect.poll(() => knockedOut(page)).toBe(0);
+    await expect(page.locator('[data-hero-score]')).toHaveCSS('opacity', '0');
     await expect(page.locator('#hero')).not.toHaveClass(/lit/);
     await expect(page.locator('[data-hero-dot]')).toBeVisible({ timeout: 3000 });
     expect(await page.locator('[data-hero-sq]').evaluate((el) => getComputedStyle(el).opacity)).toBe('0');

@@ -31,6 +31,7 @@ const headline = heroHeadline.replace(/\.$/, '');
   </div>
   <PixelField config={HOME_FIELD} class="hero-field" />
   <span class="hero-sq" aria-hidden="true" data-hero-sq></span>
+  <p class="hero-score" aria-hidden="true" data-hero-score></p>
 </section>
 
 <script>
@@ -58,6 +59,9 @@ const headline = heroHeadline.replace(/\.$/, '');
   .hero.armed.lit :global(.pf i) { --k: 1; transition: --k .55s var(--ease) var(--dl); }
   .hero :global(.pf-ghost) { border-radius: 2px; background: var(--accent); pointer-events: none; animation: ghost 1.1s var(--ease) forwards; }
   @keyframes ghost { from { opacity: .7; transform: scale(1); } to { opacity: 0; transform: scale(.6); } }
+  /* the flick game's one line of text, placed under the pattern by the script */
+  .hero-score { position: absolute; z-index: 3; margin: 0; font-size: 13px; font-weight: 500; line-height: 1.4; color: var(--muted); pointer-events: none; opacity: 0; transition: opacity .3s var(--ease); }
+  .hero-score.on { opacity: 1; }
   .hero-sub { margin: 28px 0 0; max-width: 600px; font-family: var(--display); font-size: clamp(20px, 1.8vw, 24px); font-weight: 600; line-height: 1.3; letter-spacing: -.015em; }
   .hero-bio { margin: 18px 0 0; max-width: 520px; font-size: 18px; line-height: 1.5; color: var(--muted); }
   .hero-actions { margin-top: 32px; display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
