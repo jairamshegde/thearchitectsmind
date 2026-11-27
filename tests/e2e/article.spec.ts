@@ -150,3 +150,20 @@ test('the back link is an outline pill that fills on hover', async ({ page }) =>
   await back.hover();
   await expect.poll(async () => (await style()).bg).not.toBe(rest.bg);
 });
+
+const PROJECT = './projects/mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-scratch-to-learn-object-oriented-design-and-design-patterns-in-python./';
+for (const width of [1440, 390]) {
+  test(`project: the facts table lines up with the text and the sidebar sits clear of it at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(PROJECT);
+    const prose = (await page.locator('.prose').boundingBox())!;
+    const table = (await page.locator('dl.cs-table').boundingBox())!;
+    const facts = (await page.locator('aside.cs-facts').boundingBox())!;
+    expect(Math.abs(table.x - prose.x)).toBeLessThanOrEqual(1);
+    expect(table.width).toBeLessThanOrEqual(761);
+    if (width === 1440) expect(facts.x + facts.width).toBeLessThanOrEqual(prose.x - 40);
+    else expect(facts.y + facts.height).toBeLessThanOrEqual(prose.y);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    expect(overflow).toBeLessThanOrEqual(0);
+  });
+}

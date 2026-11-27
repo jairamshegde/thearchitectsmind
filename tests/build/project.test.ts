@@ -7,21 +7,31 @@ const MINGRAPH = 'mingraph-langchain-and-langgraph-building-blocks-rebuilt-from-
 describe('case study', () => {
   const p = page(`/projects/${MINGRAPH}/`);
 
-  it('shows kicker, title and the meta grid, without the summary', () => {
-    expect(p.querySelector('.article-kicker')?.text).toBe('Case study · 2026');
+  it('shows the kicker without a year, the title, and a table of Problem and Links only', () => {
+    expect(p.querySelector('.article-kicker')?.text).toBe('Case study');
     expect(p.querySelector('h1.article-title')?.text).toMatch(/^Mingraph/);
     expect(p.querySelector('.article-lead')).toBeNull();
-    const first = p.querySelector('.article-head .back-link')!.nextElementSibling!;
-    if (p.querySelector('figure.cs-cover')) expect(first.classNames).toContain('cs-cover');
-    const meta = Object.fromEntries(p.querySelectorAll('.cs-meta > div').map((d) => [d.querySelector('dt')!.text, d.querySelector('dd')!]));
-    expect(Object.keys(meta)).toEqual(['Stack', 'Links']);
-    expect(meta.Links.querySelector('a')?.getAttribute('href')).toBe('https://github.com/jairamshegde/mingraph');
+    const rows = p.querySelectorAll('.article-head dl.cs-table > div');
+    expect(rows.map((r) => r.querySelector('dt')!.text)).toEqual(['Problem', 'Links']);
+    expect(rows[0].querySelector('dd')!.text.trim()).toBeTruthy();
+    expect(rows[1].querySelector('a')?.getAttribute('href')).toBe('https://github.com/jairamshegde/mingraph');
   });
 
-  it('renders only the Problem card, then Lessons', () => {
-    expect(p.querySelectorAll('.cs-card .cs-card-title').map((t) => t.text)).toEqual(['Problem']);
-    expect(p.querySelector('aside.lessons')).not.toBeNull();
+  it('puts year and stack in the sidebar, one stack item per line', () => {
+    const facts = p.querySelector('.article-shell aside.cs-facts')!;
+    const items = Object.fromEntries(facts.querySelectorAll('dl > div').map((d) => [d.querySelector('dt')!.text, d.querySelector('dd')!]));
+    expect(Object.keys(items)).toEqual(['Year', 'Stack']);
+    expect(items.Year.text).toBe('2026');
+    expect(items.Stack.querySelectorAll('li').map((li) => li.text)).toEqual(['Python', 'LangChain', 'LangGraph', 'Design patterns']);
+  });
+
+  it('drops the old meta grid, the cards and the lessons', () => {
+    expect(p.querySelector('.cs-meta')).toBeNull();
+    expect(p.querySelector('.cs-cards')).toBeNull();
+    expect(p.querySelector('aside.lessons')).toBeNull();
     expect(p.querySelector('.article-head a.back-link')?.getAttribute('href')).toBe(`${BASE}/projects/`);
     expect(p.querySelector('.article-head a.back-link')?.text.trim()).toBe('Back to projects');
+    const first = p.querySelector('.article-head .back-link')!.nextElementSibling!;
+    if (p.querySelector('figure.cs-cover')) expect(first.classNames).toContain('cs-cover');
   });
 });

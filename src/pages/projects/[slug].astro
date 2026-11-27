@@ -4,7 +4,6 @@ import ArticleLayout from '../../layouts/ArticleLayout.astro';
 import CaseStudyHeader from '../../components/CaseStudyHeader.astro';
 import { published } from '../../lib/collections';
 import { isCaseStudy } from '../../lib/content';
-import { renderMarkdown } from '../../lib/markdown-text';
 import { withBase } from '../../lib/url';
 
 export async function getStaticPaths() {
@@ -16,20 +15,20 @@ interface Props {
 }
 const { project } = Astro.props;
 const { Content, headings } = await render(project);
-const { title, summary, lessons } = project.data;
-const showLessons = isCaseStudy(project.data) && Boolean(lessons);
+const { title, summary, date, role, timeline, stack } = project.data;
+const full = isCaseStudy(project.data);
 ---
 <ArticleLayout title={title} description={summary} headings={headings} back={{ href: withBase('/projects/'), label: 'Back to projects' }}>
   <CaseStudyHeader slot="header" project={project} />
 
-  <Content />
+  <aside class="cs-facts" slot="rail" aria-label="Project facts">
+    <dl>
+      <div><dt>Year</dt><dd>{date.getUTCFullYear()}</dd></div>
+      {full && role && <div><dt>Role</dt><dd>{role}</dd></div>}
+      {full && timeline && <div><dt>Timeline</dt><dd>{timeline}</dd></div>}
+      <div><dt>Stack</dt><dd><ul>{stack.map((s) => <li>{s}</li>)}</ul></dd></div>
+    </dl>
+  </aside>
 
-  <Fragment slot="after">
-    {showLessons && (
-      <aside class="lessons">
-        <p class="lessons-label">Lessons</p>
-        <Fragment set:html={renderMarkdown(lessons)} />
-      </aside>
-    )}
-  </Fragment>
+  <Content />
 </ArticleLayout>

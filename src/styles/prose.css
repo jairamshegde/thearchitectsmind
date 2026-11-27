@@ -150,24 +150,30 @@
 .mermaid-panel:not(.is-rendered):not(.is-error) .mermaid-src { opacity: .55; }
 .mermaid-note { margin: 0 0 10px; text-align: left; font-size: 15px; font-style: italic; color: var(--muted); }
 
-/* ---------- case study ---------- */
-.cs-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 18px 28px; margin: 32px 0 0; padding: 20px 0 0; border-top: 2px solid var(--ink); }
-.cs-meta dt { font-size: 13px; color: var(--muted); }
-.cs-meta dd { margin: 4px 0 0; font-size: 15px; font-weight: 500; }
-.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.chips li { padding: 2px 10px; border: 1px solid var(--line); border-radius: 999px; font-size: 13px; font-weight: 400; }
+/* ---------- case study: facts table under the title, facts sidebar beside the text ---------- */
+.cs-table { margin: 28px 0 0; max-width: var(--post-w); border-top: 2px solid var(--ink); }
+.cs-table > div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 24px; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.cs-table dt { padding-top: 2px; font-size: 13px; font-weight: 600; color: var(--muted); }
+.cs-table dd { margin: 0; font-size: 16px; line-height: 1.6; }
+.cs-table dd p { margin: 0 0 .5em; }
+.cs-table dd > :last-child { margin-bottom: 0; }
 .cs-links { display: flex; flex-wrap: wrap; gap: 4px 14px; }
 .cs-links a { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
-.cs-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 28px; }
-.cs-card { padding: 20px 22px; border: 1px solid var(--line); border-radius: 14px; font-size: 16px; line-height: 1.55; }
-.cs-card-title { margin: 0 0 8px; font-size: 13px; font-weight: 600; color: var(--muted); }
-.cs-card p { margin: 0 0 .6em; }
-.cs-card > :last-child { margin-bottom: 0; }
-@media (max-width: 760px) { .cs-cards { grid-template-columns: 1fr; } }
-.lessons { margin: 56px 0 0; padding: 24px 28px; border-radius: 16px; background: var(--soft); font-size: 17px; line-height: 1.5; color: var(--body); }
-.lessons-label { margin: 0 0 6px; font-family: var(--display); font-size: 18px; font-weight: 600; color: var(--ink); }
-.lessons p { margin: 0 0 .5em; }
-.lessons > :last-child { margin-bottom: 0; }
+@media (max-width: 720px) { .cs-table > div { grid-template-columns: minmax(0, 1fr); gap: 4px; } }
+
+/* The rail holds the facts and, when there is one, the contents list. */
+.rail { grid-column: 1; grid-row: 1; position: sticky; top: 120px; align-self: start; display: flex; flex-direction: column; gap: 40px; }
+.rail .toc { position: static; }
+.cs-facts dl { margin: 0; display: flex; flex-direction: column; gap: 18px; font-size: 15px; }
+.cs-facts dt { font-size: 13px; color: var(--muted); }
+.cs-facts dd { margin: 4px 0 0; font-weight: 500; line-height: 1.5; }
+.cs-facts ul { margin: 0; padding: 0; list-style: none; }
+@media (max-width: 1100px) {
+  .rail { position: static; }
+  .article-shell:has(> .rail) .article { grid-row: 2; }
+  .cs-facts { margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+  .cs-facts dl { flex-direction: row; flex-wrap: wrap; gap: 16px 40px; }
+}
 
 /* ---------- side-by-side image + text: ![alt](./img.png "left" | "right") ---------- */
 .md-split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: clamp(20px, 3vw, 40px); align-items: center; margin: 1.4em 0 2em; }

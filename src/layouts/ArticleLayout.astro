@@ -27,7 +27,11 @@ const { title, description, headings, back, headClass, tags = [] } = Astro.props
       <slot name="header" />
     </header>
     <div class="article-shell">
-      <Toc headings={headings} />
+      {Astro.slots.has('rail') ? (
+        <div class="rail"><slot name="rail" /><Toc headings={headings} /></div>
+      ) : (
+        <Toc headings={headings} />
+      )}
       <div class="article">
         <div class="prose"><slot /></div>
         {tags.length > 0 && (
