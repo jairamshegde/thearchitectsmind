@@ -57,7 +57,7 @@ export function seriesParts<T extends Post>(posts: T[], series: string): T[] {
   return parts;
 }
 
-export const isCaseStudy = (d: { problem?: string; outcome?: string }): boolean => Boolean(d.problem || d.outcome);
+export const isCaseStudy = (d: { problem?: string; outcome?: string }): boolean => Boolean(d.problem?.trim() || d.outcome?.trim());
 
 /** The n most-used tags, most used first; ties sort alphabetically. */
 export function topTags(items: { data: { tags: string[] } }[], n: number): string[] {

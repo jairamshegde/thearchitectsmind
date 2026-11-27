@@ -70,6 +70,7 @@ describe('isCaseStudy', () => {
     expect(isCaseStudy({ problem: 'x' })).toBe(true);
     expect(isCaseStudy({ outcome: 'y' })).toBe(true);
     expect(isCaseStudy({})).toBe(false);
+    expect(isCaseStudy({ problem: '  \n', outcome: ' ' })).toBe(false);
   });
 });
 
